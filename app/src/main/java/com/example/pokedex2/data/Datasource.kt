@@ -4,7 +4,7 @@ import com.example.pokedex2.R
 import com.example.pokedex2.model.Pokemon
 
 class Datasource() {
-    fun loadAffirmations(): List<Pokemon> {
+    fun loadPokemon(): List<Pokemon> {
         return listOf<Pokemon>(
             Pokemon(R.string.pokemon1, R.drawable.image1),
             Pokemon(R.string.pokemon2, R.drawable.image2),
