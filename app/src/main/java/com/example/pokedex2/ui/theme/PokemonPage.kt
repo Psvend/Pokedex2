@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,7 +33,7 @@ fun PokemonPage(modifier: Modifier = Modifier) {
 
     }
     Box(modifier = modifier.fillMaxSize()) {
-        //backgroundImage(url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png", modifier = Modifier)
+        backgroundImage(url = "https://i.pinimg.com/736x/6e/52/e0/6e52e0a37e4194b7766ffbde181a0434.jpg", modifier = Modifier)
         PokemonImage(url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png", modifier = Modifier)
         PokemonType(type = "Electric", modifier = Modifier)
         PokemonType2(type = "Electric", modifier = Modifier)
