@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -157,28 +158,29 @@ fun togleLikeState(currentState: Boolean): Boolean {
 }
 @Composable
 fun LikeButton(){
-    var isSelect by remember { mutableStateOf(true) }
+    var isSelect by remember { mutableStateOf(false) }
     val boxModifier = Modifier.offset(x = 270.dp, y = 100.dp)
     val imageModifierLike = Modifier
         .size(width = 70.dp, height = 70.dp)
     Box(
-        modifier = boxModifier.clickable { isSelect = togleLikeState(isSelect) }
+        modifier = boxModifier.clickable {
+            isSelect = togleLikeState(isSelect) }
     ){
-        if (isSelect) {
+        if (isSelect)
             Image(
                 imageVector = Icons.Filled.Favorite,
                 contentDescription = "Like",
                 contentScale = ContentScale.FillBounds,
                 modifier = imageModifierLike
             )
-        } else {
+         else
             Image(
-                imageVector = Icons.Outlined.Favorite,
+                imageVector = Icons.Outlined.FavoriteBorder,
                 contentDescription = "unLike",
                 contentScale = ContentScale.FillBounds,
                 modifier = imageModifierLike
             )
-        }
+
     }
 
 
