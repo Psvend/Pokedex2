@@ -1,15 +1,30 @@
 package com.example.pokedex2.ui.theme
 
+import android.annotation.SuppressLint
+import android.provider.ContactsContract
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import kotlinx.serialization.Serializable
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import kotlinx.serialization.decodeFromString
+import androidx.compose.material3.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import com.example.pokedex2.R
+import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 import java.io.File
 
@@ -34,38 +49,73 @@ data class Stats(
 )
 
 @Composable
-fun loadPokemonItems(): MutableList<String> {
-    var items = remember { mutableStateListOf<String>() }
+fun loadPokemonItems(): List<Pokemon> {
+    val path = "app/src/main/res/pokeSample.json"
+    val items = Json.decodeFromString<ContactsContract.Contacts.Data>(File(path).readText())
+    return item
+}
 
-    // Load JSON file and parse it
-    val jsonString = File("src/main/res/pokeSample.json").readText()
-    val pokemonList = Json.decodeFromString<List<Pokemon>>(jsonString)
 
-    // Populate items with the names of the Pokémon
-    items.addAll(pokemonList.map { it.name })
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun TempView() {
+    var active by remember { mutableStateOf(false) }
+    var text by remember { mutableStateOf("") }
 
-    return items
+    // Load Pokémon names from JSON file
+    val items = remember {
+        loadPokemonItems()
+    }
+
+    //Wrap scaffold in box for red background
+
+    Scaffold {
+        SearchBar(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+                .background(color = Color.Red),
+            query = "",
+            onQueryChange = { text = it },
+            onSearch = { },
+            active = active,
+            onActiveChange = {active = it},
+            placeholder = { Text("Search") },
+            leadingIcon = {
+                Icon(Icons.Default.Search, contentDescription = "Search-icon within the search bar") },
+            trailingIcon = {
+                if (active) {
+                    Icon(
+                        modifier = Modifier.clickable {
+                            if (text.isNotEmpty()) {
+                                text = ""
+                            } else {
+                                active = false
+                            }
+                        },
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close-icon within the search bar"
+                    )
+                }
+            }
+
+        ) {
+            items.forEach {pokemon ->
+                Row(
+                    modifier = Modifier.padding(all = 10.dp)
+                ) {
+                    Icon(imageVector = Icons.Default.Face, contentDescription = "Pokemon Icon")
+                    Text(text = pokemon.name) // Display Pokemon name
+                }
+            }
+        }
+    }
+
 }
 
 @Preview (showBackground = true)
 @Composable
-fun TempView() {
-
-    val items = loadPokemonItems()
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color.Blue)
-    ) {
-        for (item in items) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = Color.Red)
-            ) {
-
-            }
-        }
-    }
+fun DefaultPreview() {
+    TempView()
 }
