@@ -45,10 +45,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Pokedex2Theme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    //ADD HERE
+                Scaffold(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    bottomBar = { MenuBar() }
+                ) { innerPadding ->
+                    //Adding the scrollable pokemon list
                     AffirmationsApp(modifier = Modifier.padding(innerPadding))
-                    MenuBar()
+
                 }
             }
         }
@@ -60,7 +64,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun GreetingPreview() {
     Pokedex2Theme {
-        //AffirmationsApp()
-        MenuBar()
+        Scaffold (
+            bottomBar = { MenuBar() }
+        ) {
+            AffirmationsApp(modifier = Modifier.padding(it))
+        }
     }
 }

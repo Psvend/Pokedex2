@@ -16,6 +16,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,7 +40,31 @@ fun MenuBar(){
         BottomNavItem("Search", Icons.Filled.Search, Icons.Outlined.Search),
         BottomNavItem("Filter", Icons.Filled.Edit, Icons.Outlined.Edit),
     )
-    var selectedIremIndex by rememberSaveable { mutableStateOf(0) }
+    var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
+
+    //Adapted to make it work with pokemon list
+    NavigationBar {
+        item.forEachIndexed { index, item ->
+            NavigationBarItem(
+                selected = index == selectedItemIndex,
+                onClick = { selectedItemIndex = index },
+                label = { Text(text = item.title) },
+                icon = {
+                    Icon(
+                        imageVector = if (selectedItemIndex == index) item.selectedIcon else item.unselectedIcon,
+                        contentDescription = item.title
+                    )
+                }
+            )
+        }
+    }
+}
+
+
+
+
+//OLD CODE (DO NOT DELETE) - PETRINE
+    /*
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -68,3 +93,5 @@ fun MenuBar(){
 
     }
 }
+
+     */
