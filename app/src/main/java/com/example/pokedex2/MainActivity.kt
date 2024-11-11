@@ -46,29 +46,6 @@ class MainActivity : ComponentActivity() {
 }
 
 
-@Composable
-fun PokemonCard(pokemon: Pokemon, modifier: Modifier) {
-    Card(modifier = modifier) {
-        Column {
-            Image (
-                painter = painterResource(pokemon.imageResourceId),
-                contentDescription = stringResource(pokemon.stringResourceId),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp),
-                contentScale = ContentScale.Crop
-                )
-            Text(
-                text = LocalContext.current.getString(pokemon.stringResourceId),
-                modifier = Modifier.padding(16.dp),
-                style = MaterialTheme.typography.headlineSmall
-            )
-        }
-    }
-}
-
-
-
 
 @Preview(showBackground = true)
 @Composable
