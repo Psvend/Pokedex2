@@ -60,6 +60,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun GreetingPreview() {
     Pokedex2Theme {
-        AffirmationsApp()
+        //AffirmationsApp()
+        MenuBar()
     }
 }
