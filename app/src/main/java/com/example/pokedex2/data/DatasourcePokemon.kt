@@ -10,62 +10,62 @@ class DatasourcePokemon() {
             affirmation(
                 R.string.Bulbasaur,
                 R.drawable.bulbasaur_background,
-                listOf(R.drawable.category_type_grass),
-                "#0001"
+                listOf("Grass", "Poison"),
+                "# 1"
                 ),
             affirmation
                 (R.string.Ivysaur,
                 R.drawable.ivysaur_background,
-                listOf(R.drawable.category_type_grass),
-                "#0002"
+                listOf("Grass", "Poison"),
+                "# 2"
             ),
             affirmation(
                 R.string.Venusaur,
                 R.drawable.venusaur_background,
-                listOf(R.drawable.category_type_grass),
-                "#0003"
+                listOf("Grass", "Poison"),
+                "# 3"
             ),
             affirmation(
                 R.string.Charmander,
                 R.drawable.charmander_background,
-                listOf(R.drawable.category_type_fire),
-                "#0004"
+                listOf("Fire"),
+                "# 4"
             ),
             affirmation(
                 R.string.Charmeleon,
                 R.drawable.charmeleon_background,
-                listOf(R.drawable.category_type_fire),
-                "#0005"
+                listOf("Fire"),
+                "# 5"
             ),
             affirmation(
                 R.string.Charizard,
                 R.drawable.charizard_background,
-                listOf(R.drawable.category_type_fire),
-                "#0006"
+                listOf("Fire", "Flying"),
+                "# 6"
             ),
             affirmation(
                 R.string.Squirtle,
                 R.drawable.squirtle_background,
-                listOf(R.drawable.category_type_water),
-                "#0007"
+                listOf("Water"),
+                "# 7"
             ),
             affirmation(
                 R.string.Wartortle,
                 R.drawable.wartortle_background,
-                listOf(R.drawable.category_type_water),
-                "#0008"
+                listOf("Water"),
+                "# 8"
             ),
             affirmation(
                 R.string.Blastoise,
                 R.drawable.blastoise_background,
-                listOf(R.drawable.category_type_water),
-                "#0009"
+                listOf("Water"),
+                "# 9"
             ),
             affirmation(
                 R.string.Caterpie,
                 R.drawable.caterpie_background,
-                listOf(R.drawable.category_type_bug),
-                "#0010"
+                listOf("Bug"),
+                "# 10"
             )
             )
     }
