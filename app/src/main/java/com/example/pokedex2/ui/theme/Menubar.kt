@@ -33,13 +33,13 @@ data class BottomNavItem(
 )
 @Composable
 fun MenuBar(){
-    var item = listOf(
+    val item = listOf(
         BottomNavItem("Home", Icons.Filled.Home, Icons.Outlined.Home),
         BottomNavItem("Farvorites", Icons.Filled.FavoriteBorder, Icons.Outlined.FavoriteBorder),
         BottomNavItem("Search", Icons.Filled.Search, Icons.Outlined.Search),
         BottomNavItem("Filter", Icons.Filled.Edit, Icons.Outlined.Edit),
     )
-    var selectedIremIndex by rememberSaveable { mutableStateOf(0) }
+    var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -47,12 +47,12 @@ fun MenuBar(){
         Scaffold( bottomBar = {
             NavigationBar {
                 item.forEachIndexed { index, item -> NavigationBarItem(
-                    selected = index == selectedIremIndex,
-                    onClick = { selectedIremIndex = index },
+                    selected = index == selectedItemIndex,
+                    onClick = { selectedItemIndex = index },
                     label = { item.title },
                     icon = {
                         Icon(
-                            imageVector = if (selectedIremIndex == index) item.selectedIcon else item.unselectedIcon,
+                            imageVector = if (selectedItemIndex == index) item.selectedIcon else item.unselectedIcon,
                             contentDescription = item.title
                         )
 

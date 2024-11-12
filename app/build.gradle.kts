@@ -58,6 +58,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    //for reading temp jsonPokemons. Serializes json to data class
+    //for reading temp json-Pokemons. Serializes json to data class
     implementation(libs.kotlinx.serialization.json)
 }
