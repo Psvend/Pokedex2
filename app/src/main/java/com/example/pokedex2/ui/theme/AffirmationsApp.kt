@@ -48,59 +48,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.RectangleShape
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
-
-
-@Composable
-fun AffirmationsApp(modifier: Modifier = Modifier) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFE55655))
-
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(135.dp)
-                .background(Color(0xFFE55655))
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.top_bar_background), // Replace with your image name
-                contentDescription = "Top Bar Background",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 8.dp)
-                    .fillMaxWidth()
-            )
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 60.dp)
-        ) {
-
-            val layoutDirection = LocalLayoutDirection.current
-            Surface(
-                modifier = modifier
-                    .statusBarsPadding()
-                    .padding(
-                        start = WindowInsets.safeDrawing.asPaddingValues()
-                            .calculateStartPadding(layoutDirection),
-                        end = WindowInsets.safeDrawing.asPaddingValues()
-                            .calculateStartPadding(layoutDirection),
-                    )
-            ) {
-                AffirmationsList(
-                    affirmationLIST = DatasourcePokemon().loadAffirmations()
-                )
-            }
-        }
-    }
-}
-
-
-
 @Composable
 fun AffirmationsList(affirmationLIST: List<affirmation>, modifier: Modifier = Modifier) {
     LazyColumn(
