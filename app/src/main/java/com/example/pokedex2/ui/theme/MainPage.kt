@@ -48,7 +48,7 @@ fun MainPageBackGround(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(120.dp)
-                .background(Color(0xFFE55655))
+                .background(Color(0xFFE55655).copy(alpha = 0.5f))
         ) {
             Image(
                 painter = painterResource(id = R.drawable.top_bar_background), // Replace with your image name

@@ -29,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.pokedex2.ui.theme.AffirmationsApp
+import com.example.pokedex2.ui.theme.MainPageBackGround
 import com.example.pokedex2.ui.theme.Pokedex2Theme
 
 data class BottomNavItem(
@@ -67,7 +68,7 @@ fun GreetingPreview() {
         Scaffold (
             bottomBar = { MenuBar() }
         ) {
-            AffirmationsApp(modifier = Modifier.padding(it))
+            MainPageBackGround(modifier = Modifier.padding(it))
         }
     }
 }
