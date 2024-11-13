@@ -37,7 +37,7 @@ import com.example.pokedex2.data.DatasourcePokemon
 
 @Composable
 fun MainPageBackGround(modifier: Modifier = Modifier) {
-    var expanded by remember { mutableStateOf(false) } // Declare the expanded variable here
+    var expanded by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -51,7 +51,7 @@ fun MainPageBackGround(modifier: Modifier = Modifier) {
                 .background(Color(0xFFE55655).copy(alpha = 0.5f))
         ) {
             Image(
-                painter = painterResource(id = R.drawable.top_bar_background), // Replace with your image name
+                painter = painterResource(id = R.drawable.top_bar_background),
                 contentDescription = "Top Bar Background",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -81,7 +81,7 @@ fun MainPageBackGround(modifier: Modifier = Modifier) {
                 .fillMaxSize()
                 .padding(top = 30.dp)
         ) {
-            Spacer(modifier = Modifier.height(100.dp)) // Adjust the height value as needed
+            Spacer(modifier = Modifier.height(100.dp))
 
             val layoutDirection = LocalLayoutDirection.current
             Surface(

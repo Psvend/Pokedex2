@@ -7,6 +7,6 @@ import androidx.annotation.StringRes
 data class affirmation (
     @StringRes val stringResourceId: Int,
     @DrawableRes val imageResourceId: Int,
-    val typeIcon: List<String>,
+    @DrawableRes val typeIcon: List<Int>,
     val number: String
 )

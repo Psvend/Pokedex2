@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -165,9 +166,14 @@ fun AffirmationCard(affirmation: affirmation, modifier: Modifier = Modifier) {
                 ) {
                     //Our category icons
                     affirmation.typeIcon.forEach { typeIcon ->
-                        Text (
-                            text = typeIcon,
-                            style = MaterialTheme.typography.bodySmall
+                        Image(
+                            painter = painterResource(typeIcon),
+                            contentDescription = stringResource(affirmation.stringResourceId),
+                            modifier = Modifier
+                                .width(60.dp)
+                                .height(30.dp)
+                                .padding(8.dp),
+                            contentScale = ContentScale.Crop
                         )
                     }
                 }

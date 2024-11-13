@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
                     bottomBar = { MenuBar() }
                 ) { innerPadding ->
                     //Adding the scrollable pokemon list
-                    AffirmationsApp(modifier = Modifier.padding(innerPadding))
+                    MainPageBackGround(modifier = Modifier.padding(innerPadding))
 
                 }
             }
