@@ -16,6 +16,7 @@ import androidx.navigation.NavController
 import com.example.pokedex2.ui.theme.MainPageBackGround
 import com.example.pokedex2.ui.theme.NavGraph
 import com.example.pokedex2.ui.theme.Pokedex2Theme
+import com.example.pokedex2.ui.theme.PokemonPage
 
 data class BottomNavItem(
     val title: String,
