@@ -12,7 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
+//import androidx.navigation.NavController
 import com.example.pokedex2.ui.theme.MainPageBackGround
 import com.example.pokedex2.ui.theme.NavGraph
 import com.example.pokedex2.ui.theme.Pokedex2Theme

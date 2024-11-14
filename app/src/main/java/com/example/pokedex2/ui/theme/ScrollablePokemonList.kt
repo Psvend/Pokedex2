@@ -106,7 +106,7 @@ fun AffirmationCard(affirmation: affirmation, modifier: Modifier = Modifier) {
                             modifier = Modifier
                                 .width(60.dp)
                                 .height(30.dp)
-                                .padding(8.dp),
+                                .padding(4.dp),
                             contentScale = ContentScale.Crop
                         )
                     }
@@ -115,9 +115,6 @@ fun AffirmationCard(affirmation: affirmation, modifier: Modifier = Modifier) {
 
 
             //The like button and number
-
-
-
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(start = 8.dp)
@@ -138,36 +135,8 @@ fun AffirmationCard(affirmation: affirmation, modifier: Modifier = Modifier) {
                     modifier = Modifier.padding(top = 4.dp)
                 )
             }
-
-            //Spacer to make space
-            //Spacer(modifier = Modifier.weight(1f))
-
-
         }
     }
 }
 
 
-/*
-@Composable
-fun AffirmationCard(affirmation: affirmation, modifier: Modifier = Modifier){
-    Card(modifier = modifier){
-        Column {
-            Image(
-                painter = painterResource(affirmation.imageResourceId),
-                contentDescription = stringResource(affirmation.stringResourceId),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp),
-                contentScale = ContentScale.Crop
-            )
-            Text(
-                text = LocalContext.current.getString(affirmation.stringResourceId),
-                modifier = Modifier.padding(16.dp),
-                style = MaterialTheme.typography.headlineSmall
-            )
-        }
-
-    }
-}
-*/
