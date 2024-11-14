@@ -55,6 +55,7 @@ fun GreetingPreview() {
             bottomBar = { MenuBar() }
         ) {
             MainPageBackGround(modifier = Modifier.padding(it))
+            PokemonPage(modifier = Modifier.padding(it))
         }
     }
 }
