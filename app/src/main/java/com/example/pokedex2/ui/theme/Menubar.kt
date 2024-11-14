@@ -23,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.pokedex2.BottomNavItem
 
@@ -32,33 +33,49 @@ data class BottomNavItem(
     val unselectedIcon: ImageVector
 
 )
-@Composable
-fun MenuBar(){
-    var item = listOf(
-        BottomNavItem("Home", Icons.Filled.Home, Icons.Outlined.Home),
-        BottomNavItem("Farvorites", Icons.Filled.FavoriteBorder, Icons.Outlined.FavoriteBorder),
-        BottomNavItem("Search", Icons.Filled.Search, Icons.Outlined.Search),
-        BottomNavItem("Filter", Icons.Filled.Edit, Icons.Outlined.Edit),
-    )
-    var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
 
-    //Adapted to make it work with pokemon list
-    NavigationBar {
-        item.forEachIndexed { index, item ->
+@Composable
+fun MenuBar(
+    selectedItemIndex: Int,
+    onItemSelected: (Int) -> Unit
+) {
+    val items = listOf(
+        BottomNavItem("Home", Icons.Filled.Home, Icons.Outlined.Home),
+        BottomNavItem("Favorites", Icons.Filled.FavoriteBorder, Icons.Outlined.FavoriteBorder),
+        BottomNavItem("Search", Icons.Filled.Search, Icons.Outlined.Search),
+        BottomNavItem("Filter", Icons.Filled.Edit, Icons.Outlined.Edit)
+    )
+
+    // Determine the background color based on the selected index for custom searchView..
+    val backgroundColor = if (selectedItemIndex == 2) Color.Black else MaterialTheme.colorScheme.surface
+    val contentColor = if (selectedItemIndex == 2) Color.Red else MaterialTheme.colorScheme.onSurface
+    NavigationBar(
+        containerColor = backgroundColor, // Set the NavigationBar background color to have a custom SearchView..
+        contentColor = contentColor
+    ) {
+        items.forEachIndexed { index, item ->
             NavigationBarItem(
                 selected = index == selectedItemIndex,
-                onClick = { selectedItemIndex = index },
-                label = { Text(text = item.title) },
+                onClick = { onItemSelected(index) },
+                label = {
+                    Text(
+                        text = item.title,
+                        color = contentColor
+                    )
+                },
                 icon = {
                     Icon(
-                        imageVector = if (selectedItemIndex == index) item.selectedIcon else item.unselectedIcon,
-                        contentDescription = item.title
+                        imageVector = if (index == selectedItemIndex) item.selectedIcon else item.unselectedIcon,
+                        contentDescription = item.title,
+                        tint = contentColor
                     )
                 }
             )
         }
     }
 }
+
+
 
 
 
