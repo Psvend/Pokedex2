@@ -37,7 +37,7 @@ import com.example.pokedex2.data.DatasourcePokemon
 
 @Composable
 fun MainPageBackGround(modifier: Modifier = Modifier) {
-    var expanded by remember { mutableStateOf(false) }
+    //var expanded by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -65,7 +65,8 @@ fun MainPageBackGround(modifier: Modifier = Modifier) {
                         .height(120.dp)
                     ) {
                 Button(
-                    onClick = { expanded = !expanded },
+                    onClick = { /*expanded = !expanded eller navController.navigate("placeholder")
+                    */ },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
