@@ -12,6 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 //import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -36,9 +37,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Pokedex2Theme {
-                var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
+                var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
 
-                //NavGraph()
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
@@ -48,16 +48,14 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 ) { innerPadding ->
-                    // Conditionally render content based on selectedItemIndex
                     when (selectedItemIndex) {
-                        0 -> MainPageBackGround(modifier = Modifier.padding()) // Home view
+                        0 -> MainPageBackGround(modifier = Modifier.padding(innerPadding)) // Home view
                         //1 -> FavoritesView(modifier = Modifier.padding(innerPadding))    // Favorites view
                         2 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))     // Search view
                         //3 -> FilterView(modifier = Modifier.padding(innerPadding))       // Filter view
-                        else -> MainPageBackGround(modifier = Modifier.padding()) // Default to Home
+                        else -> MainPageBackGround(modifier = Modifier.padding(innerPadding)) // Default to Home
                     }
-                    //Adding the scrollable pokemon list
-                    MainPageBackGround(modifier = Modifier.padding(innerPadding))
+
                 }
             }
         }
