@@ -42,7 +42,8 @@ import com.example.pokedex2.data.DataPokeTypes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TypeFilterUI(modifier: Modifier) {
+fun TypeFilterUI(modifier: Modifier = Modifier) {
+    modifier.background(color =  Color.Black)
     val pokeTypes = DataPokeTypes().loadTypes()
     val selectionMap = remember { mutableStateMapOf<Int, Boolean>() }
     var searchQuery by remember { mutableStateOf("Name, number or description") }
@@ -201,8 +202,6 @@ fun TypeFilterUI(modifier: Modifier) {
         )
     }
 }
-
-
 
 @Preview(showBackground = true)
 @Composable

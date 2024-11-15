@@ -182,6 +182,9 @@ fun PokemonDescription(description: String){
         modifier = Modifier.padding(horizontal = 16.dp)
     )
 }
+
+/*
+
 @Composable
 fun PokemonStats(url: String, modifier: Modifier){
     AsyncImage(
@@ -194,6 +197,8 @@ fun PokemonStats(url: String, modifier: Modifier){
         )
     )
 }
+ */
+
 
 @Composable
 fun LikeButton(){

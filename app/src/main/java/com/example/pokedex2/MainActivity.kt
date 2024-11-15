@@ -1,28 +1,23 @@
 package com.example.pokedex2
 
-import com.example.pokedex2.model.Pokemon
-import com.example.pokedex2.data.DatasourcePokemon
-import androidx.compose.material3.Card
-import androidx.compose.foundation.Image
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.pokedex2.ui.theme.MenuBar
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
+//import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.pokedex2.ui.theme.MainPageBackGround
-import com.example.pokedex2.ui.theme.NavGraph
 import com.example.pokedex2.ui.components.TypeFilterUI
 import com.example.pokedex2.ui.theme.Pokedex2Theme
 import com.example.pokedex2.ui.theme.PokemonPage
@@ -41,9 +36,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Pokedex2Theme {
-                var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
+                var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
 
-                NavGraph()
+                //NavGraph()
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
@@ -74,7 +69,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun GreetingPreview() {
     Pokedex2Theme {
-        var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
+        var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
 
         Scaffold(
             bottomBar = {
