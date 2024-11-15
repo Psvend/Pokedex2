@@ -21,12 +21,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-//import androidx.navigation.NavController
 import com.example.pokedex2.ui.theme.MainPageBackGround
 import com.example.pokedex2.ui.theme.NavGraph
-import androidx.compose.ui.unit.dp
 import com.example.pokedex2.ui.components.TypeFilterUI
-import com.example.pokedex2.ui.theme.AffirmationsApp
 import com.example.pokedex2.ui.theme.Pokedex2Theme
 import com.example.pokedex2.ui.theme.PokemonPage
 
@@ -58,11 +55,11 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     // Conditionally render content based on selectedItemIndex
                     when (selectedItemIndex) {
-                        0 -> AffirmationsApp(modifier = Modifier.padding(innerPadding)) // Home view
+                        0 -> MainPageBackGround(modifier = Modifier.padding()) // Home view
                         //1 -> FavoritesView(modifier = Modifier.padding(innerPadding))    // Favorites view
                         2 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))     // Search view
                         //3 -> FilterView(modifier = Modifier.padding(innerPadding))       // Filter view
-                        else -> AffirmationsApp(modifier = Modifier.padding(innerPadding)) // Default to Home
+                        else -> MainPageBackGround(modifier = Modifier.padding()) // Default to Home
                     }
                     //Adding the scrollable pokemon list
                     MainPageBackGround(modifier = Modifier.padding(innerPadding))
@@ -91,11 +88,11 @@ fun GreetingPreview() {
             PokemonPage(modifier = Modifier.padding(it))
             // Conditionally display content based on the selected item
             when (selectedItemIndex) {
-                0 -> AffirmationsApp(modifier = Modifier.padding(it)) // Home view
+                0 -> MainPageBackGround(modifier = Modifier.padding()) // Home view
                 //1 -> FavoritesView(modifier = Modifier.padding(it))    // Favorites view
                 2 -> TypeFilterUI(modifier = Modifier.padding(it))     // Search view
                 //3 -> FilterView(modifier = Modifier.padding(it))       // Filter view
-                else -> AffirmationsApp(modifier = Modifier.padding(it)) // Default to Home
+                else -> MainPageBackGround(modifier = Modifier.padding()) // Default to Home
             }
         }
     }

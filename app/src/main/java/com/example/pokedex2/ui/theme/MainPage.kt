@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.pokedex2.R
 import com.example.pokedex2.data.DatasourcePokemon
+import kotlinx.coroutines.selects.select
 
 @Composable
 fun MainPageBackGround(modifier: Modifier = Modifier) {
@@ -103,12 +104,17 @@ fun MainPageBackGround(modifier: Modifier = Modifier) {
     }
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun MainPagePreview() {
     Scaffold (
-        bottomBar = { MenuBar() }
+        bottomBar = { MenuBar(
+            selectedItemIndex = se },
+            onItemSelected =
+        ) }
     ) {
-        MainPageBackGround(modifier = Modifier.padding(it))
+        MainPageBackGround(modifier = Modifier.padding())
     }
 }
+*/
