@@ -14,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -41,12 +42,14 @@ fun MenuBar(
 
     // Determine the background color based on the selected index for custom searchView..
     val backgroundColor = if (selectedItemIndex == 2) Color(0xFFE55655).copy(alpha = 0.9F) else Color(0xFFE55655).copy(alpha = 0.9f)
-    val contentColor = if (selectedItemIndex == 2) Color.Yellow else MaterialTheme.colorScheme.onSurface
+    val unselectedColor = if (selectedItemIndex == 2) Color(0xFF610003) else Color(0xFF610003)
+    val selectedColor =  if (selectedItemIndex == 2) Color(0xFFFFD88E) else Color(0xFFFFD88E)
     NavigationBar(
         containerColor = backgroundColor, // Set the NavigationBar background color to have a custom SearchView..
-        contentColor = contentColor
     ) {
         items.forEachIndexed { index, item ->
+            val isSelected = index == selectedItemIndex
+            val contentColor = if (isSelected) selectedColor else unselectedColor
             NavigationBarItem(
                 selected = index == selectedItemIndex,
                 onClick = { onItemSelected(index) },
@@ -62,7 +65,11 @@ fun MenuBar(
                         contentDescription = item.title,
                         tint = contentColor
                     )
-                }
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    indicatorColor = Color.White.copy(alpha = 0.0F)
+                )
+
             )
         }
     }
