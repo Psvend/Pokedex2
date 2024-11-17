@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
@@ -44,7 +45,7 @@ import com.example.pokedex2.data.DataPokeTypes
 @Composable
 fun TypeFilterUI(modifier: Modifier = Modifier) {
     modifier.background(color =  Color.Black)
-    val pokeTypes = DataPokeTypes().loadTypes()
+    val pokeTypes = DataPokeTypes().loadTypes().sortedBy{it.name}
     val selectionMap = remember { mutableStateMapOf<Int, Boolean>() }
     var searchQuery by remember { mutableStateOf("Name, number or description") }
     var active by remember { mutableStateOf(false) }
@@ -124,10 +125,10 @@ fun TypeFilterUI(modifier: Modifier = Modifier) {
             LazyVerticalStaggeredGrid(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(horizontal = 24.dp, vertical = 16.dp),
+                    .padding(horizontal = 16.dp, vertical = 5.dp),
                 columns = StaggeredGridCells.Fixed(3),
-                horizontalArrangement = Arrangement.spacedBy(22.dp),
-                verticalItemSpacing = 30.dp
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalItemSpacing = 10.dp
             ) {
                 items(pokeTypes) { localPokeType ->
                     val isSelected = selectionMap[localPokeType.id] ?: false
@@ -135,12 +136,12 @@ fun TypeFilterUI(modifier: Modifier = Modifier) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .aspectRatio(1.75f)
+                            .aspectRatio(3.0f)
                             .background(
                                 color = if (isSelected) Color(android.graphics.Color.parseColor(localPokeType.color)) else Color.White,
-                                shape = RoundedCornerShape(8.dp)
+                                shape = RoundedCornerShape(25.dp)
                             )
-                            .padding(8.dp)
+                            //.padding(8.dp)
                             //.clip(RoundedCornerShape(100.dp)) No rounded corners?
                             .clickable {
                                 selectionMap[localPokeType.id] = !isSelected
