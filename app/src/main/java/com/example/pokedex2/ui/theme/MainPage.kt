@@ -36,13 +36,15 @@ fun MainPageBackGround(modifier: Modifier = Modifier) {
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFE55655))
+            //.background(Color.Transparent)
+
 
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(120.dp)
-                .background(Color(0xFFE55655).copy(alpha = 0.5f))
+                .height(140.dp)
+                //.background(Color(0xFFE55655).copy(alpha = 0.5f))
         ) {
             Image(
                 painter = painterResource(id = R.drawable.top_bar_background),
@@ -77,7 +79,8 @@ fun MainPageBackGround(modifier: Modifier = Modifier) {
                 .fillMaxSize()
                 .padding(top = 30.dp)
         ) {
-            Spacer(modifier = Modifier.height(100.dp))
+            //Edit header spacing
+            Spacer(modifier = Modifier.height(60.dp))
 
             val layoutDirection = LocalLayoutDirection.current
             Surface(

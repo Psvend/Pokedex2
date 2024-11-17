@@ -71,6 +71,7 @@ fun GreetingPreview() {
 
         Scaffold(
             bottomBar = {
+
                 MenuBar(
                     selectedItemIndex = selectedItemIndex,
                     onItemSelected = { index -> selectedItemIndex = index }
