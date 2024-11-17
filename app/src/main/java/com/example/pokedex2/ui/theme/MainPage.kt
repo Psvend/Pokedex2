@@ -47,6 +47,7 @@ fun MainPageBackGround(modifier: Modifier = Modifier) {
             Image(
                 painter = painterResource(id = R.drawable.top_bar_background),
                 contentDescription = "Top Bar Background",
+                //alpha = 0.2f, hvis opacity skal ændres
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
