@@ -36,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -66,7 +67,16 @@ fun TypeFilterUI(modifier: Modifier = Modifier) {
             SearchBar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(16.dp)
+                    .onFocusChanged { focusState ->
+                        if (focusState.isFocused && searchQuery == "Name, number or description") {
+                            searchQuery = ""
+                        } else {
+                            searchQuery = "Name, number or description"
+                        }
+
+                    },
+
                 query = searchQuery,
                 onQueryChange = { searchQuery = it },
                 onSearch = {},
