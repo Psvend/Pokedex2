@@ -76,6 +76,7 @@ fun MainPageBackGround(modifier: Modifier = Modifier) {
                 .fillMaxSize()
                 .padding(top = 30.dp)
         ) {
+            //Spacer - Red box under image
             Spacer(modifier = Modifier.height(100.dp))
 
             val layoutDirection = LocalLayoutDirection.current

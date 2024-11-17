@@ -39,7 +39,9 @@ fun MenuBar(
     )
 
     // Determine the background color based on the selected index for custom searchView..
-    val backgroundColor = if (selectedItemIndex == 2) Color.Black else MaterialTheme.colorScheme.surface
+    //TASK: Remove if else statement
+    //if (selectedItemIndex == 2) Color(0xFFD90007).copy(alpha = 0.65F) else
+    val backgroundColor = Color(0xFFD90007).copy(alpha = 0.5f)
     val contentColor = if (selectedItemIndex == 2) Color.Red else MaterialTheme.colorScheme.onSurface
     NavigationBar(
         containerColor = backgroundColor, // Set the NavigationBar background color to have a custom SearchView..
