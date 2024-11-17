@@ -1,5 +1,6 @@
 package com.example.pokedex2.ui.theme
 
+import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -39,8 +40,8 @@ fun MenuBar(
     )
 
     // Determine the background color based on the selected index for custom searchView..
-    val backgroundColor = if (selectedItemIndex == 2) Color.Black else MaterialTheme.colorScheme.surface
-    val contentColor = if (selectedItemIndex == 2) Color.Red else MaterialTheme.colorScheme.onSurface
+    val backgroundColor = if (selectedItemIndex == 2) Color(0xFFE55655).copy(alpha = 0.9F) else Color(0xFFE55655).copy(alpha = 0.9f)
+    val contentColor = if (selectedItemIndex == 2) Color.Yellow else MaterialTheme.colorScheme.onSurface
     NavigationBar(
         containerColor = backgroundColor, // Set the NavigationBar background color to have a custom SearchView..
         contentColor = contentColor
