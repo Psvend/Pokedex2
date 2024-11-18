@@ -1,9 +1,5 @@
 package com.example.pokedex2.data
 
-import androidx.compose.ui.graphics.Color
-
-
-
 
 data class LocalPokeTypes(
     val id: Int,

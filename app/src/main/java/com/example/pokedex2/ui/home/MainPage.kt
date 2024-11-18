@@ -1,4 +1,4 @@
-package com.example.pokedex2.ui.theme
+package com.example.pokedex2.ui.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,13 +27,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.pokedex2.R
-import com.example.pokedex2.data.DatasourcePokemon
 import com.example.pokedex2.viewModel.AffirmationViewModel
 import androidx.compose.runtime.*
-
 
 
 @Composable

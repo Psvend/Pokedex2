@@ -1,4 +1,4 @@
-package com.example.pokedex2.ui.theme
+package com.example.pokedex2.ui.menuNav
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokedex2.BottomNavItem
 import com.example.pokedex2.viewModel.MenuBarViewModel

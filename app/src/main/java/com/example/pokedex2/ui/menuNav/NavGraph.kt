@@ -1,4 +1,4 @@
-package com.example.pokedex2.ui.theme
+package com.example.pokedex2.ui.menuNav
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -6,7 +6,9 @@ import androidx.navigation.NavHostController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import com.example.pokedex2.ui.home.MainPageBackGround
+import com.example.pokedex2.ui.home.PokemonPage
+import com.example.pokedex2.ui.home.pokemonAffirmation
 import com.example.pokedex2.viewModel.PokemonPageViewModel
 
 @Composable

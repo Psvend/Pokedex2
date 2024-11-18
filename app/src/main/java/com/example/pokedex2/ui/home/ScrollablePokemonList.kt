@@ -1,4 +1,4 @@
-package com.example.pokedex2.ui.theme
+package com.example.pokedex2.ui.home
 import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.viewModel.AffirmationViewModel
 import androidx.compose.foundation.Image
@@ -20,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -37,7 +36,6 @@ import com.example.pokedex2.R
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 
 @Composable

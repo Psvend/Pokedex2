@@ -1,6 +1,5 @@
 package com.example.pokedex2
 
-//import androidx.compose.runtime.mutableStateOf
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,25 +12,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.pokedex2.data.DatasourcePokemon
-import com.example.pokedex2.model.Affirmation
-import com.example.pokedex2.ui.theme.MainPageBackGround
 import androidx.navigation.compose.rememberNavController
 import com.example.pokedex2.ui.search.SearchScreen
-import com.example.pokedex2.ui.theme.MenuBar
-import com.example.pokedex2.ui.theme.NavGraph
+import com.example.pokedex2.ui.menuNav.MenuBar
+import com.example.pokedex2.ui.menuNav.NavGraph
 import com.example.pokedex2.ui.theme.Pokedex2Theme
 import com.example.pokedex2.ui.util.RotatingLoader
 import com.example.pokedex2.viewModel.MenuBarViewModel
 import com.example.pokedex2.viewModel.PokemonPageViewModel
 
+
 data class BottomNavItem(
     val title: String,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector
-
 )
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,9 +53,8 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.padding(innerPadding))
                         //1 -> FavoritesView(modifier = Modifier.padding(it))
                         2 -> SearchScreen()
-                        3 -> RotatingLoader() //Originally filter. RotatingLoader is a placeholder
-                        else -> NavGraph(navController = navController,
-                            startDestination = "mainPage" , pokemonPageViewModel = pokemonPageViewModel)
+                        //3 -> FilterScreen()
+                        else -> RotatingLoader()
 
                     }
                 }

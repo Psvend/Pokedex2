@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 @Composable
 fun FavViewModel(modifier: Modifier = Modifier) {
     val placeholderList = listOf(1, 2, 3) //Using id from pokemons?
-    val viewModel = FavViewModel()
+    val viewModel = com.example.pokedex2.viewModel.FavViewModel()
 
 
 }
