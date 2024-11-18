@@ -1,6 +1,7 @@
 package com.example.pokedex2.ui.theme
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,23 +30,21 @@ import com.example.pokedex2.ui.components.TypeFilterUI
 fun TopBar() {
     Box(
         modifier = Modifier
-            .fillMaxWidth()
             .height(120.dp)
-        //.background(Color(0xFFE55655).copy(alpha = 0.5f))
+            .background(Color(0xFFE55655).copy(alpha = 0.9f))
     ) {
+        Box(){}
         Image(
             painter = painterResource(id = R.drawable.top_bar_background),
             contentDescription = "Top Bar Background",
-            //alpha = 0.2f, hvis opacity skal ændres
+            alpha = 0.9f,
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 8.dp)
-                .fillMaxWidth()
+                //.padding(bottom = 8.dp)
         )
         Box(
             modifier = Modifier
-                .fillMaxWidth()
                 .height(120.dp)
         ) {
             Button(

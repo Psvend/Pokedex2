@@ -44,10 +44,10 @@ fun MainPageBackGround(modifier: Modifier = Modifier) {
         Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 80.dp)
+                    //.padding(top = 80.dp)
                 ) {
             //Edit header spacing
-            Spacer(modifier = Modifier.height(60.dp))
+            //Spacer(modifier = Modifier.height(60.dp))
 
             val layoutDirection = LocalLayoutDirection.current
             Surface(
