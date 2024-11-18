@@ -22,6 +22,7 @@ import com.example.pokedex2.ui.theme.MainPageBackGround
 import com.example.pokedex2.ui.theme.MenuBar
 import com.example.pokedex2.ui.theme.NavGraph
 import com.example.pokedex2.ui.theme.Pokedex2Theme
+import com.example.pokedex2.ui.util.RotatingLoader
 import com.example.pokedex2.viewModel.MenuBarViewModel
 import com.example.pokedex2.viewModel.PokemonPageViewModel
 
@@ -55,14 +56,13 @@ class MainActivity : ComponentActivity() {
                     when(selectedItemIndex){
                         0 ->  NavGraph(navController = navController,
                             startDestination = "mainPage" , pokemonPageViewModel = pokemonPageViewModel)
-                       // 1 -> MainPageBackGround(viewModel = menuBarViewModel, navController = navController, modifier = Modifier.padding(innerPadding))
+                       // 1 -> Loading(viewModel = menuBarViewModel, navController = navController, modifier = Modifier.padding(innerPadding))
                         2 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))
-                        // 3 -> MainPageBackGround(viewModel = menuBarViewModel, navController = navController, modifier = Modifier.padding(innerPadding))
-                        else -> MainPageBackGround(viewModel = viewModel(), navController = navController, modifier = Modifier.padding(innerPadding))
+                        3 -> RotatingLoader()
+                        else -> NavGraph(navController = navController,
+                            startDestination = "mainPage" , pokemonPageViewModel = pokemonPageViewModel)
+
                     }
-
-
-
                 }
             }
         }
