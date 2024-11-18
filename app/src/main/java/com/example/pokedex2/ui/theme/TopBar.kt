@@ -3,13 +3,17 @@ package com.example.pokedex2.ui.theme
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -37,7 +41,8 @@ fun TopBar() {
                 .fillMaxWidth()
                 .background(Color(0xFFE55655).copy(alpha = 0.9f))
                 .height(22.dp)
-        ){}
+        ){
+        }
         Image(
             painter = painterResource(id = R.drawable.top_bar_background),
             contentDescription = "Top Bar Background",
@@ -47,27 +52,37 @@ fun TopBar() {
                 .align(Alignment.BottomCenter)
                 //.padding(bottom = 8.dp)
                 .fillMaxWidth()
-        )
-        Box(
+            )
+        Button(
+            onClick = { /* Handle button click */ },
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
             modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp)
+                .align(Alignment.TopEnd)
+                .padding(top = 75.dp, end = 16.dp)
+                .size(width = 45.dp, height = 11.dp)
         ) {
-            Button(
-                onClick = { /*expanded = !expanded or navController.navigate("placeholder")
-                    */
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(top = 20.dp, end = 16.dp)
-                    .size(50.dp)
-            ) {
-
-            }
+            Text("Button")
+        }
+        Button(
+            onClick = { /* Handle button click */ },
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(top = 36.dp, start = 16.dp)
+                .size(width = 70.dp, height = 70.dp)
+        ) {
+        }
         }
     }
-}
+/*Button(
+onClick = { /*expanded = !expanded or navController.navigate("placeholder")
+                    */
+},
+colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+modifier = Modifier
+.padding(top = 20.dp, end = 16.dp)
+.size(50.dp)
+)*/
 
 @Preview
 @Composable
