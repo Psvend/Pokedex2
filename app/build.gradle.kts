@@ -40,6 +40,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.runtime.livedata)
     val nav_version = "2.8.3"
 
     implementation("androidx.navigation:navigation-compose:2.8.3")

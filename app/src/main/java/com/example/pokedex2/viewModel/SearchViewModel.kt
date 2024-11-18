@@ -35,8 +35,10 @@ class SearchViewModel : ViewModel() {
     }
 
     fun selectAll() {
-        pokeTypes.forEach { selectionMap[it.id] = true }
+        val areAllSelected = pokeTypes.all { selectionMap[it.id] == true } // Check if all types are selected
+        pokeTypes.forEach { selectionMap[it.id] = !areAllSelected } // Toggle selection
     }
+
 
     fun validateCriteria() {
         if (selectionMap.containsValue(true) || searchQuery.value.isNotBlank() && searchQuery.value != "Name, number or description") {

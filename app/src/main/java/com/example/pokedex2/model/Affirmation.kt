@@ -13,3 +13,4 @@ data class Affirmation (
     var description: String,
     @DrawableRes val graph: Int
 )
+
