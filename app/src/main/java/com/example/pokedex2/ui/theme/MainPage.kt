@@ -19,6 +19,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,9 +29,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.pokedex2.R
 import com.example.pokedex2.data.DatasourcePokemon
+import com.example.pokedex2.viewModel.AffirmationViewModel
+import androidx.compose.runtime.*
+
+
 
 @Composable
-fun MainPageBackGround(modifier: Modifier = Modifier) {
+fun MainPageBackGround(
+    viewModel: AffirmationViewModel,
+    modifier: Modifier
+) {
+
+    val affirmationList by viewModel.affirmations.collectAsState(initial = emptyList())
+
     //var expanded by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
@@ -94,7 +105,8 @@ fun MainPageBackGround(modifier: Modifier = Modifier) {
                     )
             ) {
                 AffirmationsList(
-                    affirmationLIST = DatasourcePokemon().loadAffirmations()
+                    viewModel,
+                    modifier = modifier
                 )
             }
         }

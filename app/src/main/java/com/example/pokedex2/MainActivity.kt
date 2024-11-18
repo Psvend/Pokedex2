@@ -18,6 +18,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokedex2.ui.theme.MainPageBackGround
 import com.example.pokedex2.ui.components.TypeFilterUI
 import com.example.pokedex2.ui.theme.Pokedex2Theme
@@ -49,11 +50,11 @@ class MainActivity : ComponentActivity() {
                     }
                 ) { innerPadding ->
                     when (selectedItemIndex) {
-                        0 -> MainPageBackGround(modifier = Modifier.padding(innerPadding)) // Home view
+                        0 -> MainPageBackGround(viewModel = viewModel(), modifier = Modifier.padding(innerPadding)) // Home view
                         //1 -> FavoritesView(modifier = Modifier.padding(innerPadding))    // Favorites view
                         2 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))     // Search view
                         //3 -> FilterView(modifier = Modifier.padding(innerPadding))       // Filter view
-                        else -> MainPageBackGround(modifier = Modifier.padding(innerPadding)) // Default to Home
+                        else -> MainPageBackGround(viewModel = viewModel(), modifier = Modifier.padding(innerPadding)) // Default to Home
                     }
 
                 }
@@ -82,11 +83,11 @@ fun GreetingPreview() {
             PokemonPage(modifier = Modifier.padding(it))
             // Conditionally display content based on the selected item
             when (selectedItemIndex) {
-                0 -> MainPageBackGround(modifier = Modifier.padding()) // Home view
+                0 -> MainPageBackGround(viewModel = viewModel(), modifier = Modifier.padding()) // Home view
                 //1 -> FavoritesView(modifier = Modifier.padding(it))    // Favorites view
                 2 -> TypeFilterUI(modifier = Modifier.padding(it))     // Search view
                 //3 -> FilterView(modifier = Modifier.padding(it))       // Filter view
-                else -> MainPageBackGround(modifier = Modifier.padding()) // Default to Home
+                else -> MainPageBackGround(viewModel = viewModel(),modifier = Modifier.padding()) // Default to Home
             }
         }
     }

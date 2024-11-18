@@ -1,5 +1,6 @@
 package com.example.pokedex2.ui.theme
 import com.example.pokedex2.model.Affirmation
+import com.example.pokedex2.viewModel.AffirmationViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +27,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -36,7 +38,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.RectangleShape
 
 @Composable
-fun AffirmationsList(affirmationLIST: List<Affirmation>, modifier: Modifier = Modifier) {
+fun AffirmationsList(
+   viewModel: AffirmationViewModel,
+   modifier: Modifier = Modifier,
+) {
+    val affirmationLIST by viewModel.affirmations.collectAsState(initial = emptyList())
+
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -46,6 +53,7 @@ fun AffirmationsList(affirmationLIST: List<Affirmation>, modifier: Modifier = Mo
         items(affirmationLIST) { affirmation ->
             AffirmationCard(
                 affirmation = affirmation,
+                onLikeClicked = { viewModel.toggleLike(affirmation)},
                 modifier = Modifier
                     .padding(4.dp)
             )
@@ -55,8 +63,12 @@ fun AffirmationsList(affirmationLIST: List<Affirmation>, modifier: Modifier = Mo
 
 
 @Composable
-fun AffirmationCard(affirmation: Affirmation, modifier: Modifier = Modifier) {
-    var isLiked by remember { mutableStateOf(false) }
+fun AffirmationCard(
+    affirmation: Affirmation,
+    onLikeClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var isLiked by remember { mutableStateOf(affirmation.isLiked) }
 
     Card(
         modifier = modifier.padding(4.dp),
@@ -88,7 +100,7 @@ fun AffirmationCard(affirmation: Affirmation, modifier: Modifier = Modifier) {
             ) {
                 //Name of pokemon
                 Text(
-                    text = LocalContext.current.getString(affirmation.stringResourceId),
+                    text = stringResource(affirmation.stringResourceId),
                     //modifier = Modifier.padding(16.dp),
                     style = MaterialTheme.typography.headlineSmall
                 )
