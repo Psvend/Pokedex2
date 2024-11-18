@@ -9,5 +9,7 @@ data class Affirmation (
     @DrawableRes val imageResourceId: Int,
     @DrawableRes val typeIcon: List<Int>,
     val number: String,
-    var isLiked: Boolean = false
+    var isLiked: Boolean = false,
+    var description: String,
+    @DrawableRes val graph: Int
 )

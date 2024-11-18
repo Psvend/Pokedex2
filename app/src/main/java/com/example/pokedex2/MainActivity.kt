@@ -16,6 +16,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.pokedex2.data.DatasourcePokemon
+import com.example.pokedex2.model.Affirmation
+import com.example.pokedex2.ui.theme.MainPageBackGround
 import androidx.navigation.compose.rememberNavController
 import com.example.pokedex2.ui.components.TypeFilterUI
 import com.example.pokedex2.ui.theme.MainPageBackGround
@@ -70,6 +73,11 @@ class MainActivity : ComponentActivity() {
 }
 
 
+//Our now specific pokemon, can be changed by nav and API later on
+val datasource = DatasourcePokemon.loadAffirmations()
+val bulbasaurAffirmation = datasource[0]
+
+
 /*
 @Preview(showBackground = true)
 @Composable
@@ -87,7 +95,10 @@ fun GreetingPreview() {
             }
         ) {
             //MainPageBackGround(modifier = Modifier.padding(it))
-            PokemonPage(modifier = Modifier.padding(it))
+
+
+            PokemonPage(affirmation = bulbasaurAffirmation,  modifier = Modifier.padding(it))
+
             // Conditionally display content based on the selected item
             when (selectedItemIndex) {
                 0 -> MainPageBackGround(viewModel = viewModel(), modifier = Modifier.padding()) // Home view
