@@ -54,7 +54,7 @@ fun GreetingPreview() {
         Scaffold (
             bottomBar = { MenuBar() }
         ) {
-            MainPageBackGround(modifier = Modifier.padding(it))
+            //MainPageBackGround(modifier = Modifier.padding(it))
             PokemonPage(modifier = Modifier.padding(it))
         }
     }
