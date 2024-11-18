@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
                             startDestination = "mainPage" , pokemonPageViewModel = pokemonPageViewModel)
                        // 1 -> Loading(viewModel = menuBarViewModel, navController = navController, modifier = Modifier.padding(innerPadding))
                         2 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))
-                        3 -> RotatingLoader()
+                        3 -> RotatingLoader() //Normally filter view
                         else -> NavGraph(navController = navController,
                             startDestination = "mainPage" , pokemonPageViewModel = pokemonPageViewModel)
 
