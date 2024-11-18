@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 
 class RotatingLoaderViewModel : ViewModel() {
 
-    // add an state isLoading
+    // add a state isLoading
     private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> get() = _isLoading
     private val _rotation = mutableStateOf(0f)
@@ -22,10 +22,10 @@ class RotatingLoaderViewModel : ViewModel() {
     private fun startRotation(rotationDuration: Int = 2000) {
         viewModelScope.launch {
             while (true) {
-                val rotationStep = 360f / (rotationDuration / 16f) // Update every 16ms (60fps approx)
+                val rotationStep = 360f / (rotationDuration / 16f)
                 for (i in 1..(rotationDuration / 16)) {
                     _rotation.value = (_rotation.value + rotationStep) % 360f
-                    delay(16) // Approx. 60 FPS
+                    delay(16)
                 }
             }
         }

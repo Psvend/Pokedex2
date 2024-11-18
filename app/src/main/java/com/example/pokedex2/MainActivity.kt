@@ -10,9 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -20,8 +17,7 @@ import com.example.pokedex2.data.DatasourcePokemon
 import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.ui.theme.MainPageBackGround
 import androidx.navigation.compose.rememberNavController
-import com.example.pokedex2.ui.components.TypeFilterUI
-import com.example.pokedex2.ui.theme.MainPageBackGround
+import com.example.pokedex2.ui.search.SearchScreen
 import com.example.pokedex2.ui.theme.MenuBar
 import com.example.pokedex2.ui.theme.NavGraph
 import com.example.pokedex2.ui.theme.Pokedex2Theme
@@ -58,10 +54,11 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     when(selectedItemIndex){
                         0 ->  NavGraph(navController = navController,
-                            startDestination = "mainPage" , pokemonPageViewModel = pokemonPageViewModel)
-                       // 1 -> Loading(viewModel = menuBarViewModel, navController = navController, modifier = Modifier.padding(innerPadding))
-                        2 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))
-                        3 -> RotatingLoader() //Normally filter view
+                            startDestination = "mainPage" , pokemonPageViewModel = pokemonPageViewModel,
+                            modifier = Modifier.padding(innerPadding))
+                        //1 -> FavoritesView(modifier = Modifier.padding(it))
+                        2 -> SearchScreen()
+                        3 -> RotatingLoader() //Originally filter. RotatingLoader is a placeholder
                         else -> NavGraph(navController = navController,
                             startDestination = "mainPage" , pokemonPageViewModel = pokemonPageViewModel)
 
@@ -71,11 +68,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-
-//Our now specific pokemon, can be changed by nav and API later on
-val datasource = DatasourcePokemon.loadAffirmations()
-val bulbasaurAffirmation = datasource[0]
 
 
 /*
