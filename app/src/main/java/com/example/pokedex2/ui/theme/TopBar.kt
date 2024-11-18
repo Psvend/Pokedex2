@@ -31,9 +31,13 @@ fun TopBar() {
     Box(
         modifier = Modifier
             .height(120.dp)
-            .background(Color(0xFFE55655).copy(alpha = 0.9f))
     ) {
-        Box(){}
+        Box(modifier = Modifier
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+                .background(Color(0xFFE55655).copy(alpha = 0.9f))
+                .height(22.dp)
+        ){}
         Image(
             painter = painterResource(id = R.drawable.top_bar_background),
             contentDescription = "Top Bar Background",
@@ -42,9 +46,11 @@ fun TopBar() {
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 //.padding(bottom = 8.dp)
+                .fillMaxWidth()
         )
         Box(
             modifier = Modifier
+                .fillMaxWidth()
                 .height(120.dp)
         ) {
             Button(
