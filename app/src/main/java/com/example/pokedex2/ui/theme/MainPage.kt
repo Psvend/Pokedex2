@@ -109,9 +109,9 @@ fun MainPageBackGround(
                     )
             ) {
                 AffirmationsList(
-                    affirmationLIST = DatasourcePokemon().loadAffirmations(), navController = navController
                     viewModel,
-                    modifier = modifier
+                    modifier = modifier,
+                    navController = navController,
                 )
             }
         }

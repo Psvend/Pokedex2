@@ -7,14 +7,19 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.pokedex2.viewModel.PokemonPageViewModel
 
 @Composable
-fun NavGraph(navController: NavHostController, startDestination: String) {
+fun NavGraph(navController: NavHostController,
+             startDestination: String,
+             modifier: Modifier = Modifier,
+             pokemonPageViewModel: PokemonPageViewModel
+
+             ) {
     NavHost(navController = navController, startDestination = startDestination) {
-        composable("mainPage") { MainPageBackGround(modifier = Modifier, navController ) }
+        composable("mainPage") { MainPageBackGround(viewModel = viewModel(),modifier = Modifier, navController ) }
         composable("pokemonPage") { PokemonPage() }
         }
-        composable("mainPage") { MainPageBackGround(viewModel = viewModel(), modifier = Modifier) }
 
         //composable("MainPageBackGround") {  MainPageBackGround(navController, modifier = Modifier.padding(it)) }
         //composable("PlaceHolder") { Placeholder(navController)}

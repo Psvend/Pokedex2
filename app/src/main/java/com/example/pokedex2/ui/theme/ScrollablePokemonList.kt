@@ -41,11 +41,12 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 
 @Composable
-fun AffirmationsList(affirmationLIST: List<Affirmation>,navController: NavHostController ,modifier: Modifier = Modifier) {
 fun AffirmationsList(
-   viewModel: AffirmationViewModel,
-   modifier: Modifier = Modifier,
+    viewModel: AffirmationViewModel,
+    navController: NavHostController ,
+    modifier: Modifier = Modifier
 ) {
+
     val affirmationLIST by viewModel.affirmations.collectAsState(initial = emptyList())
 
     LazyColumn(
@@ -68,13 +69,13 @@ fun AffirmationsList(
 
 
 @Composable
-fun AffirmationCard(affirmation: Affirmation,navController: NavHostController, modifier: Modifier = Modifier) {
-    var isLiked by remember { mutableStateOf(false) }
 fun AffirmationCard(
     affirmation: Affirmation,
     onLikeClicked: () -> Unit,
+    navController: NavHostController,
     modifier: Modifier = Modifier
-) {
+    ){
+
     var isLiked by remember { mutableStateOf(affirmation.isLiked) }
 
     Card(
