@@ -56,6 +56,7 @@ import com.example.pokedex2.viewModel.PokemonPageViewModel
 import com.example.pokedex2.data.DatasourcePokemon
 
 
+
 //Our now specific pokemon, can be changed by nav and API later on
 val datasource = DatasourcePokemon.loadAffirmations()
 val bulbasaurAffirmation = datasource[0]
@@ -63,8 +64,14 @@ val pokemonAffirmation = bulbasaurAffirmation
 
 
 @Composable
-fun PokemonPage(affirmation: Affirmation, modifier: Modifier = Modifier) {
-    //val pokemonId by viewModel.pokemonId.collectAsState()
+fun PokemonPage(
+    affirmation: Affirmation,
+    modifier: Modifier = Modifier,
+    viewModel: PokemonPageViewModel
+) {
+   // val pokemonId by viewModel.pokemonId.collectAsState()
+    val evolutions by viewModel.evolutions.collectAsState() //list of evolutions
+    val currentEvolution by viewModel.currentEvolution.collectAsState()
 
     Column(
         modifier = modifier
@@ -95,6 +102,18 @@ fun PokemonPage(affirmation: Affirmation, modifier: Modifier = Modifier) {
         }
 
         Spacer(modifier = Modifier.height(2.dp))
+
+        //The evolution pager
+        if(evolutions.isNotEmpty()) {
+            EvolutionPager(
+                evolutions = evolutions,
+                currentEvolution = currentEvolution,
+                onPageChanged = { newIndex ->
+                    viewModel.onEvolutionChanged(newIndex)
+                }
+            )
+        }
+
 
         // Top Section - Name and Number
         Row(
@@ -141,11 +160,16 @@ fun PokemonPage(affirmation: Affirmation, modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(16.dp))
 
         // Description Section
-        PokemonDescription(affirmation = pokemonAffirmation)
+        if(evolutions.isNotEmpty()) {
+            PokemonDescription(affirmation = evolutions[currentEvolution])
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         //Graph section
+        PokemonStats(affirmation = pokemonAffirmation)
+
+        //EXTRA (just so we can see it is possible to scroll)
         PokemonStats(affirmation = pokemonAffirmation)
 
 

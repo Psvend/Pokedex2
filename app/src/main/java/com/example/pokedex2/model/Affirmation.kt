@@ -11,5 +11,6 @@ data class Affirmation (
     val number: String,
     var isLiked: Boolean = false,
     var description: String,
-    @DrawableRes val graph: Int
+    @DrawableRes val graph: Int,
+    val evolutionNumber: Int
 )

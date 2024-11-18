@@ -15,7 +15,8 @@ object DatasourcePokemon {
                 listOf(R.drawable.grass_background, R.drawable.poison_background),
                 "# 1",
                 description = "The is the cutest of them all",
-                graph = R.drawable.graph_test
+                graph = R.drawable.graph_test,
+                evolutionNumber = 1
                 ),
             Affirmation
                 (R.string.Ivysaur,
@@ -23,7 +24,8 @@ object DatasourcePokemon {
                 listOf(R.drawable.grass_background, R.drawable.poison_background),
                 "# 2",
                 description = "The is the cutest of them all",
-                graph = R.drawable.graph_test
+                graph = R.drawable.graph_test,
+                evolutionNumber = 2
             ),
             Affirmation(
                 R.string.Venusaur,
@@ -31,7 +33,8 @@ object DatasourcePokemon {
                 listOf(R.drawable.grass_background, R.drawable.poison_background),
                 "# 3",
                 description = "The is the cutest of them all",
-                graph = R.drawable.graph_test
+                graph = R.drawable.graph_test,
+                evolutionNumber = 3
             ),
             Affirmation(
                 R.string.Charmander,
@@ -39,7 +42,8 @@ object DatasourcePokemon {
                 listOf(R.drawable.fire_background),
                 "# 4",
                 description = "The is the cutest of them all",
-                graph = R.drawable.graph_test
+                graph = R.drawable.graph_test,
+                evolutionNumber = 1
             ),
             Affirmation(
                 R.string.Charmeleon,
@@ -47,7 +51,8 @@ object DatasourcePokemon {
                 listOf(R.drawable.fire_background),
                 "# 5" ,
                 description = "The is the cutest of them all",
-                graph = R.drawable.graph_test
+                graph = R.drawable.graph_test,
+                evolutionNumber = 2
             ),
             Affirmation(
                 R.string.Charizard,
@@ -55,7 +60,8 @@ object DatasourcePokemon {
                 listOf(R.drawable.fire_background, R.drawable.flying_background),
                 "# 6",
                 description = "The is the cutest of them all",
-                graph = R.drawable.graph_test
+                graph = R.drawable.graph_test,
+                evolutionNumber = 3
             ),
             Affirmation(
                 R.string.Squirtle,
@@ -63,7 +69,8 @@ object DatasourcePokemon {
                 listOf(R.drawable.water_background),
                 "# 7",
                 description = "The is the cutest of them all",
-                graph = R.drawable.graph_test
+                graph = R.drawable.graph_test,
+                evolutionNumber = 1
             ),
             Affirmation(
                 R.string.Wartortle,
@@ -71,7 +78,8 @@ object DatasourcePokemon {
                 listOf(R.drawable.water_background),
                 "# 8",
                 description = "The is the cutest of them all",
-                graph = R.drawable.graph_test
+                graph = R.drawable.graph_test,
+                evolutionNumber = 2
             ),
             Affirmation(
                 R.string.Blastoise,
@@ -79,7 +87,8 @@ object DatasourcePokemon {
                 listOf(R.drawable.water_background),
                 "# 9",
                 description = "The is the cutest of them all",
-                graph = R.drawable.graph_test
+                graph = R.drawable.graph_test,
+                evolutionNumber = 3
             ),
             Affirmation(
                 R.string.Caterpie,
@@ -87,7 +96,8 @@ object DatasourcePokemon {
                 listOf(R.drawable.bugtype_background),
                 "# 10",
                 description = "The is the cutest of them all",
-                graph = R.drawable.graph_test
+                graph = R.drawable.graph_test,
+                evolutionNumber = 1
             )
             )
     }
