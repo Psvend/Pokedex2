@@ -1,4 +1,4 @@
-package com.example.pokedex2.ui.theme
+package com.example.pokedex2.ui.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,12 +33,22 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.pokedex2.R
 import com.example.pokedex2.data.DatasourcePokemon
-import com.example.pokedex2.ui.components.TypeFilterUI
+import com.example.pokedex2.viewModel.AffirmationViewModel
+import androidx.compose.runtime.*
+
 
 @Composable
-fun MainPageBackGround(modifier: Modifier = Modifier) {
+fun MainPageBackGround(
+    viewModel: AffirmationViewModel,
+    modifier: Modifier,
+    navController: NavHostController
+) {
+
+    val affirmationList by viewModel.affirmations.collectAsState(initial = emptyList())
+
     //var expanded by remember { mutableStateOf(false) }
 
 
@@ -61,7 +72,9 @@ fun MainPageBackGround(modifier: Modifier = Modifier) {
                     )
             ) {
                 AffirmationsList(
-                    affirmationLIST = DatasourcePokemon().loadAffirmations()
+                    viewModel,
+                    modifier = modifier,
+                    navController = navController,
                 )
             }
         }
@@ -99,11 +112,3 @@ fun GreetingPreview() {
     }
 }*/
 
-
-
-/*
-Box(
-modifier = Modifier
-.background(Color(0xFFE55655))
-//.background(Color.Transparent)
-) { */
