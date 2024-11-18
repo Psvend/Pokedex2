@@ -2,6 +2,7 @@ package com.example.pokedex2.ui.theme
 import com.example.pokedex2.model.Affirmation
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,9 +35,11 @@ import com.example.pokedex2.R
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 
 @Composable
-fun AffirmationsList(affirmationLIST: List<Affirmation>, modifier: Modifier = Modifier) {
+fun AffirmationsList(affirmationLIST: List<Affirmation>,navController: NavHostController ,modifier: Modifier = Modifier) {
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -46,6 +49,7 @@ fun AffirmationsList(affirmationLIST: List<Affirmation>, modifier: Modifier = Mo
         items(affirmationLIST) { affirmation ->
             AffirmationCard(
                 affirmation = affirmation,
+                navController = navController,
                 modifier = Modifier
                     .padding(4.dp)
             )
@@ -55,11 +59,12 @@ fun AffirmationsList(affirmationLIST: List<Affirmation>, modifier: Modifier = Mo
 
 
 @Composable
-fun AffirmationCard(affirmation: Affirmation, modifier: Modifier = Modifier) {
+fun AffirmationCard(affirmation: Affirmation,navController: NavHostController, modifier: Modifier = Modifier) {
     var isLiked by remember { mutableStateOf(false) }
 
     Card(
-        modifier = modifier.padding(4.dp),
+        modifier = modifier.padding(4.dp)
+            .clickable { navController.navigate("pokemonPage") },
         colors = CardDefaults.cardColors(Color(0xFFFFF9E6)),
         shape = RectangleShape
 
@@ -138,5 +143,6 @@ fun AffirmationCard(affirmation: Affirmation, modifier: Modifier = Modifier) {
         }
     }
 }
+
 
 

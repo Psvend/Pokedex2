@@ -26,11 +26,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.pokedex2.R
 import com.example.pokedex2.data.DatasourcePokemon
 
 @Composable
-fun MainPageBackGround(modifier: Modifier = Modifier) {
+fun MainPageBackGround(modifier: Modifier = Modifier, navController: NavHostController) {
     //var expanded by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
@@ -45,6 +47,7 @@ fun MainPageBackGround(modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .height(140.dp)
                 //.background(Color(0xFFE55655).copy(alpha = 0.5f))
+
         ) {
             Image(
                 painter = painterResource(id = R.drawable.top_bar_background),
@@ -94,7 +97,7 @@ fun MainPageBackGround(modifier: Modifier = Modifier) {
                     )
             ) {
                 AffirmationsList(
-                    affirmationLIST = DatasourcePokemon().loadAffirmations()
+                    affirmationLIST = DatasourcePokemon().loadAffirmations(), navController = navController
                 )
             }
         }

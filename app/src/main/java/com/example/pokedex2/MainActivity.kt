@@ -18,8 +18,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.pokedex2.ui.theme.MainPageBackGround
 import com.example.pokedex2.ui.components.TypeFilterUI
+import com.example.pokedex2.ui.theme.NavGraph
 import com.example.pokedex2.ui.theme.Pokedex2Theme
 import com.example.pokedex2.ui.theme.PokemonPage
 
@@ -38,6 +42,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             Pokedex2Theme {
                 var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
+                val navController = rememberNavController()
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -49,11 +54,11 @@ class MainActivity : ComponentActivity() {
                     }
                 ) { innerPadding ->
                     when (selectedItemIndex) {
-                        0 -> MainPageBackGround(modifier = Modifier.padding(innerPadding)) // Home view
+                        0 -> NavGraph(navController = navController, startDestination = "mainPage")
                         //1 -> FavoritesView(modifier = Modifier.padding(innerPadding))    // Favorites view
                         2 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))     // Search view
                         //3 -> FilterView(modifier = Modifier.padding(innerPadding))       // Filter view
-                        else -> MainPageBackGround(modifier = Modifier.padding(innerPadding)) // Default to Home
+                        else -> MainPageBackGround(modifier = Modifier.padding(innerPadding), navController= navController) // Default to Home
                     }
 
                 }
@@ -62,7 +67,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -91,3 +96,6 @@ fun GreetingPreview() {
         }
     }
 }
+
+'''
+ */
