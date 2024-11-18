@@ -1,5 +1,6 @@
 package com.example.pokedex2.ui.theme
 
+import android.graphics.Paint.Align
 import androidx.compose.foundation.Image
 import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.R
@@ -18,7 +19,9 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -64,6 +67,7 @@ fun PokemonPage(affirmation: Affirmation, modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFFFFF9E6))
+            .verticalScroll(rememberScrollState())
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -80,7 +84,7 @@ fun PokemonPage(affirmation: Affirmation, modifier: Modifier = Modifier) {
                 //alpha = 0.2f, hvis opacity skal ændres
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    //.align(Alignment.BottomCenter)
+                    .align(Alignment.BottomCenter)
                     .padding(bottom = 4.dp)
                     .fillMaxWidth()
             )
@@ -135,6 +139,11 @@ fun PokemonPage(affirmation: Affirmation, modifier: Modifier = Modifier) {
 
         // Description Section
         PokemonDescription(affirmation = pokemonAffirmation)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        //Graph section
+        PokemonStats(affirmation = pokemonAffirmation)
 
 
     }
@@ -193,6 +202,7 @@ fun PokemonImage(affirmation: Affirmation) {
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
+
     }
 }
 
@@ -246,21 +256,27 @@ fun PokemonDescription(affirmation: Affirmation){
     )
 }
 
-/*
-
+//The graph section
 @Composable
-fun PokemonStats(url: String, modifier: Modifier){
-    AsyncImage(
-        model = url,
-        contentDescription = "Stats",
-        contentScale = ContentScale.FillBounds,
-        modifier = modifier.size(
-            width = 200.dp,
-            height = 200.dp
+fun PokemonStats(affirmation: Affirmation){
+    Box (
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+
+        Image(
+            painter = painterResource(affirmation.graph),
+            contentDescription = "Graph",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .align(Alignment.CenterStart)
+
         )
-    )
+    }
 }
- */
+
 
 
 @Composable
