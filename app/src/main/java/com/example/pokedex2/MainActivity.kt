@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.example.pokedex2.ui.Topbar.TopBar
 import com.example.pokedex2.ui.search.SearchScreen
 import com.example.pokedex2.ui.menuNav.MenuBar
 import com.example.pokedex2.ui.menuNav.NavGraph
@@ -20,6 +21,7 @@ import com.example.pokedex2.ui.theme.Pokedex2Theme
 import com.example.pokedex2.ui.util.RotatingLoader
 import com.example.pokedex2.viewModel.MenuBarViewModel
 import com.example.pokedex2.viewModel.PokemonPageViewModel
+import com.example.pokedex2.viewModel.TopBarViewModel
 
 
 data class BottomNavItem(
@@ -36,11 +38,17 @@ class MainActivity : ComponentActivity() {
             Pokedex2Theme {
                 val navController = rememberNavController()
                 val menuBarViewModel: MenuBarViewModel = viewModel()
+                val topBarViewModel: TopBarViewModel = viewModel()
                 val pokemonPageViewModel: PokemonPageViewModel = viewModel()
                 val selectedItemIndex by menuBarViewModel.selectedItemIndex.collectAsState()
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
+                    topBar = {
+                        TopBar(
+                            viewModel = topBarViewModel
+                        )
+                    },
                     bottomBar = {
                         MenuBar(
                           viewModel = menuBarViewModel

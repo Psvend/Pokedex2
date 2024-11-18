@@ -1,15 +1,12 @@
-package com.example.pokedex2.ui.theme
+package com.example.pokedex2.ui.Topbar
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
@@ -26,12 +23,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokedex2.R
-import com.example.pokedex2.data.DatasourcePokemon
-import com.example.pokedex2.ui.components.TypeFilterUI
+import com.example.pokedex2.ui.theme.Pokedex2Theme
+import com.example.pokedex2.viewModel.TopBarViewModel
 
 @Composable
-fun TopBar() {
+fun TopBar(
+    viewModel: TopBarViewModel = viewModel()
+) {
     Box(
         modifier = Modifier
             .height(120.dp)
@@ -74,16 +74,7 @@ fun TopBar() {
         }
         }
     }
-/*Button(
-onClick = { /*expanded = !expanded or navController.navigate("placeholder")
-                    */
-},
-colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-modifier = Modifier
-.padding(top = 20.dp, end = 16.dp)
-.size(50.dp)
-)*/
-
+/*
 @Preview
 @Composable
 fun TopBarView () {
@@ -91,7 +82,7 @@ fun TopBarView () {
         var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
 
         Scaffold(
-            topBar = @androidx.compose.runtime.Composable { TopBar() },
+            topBar = @Composable { TopBar() },
 
             bottomBar = {
                 MenuBar(selectedItemIndex = selectedItemIndex,
@@ -111,4 +102,4 @@ fun TopBarView () {
         }
 
     }
-}
+}*/

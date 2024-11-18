@@ -45,14 +45,9 @@ fun MainPageBackGround(
     viewModel: AffirmationViewModel,
     modifier: Modifier,
     navController: NavHostController
-) {
+) { val affirmationList by viewModel.affirmations.collectAsState(initial = emptyList())
 
-    val affirmationList by viewModel.affirmations.collectAsState(initial = emptyList())
-
-    //var expanded by remember { mutableStateOf(false) }
-
-
-        Column(
+    Column(
                 modifier = Modifier
                     .fillMaxSize()
                     //.padding(top = 80.dp)
