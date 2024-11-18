@@ -1,12 +1,10 @@
 package com.example.pokedex2.viewModel
 
-import com.example.pokedex2.data.DatasourcePokemon
 import androidx.lifecycle.ViewModel
 import com.example.pokedex2.model.Affirmation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import com.example.pokedex2.viewModel.AffirmationViewModel
 
 
 class AffirmationViewModel : ViewModel() {

@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-import com.example.pokedex2.ui.Topbar.TopBar
+import com.example.pokedex2.ui.topbar.TopBar
 import com.example.pokedex2.ui.search.SearchScreen
 import com.example.pokedex2.ui.menuNav.MenuBar
 import com.example.pokedex2.ui.menuNav.NavGraph
