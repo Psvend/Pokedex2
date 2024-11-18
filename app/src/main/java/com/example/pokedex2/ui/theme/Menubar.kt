@@ -1,6 +1,5 @@
 package com.example.pokedex2.ui.theme
 
-import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -11,14 +10,18 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokedex2.BottomNavItem
+import com.example.pokedex2.viewModel.MenuBarViewModel
 
 /*
 data class BottomNavItem(
@@ -31,9 +34,9 @@ data class BottomNavItem(
 
 @Composable
 fun MenuBar(
-    selectedItemIndex: Int,
-    onItemSelected: (Int) -> Unit
+    viewModel: MenuBarViewModel = viewModel()
 ) {
+    val selectedItemIndex by viewModel.selectedItemIndex.collectAsState()
     val items = listOf(
         BottomNavItem("Home", Icons.Filled.Home, Icons.Outlined.Home),
         BottomNavItem("Favorites", Icons.Filled.FavoriteBorder, Icons.Outlined.FavoriteBorder),
@@ -53,7 +56,7 @@ fun MenuBar(
             val contentColor = if (isSelected) selectedColor else unselectedColor
             NavigationBarItem(
                 selected = index == selectedItemIndex,
-                onClick = { onItemSelected(index) },
+                onClick = { viewModel.selectItem(index) },
                 label = {
                     Text(
                         text = item.title,

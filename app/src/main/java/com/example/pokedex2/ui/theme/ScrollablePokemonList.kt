@@ -3,6 +3,7 @@ import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.viewModel.AffirmationViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,12 +37,16 @@ import com.example.pokedex2.R
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 
 @Composable
 fun AffirmationsList(
-   viewModel: AffirmationViewModel,
-   modifier: Modifier = Modifier,
+    viewModel: AffirmationViewModel,
+    navController: NavHostController ,
+    modifier: Modifier = Modifier
 ) {
+
     val affirmationLIST by viewModel.affirmations.collectAsState(initial = emptyList())
 
     LazyColumn(
@@ -53,6 +58,7 @@ fun AffirmationsList(
         items(affirmationLIST) { affirmation ->
             AffirmationCard(
                 affirmation = affirmation,
+                navController = navController,
                 onLikeClicked = { viewModel.toggleLike(affirmation)},
                 modifier = Modifier
                     .padding(4.dp)
@@ -66,12 +72,15 @@ fun AffirmationsList(
 fun AffirmationCard(
     affirmation: Affirmation,
     onLikeClicked: () -> Unit,
+    navController: NavHostController,
     modifier: Modifier = Modifier
-) {
+    ){
+
     var isLiked by remember { mutableStateOf(affirmation.isLiked) }
 
     Card(
-        modifier = modifier.padding(4.dp),
+        modifier = modifier.padding(4.dp)
+            .clickable { navController.navigate("pokemonPage") },
         colors = CardDefaults.cardColors(Color(0xFFFFF9E6)),
         shape = RectangleShape
 
@@ -150,5 +159,6 @@ fun AffirmationCard(
         }
     }
 }
+
 
 

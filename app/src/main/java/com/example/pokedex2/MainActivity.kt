@@ -1,28 +1,29 @@
 package com.example.pokedex2
 
+//import androidx.compose.runtime.mutableStateOf
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.ui.graphics.vector.ImageVector
-import com.example.pokedex2.ui.theme.MenuBar
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-//import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.pokedex2.ui.theme.MainPageBackGround
+import androidx.navigation.compose.rememberNavController
 import com.example.pokedex2.ui.components.TypeFilterUI
+import com.example.pokedex2.ui.theme.MainPageBackGround
+import com.example.pokedex2.ui.theme.MenuBar
+import com.example.pokedex2.ui.theme.NavGraph
 import com.example.pokedex2.ui.theme.Pokedex2Theme
-import com.example.pokedex2.ui.theme.PokemonPage
+import com.example.pokedex2.viewModel.MenuBarViewModel
+import com.example.pokedex2.viewModel.PokemonPageViewModel
 
 data class BottomNavItem(
     val title: String,
@@ -38,24 +39,29 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Pokedex2Theme {
-                var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
+                val navController = rememberNavController()
+                val menuBarViewModel: MenuBarViewModel = viewModel()
+                val pokemonPageViewModel: PokemonPageViewModel = viewModel()
+                val selectedItemIndex by menuBarViewModel.selectedItemIndex.collectAsState()
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
                         MenuBar(
-                            selectedItemIndex = selectedItemIndex,
-                            onItemSelected = { index -> selectedItemIndex = index }
+                          viewModel = menuBarViewModel
                         )
                     }
                 ) { innerPadding ->
-                    when (selectedItemIndex) {
-                        0 -> MainPageBackGround(viewModel = viewModel(), modifier = Modifier.padding(innerPadding)) // Home view
-                        //1 -> FavoritesView(modifier = Modifier.padding(innerPadding))    // Favorites view
-                        2 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))     // Search view
-                        //3 -> FilterView(modifier = Modifier.padding(innerPadding))       // Filter view
-                        else -> MainPageBackGround(viewModel = viewModel(), modifier = Modifier.padding(innerPadding)) // Default to Home
+                    when(selectedItemIndex){
+                        0 ->  NavGraph(navController = navController,
+                            startDestination = "mainPage" , pokemonPageViewModel = pokemonPageViewModel)
+                       // 1 -> MainPageBackGround(viewModel = menuBarViewModel, navController = navController, modifier = Modifier.padding(innerPadding))
+                        2 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))
+                        // 3 -> MainPageBackGround(viewModel = menuBarViewModel, navController = navController, modifier = Modifier.padding(innerPadding))
+                        else -> MainPageBackGround(viewModel = viewModel(), navController = navController, modifier = Modifier.padding(innerPadding))
                     }
+
+
 
                 }
             }
@@ -64,6 +70,7 @@ class MainActivity : ComponentActivity() {
 }
 
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -92,3 +99,6 @@ fun GreetingPreview() {
         }
     }
 }
+
+'''
+ */

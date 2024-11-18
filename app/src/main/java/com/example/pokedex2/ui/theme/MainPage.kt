@@ -27,6 +27,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.pokedex2.R
 import com.example.pokedex2.data.DatasourcePokemon
 import com.example.pokedex2.viewModel.AffirmationViewModel
@@ -37,7 +39,8 @@ import androidx.compose.runtime.*
 @Composable
 fun MainPageBackGround(
     viewModel: AffirmationViewModel,
-    modifier: Modifier
+    modifier: Modifier,
+    navController: NavHostController
 ) {
 
     val affirmationList by viewModel.affirmations.collectAsState(initial = emptyList())
@@ -56,6 +59,7 @@ fun MainPageBackGround(
                 .fillMaxWidth()
                 .height(140.dp)
                 //.background(Color(0xFFE55655).copy(alpha = 0.5f))
+
         ) {
             Image(
                 painter = painterResource(id = R.drawable.top_bar_background),
@@ -106,7 +110,8 @@ fun MainPageBackGround(
             ) {
                 AffirmationsList(
                     viewModel,
-                    modifier = modifier
+                    modifier = modifier,
+                    navController = navController,
                 )
             }
         }
