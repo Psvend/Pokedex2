@@ -1,5 +1,5 @@
 package com.example.pokedex2.ui.theme
-import com.example.pokedex2.model.affirmation
+import com.example.pokedex2.model.Affirmation
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -36,7 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.RectangleShape
 
 @Composable
-fun AffirmationsList(affirmationLIST: List<affirmation>, modifier: Modifier = Modifier) {
+fun AffirmationsList(affirmationLIST: List<Affirmation>, modifier: Modifier = Modifier) {
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -55,7 +55,7 @@ fun AffirmationsList(affirmationLIST: List<affirmation>, modifier: Modifier = Mo
 
 
 @Composable
-fun AffirmationCard(affirmation: affirmation, modifier: Modifier = Modifier) {
+fun AffirmationCard(affirmation: Affirmation, modifier: Modifier = Modifier) {
     var isLiked by remember { mutableStateOf(false) }
 
     Card(

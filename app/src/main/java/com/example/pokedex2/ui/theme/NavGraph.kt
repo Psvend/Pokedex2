@@ -4,12 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import java.lang.reflect.Modifier
 
 @Composable
 fun NavGraph(startDestination: String = "MainPageBackGround") {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = startDestination) {
+        composable("mainPage") { MainPageBackGround() }
+
         //composable("MainPageBackGround") {  MainPageBackGround(navController, modifier = Modifier.padding(it)) }
         //composable("PlaceHolder") { Placeholder(navController)}
     }
