@@ -8,6 +8,11 @@ import kotlinx.coroutines.flow.StateFlow
 import com.example.pokedex2.data.DatasourcePokemon
 import kotlinx.coroutines.launch
 import com.example.pokedex2.model.Affirmation
+import com.example.pokedex2.ui.*
+import com.example.pokedex2.model.*
+import com.example.pokedex2.data.*
+
+
 
 class PokemonPageViewModel : ViewModel() {
 

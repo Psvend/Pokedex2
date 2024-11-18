@@ -18,7 +18,12 @@ fun NavGraph(navController: NavHostController,
              ) {
     NavHost(navController = navController, startDestination = startDestination) {
         composable("mainPage") { MainPageBackGround(viewModel = viewModel(),modifier = Modifier, navController ) }
-        composable("pokemonPage") { PokemonPage(pokemonAffirmation, modifier) }
+        composable("pokemonPage")
+        { PokemonPage(
+            pokemonAffirmation,
+            modifier,
+            pokemonPageViewModel
+        ) }
         }
 
         //composable("MainPageBackGround") {  MainPageBackGround(navController, modifier = Modifier.padding(it)) }

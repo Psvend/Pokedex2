@@ -54,6 +54,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.pokedex2.viewModel.PokemonPageViewModel
 import com.example.pokedex2.data.DatasourcePokemon
+import com.example.pokedex2.ui.*
+import com.example.pokedex2.model.*
+import com.example.pokedex2.data.*
+import com.example.pokedex2.ui.components.EvolutionPager
 
 
 

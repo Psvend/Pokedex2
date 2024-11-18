@@ -5,7 +5,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.example.pokedex2.model.Affirmation
-import java.lang.reflect.Modifier
+import androidx.compose.ui.Modifier
 import android.graphics.Paint.Align
 import androidx.compose.foundation.Image
 import com.example.pokedex2.R
@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -60,16 +61,25 @@ import com.example.pokedex2.viewModel.PokemonPageViewModel
 import com.example.pokedex2.data.DatasourcePokemon
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CircleShape
+import com.example.pokedex2.ui.*
+import com.example.pokedex2.model.*
+import com.example.pokedex2.data.*
+import com.example.pokedex2.ui.theme.PokemonImage
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 
 
 @Composable
 fun EvolutionPager(
     evolutions: List<Affirmation>, // The list of Pokémon evolutions
-    currentEvolution: Int, // The currently displayed evolution (passed from ViewModel or parent)
-    onPageChanged: (Int) -> Unit // Callback to notify when the page changes
+    currentEvolution: Int,         // The currently displayed evolution (passed from ViewModel or parent)
+    onPageChanged: (Int) -> Unit   // Callback to notify when the page changes
 ) {
     // Remember the state of the pager
-    val pagerState = rememberPagerState(initialPage = currentEvolution)
+    val pagerState = rememberPagerState(
+        initialPage = currentEvolution,
+        pageCount = {3}
+    )
 
     // Notify the parent when the user swipes to a different page
     LaunchedEffect(pagerState.currentPage) {
@@ -77,15 +87,14 @@ fun EvolutionPager(
     }
 
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxHeight(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Horizontal Pager for swiping through Pokémon evolutions
         HorizontalPager(
-            pageCount = 3,
             state = pagerState,
+            //pageCount = 3,
             modifier = Modifier
-                .fillMaxWidth()
                 .fillMaxSize() // Adjust size as needed
         ) { page ->
             // Render the Pokémon image for each evolution
