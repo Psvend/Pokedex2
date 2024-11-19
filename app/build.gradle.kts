@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-kapt")
 }
 
 android {
@@ -40,7 +41,11 @@ android {
 }
 
 dependencies {
-    val nav_version = "2.8.3"
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+// Retrofit with Scalar Converter
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     implementation("androidx.navigation:navigation-compose:2.8.3")
     implementation(libs.androidx.core.ktx)
@@ -59,4 +64,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation ("androidx.room:room-ktx:2.5.1")
+    kapt ("androidx.room:room-compiler:2.5.1")
+    implementation ("androidx.room:room-paging:2.5.1")
 }

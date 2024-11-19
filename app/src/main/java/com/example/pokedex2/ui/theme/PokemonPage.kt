@@ -45,7 +45,9 @@ fun PokemonPage(
     viewModel: PokemonPageViewModel= viewModel(),
     modifier: Modifier = Modifier
 ) {
-    val pokemonId by viewModel.pokemonId.collectAsState()
+    val pokemon by viewModel.pokemon.collectAsState()
+
+    pokemon?.let {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -78,8 +80,8 @@ fun PokemonPage(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            PokemonName(name = "Bulbasaur")
-            PokemonNr(nr = 1)
+            PokemonName(name = it.name)
+            PokemonNr(nr = it.id)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -92,9 +94,7 @@ fun PokemonPage(
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
-            PokemonImage(
-                url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
-            )
+            PokemonImage(url = it.imageUrl)
             LikeButton()
         }
 
@@ -106,19 +106,26 @@ fun PokemonPage(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            PokemonType(type = "Grass")
-            PokemonType(type = "Poison")
+            it.types.forEach { type ->
+                PokemonType(type = type)
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         // Description Section
         PokemonDescription(
-                description = "Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger."
+description = it.description
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Stats Section
+        //PokemonStats(url = it.stats)
 
 
     }
+}
 }
 
 @Composable
