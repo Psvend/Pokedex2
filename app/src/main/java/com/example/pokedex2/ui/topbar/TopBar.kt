@@ -19,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.pokedex2.ui.menuNav.NavGraph
 import com.example.pokedex2.R
 import com.example.pokedex2.viewModel.TopBarViewModel
 
@@ -58,7 +59,7 @@ fun TopBar(
             Text("Button")
         }
         Button(
-            onClick = { navController.navigate("homePage") },
+            onClick = { navController.navigate("mainPage") },
             colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
             modifier = Modifier
                 .align(Alignment.TopStart)
