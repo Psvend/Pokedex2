@@ -1,8 +1,19 @@
 package com.example.pokedex2.data.remote
 
-data class PokemonDto(
+class PokemonDto (
+    val id: Int,
     val name: String,
-    val number: Number,
-    val type: List<String>,
-    val image: String?
-)
+    val height: Int,
+    val weight: Int,
+    val types: List<PokemonType>
+    )
+
+    data class PokemonType(
+        val slot: Int,
+        val type: TypeDetail
+    )
+
+    data class TypeDetail(
+        val name: String,
+        val url: String
+    )

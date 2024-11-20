@@ -1,37 +1,27 @@
 package com.example.pokedex2.viewModel
 
-import network.RetrofitInstance
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pokedex2.data.remote.PokemonDto
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.example.pokedex2.data.remote.PokemonApiService
+import com.example.pokedex2.data.remote.PokemonPagingSource
+import com.example.pokedex2.data.remote.PokemonResult
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
 
-class PokeViewModel : ViewModel() {
-    private val _pokemonList = MutableStateFlow<List<PokemonDto>>(emptyList())
-    val pokemonList: StateFlow<List<PokemonDto>> = _pokemonList
-    init {
-        fetchPokemonList()
+class PokeViewModel @Inject() constructor(
+   private val pokemonApiService: PokemonApiService
+
+
+) : ViewModel() {
+    val pokemonPagingFlow: Flow<PagingData<PokemonResult>> = Pager(
+        config = PagingConfig(pageSize = 20),
+        pagingSourceFactory = { PokemonPagingSource(pokemonApiService) }
+    ).flow.cachedIn(viewModelScope)
+
     }
 
-    private fun fetchPokemonList() {
-        viewModelScope.launch {
-            RetrofitInstance.api.getPokemonList().enqueue(object : Callback<List<PokemonDto>> {
-                override fun onResponse(call: Call<List<PokemonDto>>, response: Response<List<PokemonDto>>) {
-                    if (response.isSuccessful) {
-                        _pokemonList.value = (response.body() ?: emptyList()) as List<PokemonDto>
-                    }
-                }
-
-                override fun onFailure(call: Call<List<PokemonDto>>, t: Throwable) {
-                    // Handle error
-                }
-            })
-        }
-    }
-}

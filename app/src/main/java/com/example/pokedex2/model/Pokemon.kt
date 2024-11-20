@@ -5,7 +5,7 @@ package com.example.pokedex2.model
 data class Pokemon(
 
     val name: String,
-    val number: Number,
+    val number: Int,
     val type: List<String>,
     val image: String?
 )

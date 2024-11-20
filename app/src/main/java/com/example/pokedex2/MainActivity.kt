@@ -15,15 +15,20 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.pokedex2.ui.components.TypeFilterUI
 import com.example.pokedex2.ui.theme.MainPageBackGround
 import com.example.pokedex2.ui.theme.MenuBar
 import com.example.pokedex2.ui.theme.NavGraph
 import com.example.pokedex2.ui.theme.Pokedex2Theme
+import com.example.pokedex2.ui.theme.PokemonListScreen
 import com.example.pokedex2.viewModel.MenuBarViewModel
+import com.example.pokedex2.viewModel.PokeViewModel
 import com.example.pokedex2.viewModel.PokemonPageViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 data class BottomNavItem(
     val title: String,
@@ -32,7 +37,7 @@ data class BottomNavItem(
 
 )
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +48,8 @@ class MainActivity : ComponentActivity() {
                 val menuBarViewModel: MenuBarViewModel = viewModel()
                 val pokemonPageViewModel: PokemonPageViewModel = viewModel()
                 val selectedItemIndex by menuBarViewModel.selectedItemIndex.collectAsState()
+                val viewModel = hiltViewModel<PokeViewModel>()
+                val pokemon = viewModel.pokemonPagingFlow.collectAsLazyPagingItems()
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -57,7 +64,7 @@ class MainActivity : ComponentActivity() {
                             startDestination = "mainPage" , pokemonPageViewModel = pokemonPageViewModel)
                        // 1 -> MainPageBackGround(viewModel = menuBarViewModel, navController = navController, modifier = Modifier.padding(innerPadding))
                         2 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))
-                        // 3 -> MainPageBackGround(viewModel = menuBarViewModel, navController = navController, modifier = Modifier.padding(innerPadding))
+                        3 -> PokemonListScreen(pokemon = pokemon)
                         else -> MainPageBackGround(viewModel = viewModel(), navController = navController, modifier = Modifier.padding(innerPadding))
                     }
 

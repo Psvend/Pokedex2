@@ -6,8 +6,9 @@ import androidx.room.PrimaryKey
 @Entity
 data class PokemonEntity(
     @PrimaryKey
+    val id: Int,
     val name: String,
-    val number: Number,
-    val type: List<String>,
-    val image: String?
+    val height: Int,
+    val weight: Int,
+    val types: List<String>
 )
