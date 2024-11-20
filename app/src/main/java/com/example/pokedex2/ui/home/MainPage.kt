@@ -52,36 +52,3 @@ fun MainPageBackGround(
             }
         }
 }
-
-/*@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Pokedex2Theme {
-        var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
-
-        Scaffold(
-            bottomBar = {
-
-                MenuBar(
-                    selectedItemIndex = selectedItemIndex,
-                    onItemSelected = { index -> selectedItemIndex = index }
-                )
-            }
-            topBar = {
-                TopBar()
-            }
-        ) {
-            MainPageBackGround(modifier = Modifier.padding(it))
-            PokemonPage(modifier = Modifier.padding(it))
-            // Conditionally display content based on the selected item
-            when (selectedItemIndex) {
-                0 -> MainPageBackGround(modifier = Modifier.padding()) // Home view
-                //1 -> FavoritesView(modifier = Modifier.padding(it))    // Favorites view
-                2 -> TypeFilterUI(modifier = Modifier.padding(it))     // Search view
-                //3 -> FilterView(modifier = Modifier.padding(it))       // Filter view
-                else -> MainPageBackGround(modifier = Modifier.padding()) // Default to Home
-            }
-        }
-    }
-}*/
-

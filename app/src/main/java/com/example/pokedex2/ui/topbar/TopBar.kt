@@ -18,12 +18,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.pokedex2.R
 import com.example.pokedex2.viewModel.TopBarViewModel
 
 @Composable
 fun TopBar(
-    viewModel: TopBarViewModel = viewModel()
+    viewModel: TopBarViewModel = viewModel(),
+    navController: NavHostController
 ) {
     Box(
         modifier = Modifier
@@ -34,8 +36,7 @@ fun TopBar(
                 .fillMaxWidth()
                 .background(Color(0xFFE55655).copy(alpha = 0.9f))
                 .height(22.dp)
-        ){
-        }
+        ){}
         Image(
             painter = painterResource(id = R.drawable.top_bar_background),
             contentDescription = "Top Bar Background",
@@ -57,7 +58,7 @@ fun TopBar(
             Text("Button")
         }
         Button(
-            onClick = { /* Handle button click */ },
+            onClick = { navController.navigate("homePage") },
             colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
             modifier = Modifier
                 .align(Alignment.TopStart)
@@ -67,32 +68,3 @@ fun TopBar(
         }
         }
     }
-/*
-@Preview
-@Composable
-fun TopBarView () {
-    Pokedex2Theme {
-        var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
-
-        Scaffold(
-            topBar = @Composable { TopBar() },
-
-            bottomBar = {
-                MenuBar(selectedItemIndex = selectedItemIndex,
-                    onItemSelected = { index -> selectedItemIndex = index })
-            }
-        ) {
-            MainPageBackGround(modifier = Modifier.padding(it))
-            PokemonPage(modifier = Modifier.padding(it))
-            // Conditionally display content based on the selected item
-            when (selectedItemIndex) {
-                0 -> MainPageBackGround(modifier = Modifier.padding()) // Home view
-                //1 -> FavoritesView(modifier = Modifier.padding(it))    // Favorites view
-                2 -> TypeFilterUI(modifier = Modifier.padding(it))     // Search view
-                //3 -> FilterView(modifier = Modifier.padding(it))       // Filter view
-                else -> MainPageBackGround(modifier = Modifier.padding()) // Default to Home
-            }
-        }
-
-    }
-}*/
