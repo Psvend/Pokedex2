@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("kotlin-kapt")
+    id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
 }
 
@@ -30,11 +30,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
     buildFeatures {
         compose = true
@@ -71,21 +71,18 @@ dependencies {
 
     // Dagger - Hilt
     implementation (libs.hilt.android)
-    kapt (libs.hilt.android.compiler)
-    kapt (libs.androidx.hilt.compiler)
+    ksp (libs.hilt.android.compiler)
+    ksp (libs.androidx.hilt.compiler)
     implementation (libs.androidx.hilt.navigation.compose)
     implementation(libs.dagger.android)
-    kapt(libs.dagger.compiler)
+    ksp(libs.dagger.compiler)
     implementation(libs.hilt.android.v252)
-    kapt(libs.hilt.android.compiler.v252)
+    ksp(libs.hilt.android.compiler.v252)
 
     implementation (libs.androidx.room.ktx)
-    kapt (libs.androidx.room.compiler)
+    ksp (libs.androidx.room.compiler)
     implementation (libs.androidx.room.paging)
     // Paging
     implementation (libs.androidx.paging.runtime.ktx)
     implementation (libs.androidx.paging.compose)
-}
-kapt {
-    correctErrorTypes = true
 }
