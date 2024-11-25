@@ -5,9 +5,11 @@ import androidx.annotation.StringRes
 
 
 data class Affirmation (
-    @StringRes val stringResourceId: Int,
-    @DrawableRes val imageResourceId: Int,
-    @DrawableRes val typeIcon: List<Int>,
-    val number: String,
-    var isLiked: Boolean = false
+    val id: Int,
+    val name: String,
+    val imageResourceId: String,
+    val typeIcon: List<String>,
+    val isLiked: Boolean,
+    val number: Int
+
 )

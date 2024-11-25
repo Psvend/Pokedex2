@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.pokedex2.R
-import com.example.pokedex2.data.DatasourcePokemon
+
 import com.example.pokedex2.viewModel.AffirmationViewModel
 import androidx.compose.runtime.*
 import com.example.pokedex2.viewModel.PokemonPageViewModel

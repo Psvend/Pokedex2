@@ -39,27 +39,27 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
+import com.example.pokedex2.viewModel.Pokemon
 
 @Composable
 fun AffirmationsList(
     viewModel: AffirmationViewModel,
-    navController: NavHostController ,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-
-    val affirmationLIST by viewModel.affirmations.collectAsState(initial = emptyList())
+    val affirmationList by viewModel.affirmations.collectAsState(initial = emptyList())
 
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFFD9D9D9))
-
     ) {
-        items(affirmationLIST) { affirmation ->
+        items(affirmationList) { affirmation ->
             AffirmationCard(
                 affirmation = affirmation,
                 navController = navController,
-                onLikeClicked = { viewModel.toggleLike(affirmation)},
+                onLikeClicked = { viewModel.toggleLike(affirmation) },
                 modifier = Modifier
                     .padding(4.dp)
             )
@@ -74,8 +74,7 @@ fun AffirmationCard(
     onLikeClicked: () -> Unit,
     navController: NavHostController,
     modifier: Modifier = Modifier
-    ){
-
+) {
     var isLiked by remember { mutableStateOf(affirmation.isLiked) }
 
     Card(
@@ -83,7 +82,6 @@ fun AffirmationCard(
             .clickable { navController.navigate("pokemonPage") },
         colors = CardDefaults.cardColors(Color(0xFFFFF9E6)),
         shape = RectangleShape
-
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -91,67 +89,65 @@ fun AffirmationCard(
                 .fillMaxWidth()
                 .padding(8.dp),
         ) {
-            //pokemon image
+            // Pokemon image
             Image(
-                painter = painterResource(affirmation.imageResourceId),
-                contentDescription = stringResource(affirmation.stringResourceId),
+                painter = rememberAsyncImagePainter(affirmation.imageResourceId),
+                contentDescription = affirmation.name,
                 modifier = Modifier
                     .size(90.dp)
                     .padding(8.dp),
                 contentScale = ContentScale.Crop
             )
-            //text and category icons in the middle
+            // Text and category icons in the middle
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 16.dp)
             ) {
-                //Name of pokemon
+                // Name of pokemon
                 Text(
-                    text = stringResource(affirmation.stringResourceId),
-                    //modifier = Modifier.padding(16.dp),
+                    text = affirmation.name,
                     style = MaterialTheme.typography.headlineSmall
                 )
 
-                //Row for dynamic pokemon type text
+                // Row for dynamic pokemon type text
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     modifier = Modifier.padding(top = 4.dp)
                 ) {
-                    //Our category icons
-                    affirmation.typeIcon.forEach { typeIcon ->
-                        Image(
-                            painter = painterResource(typeIcon),
-                            contentDescription = stringResource(affirmation.stringResourceId),
+                    // Our category icons
+                    affirmation.typeIcon.forEach { type ->
+                        Text(
+                            text = type,
+                            style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier
-                                .width(60.dp)
-                                .height(30.dp)
-                                .padding(4.dp),
-                            contentScale = ContentScale.Crop
+                                .padding(4.dp)
                         )
                     }
                 }
             }
 
-
-            //The like button and number
+            // The like button and number
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(start = 8.dp)
             ) {
-            IconButton(onClick = { isLiked = !isLiked }) {
-                Icon(
-                    painter = painterResource(
-                        if (isLiked) R.drawable.heart_filled else R.drawable.heart_empty
-                    ),
-                    contentDescription = if (isLiked) "Unlike" else "Like",
-                    tint = if (isLiked) Color(0xFFB11014) else Color(0xFFB11014)
-                )
-            }
-            //Id number of pokemon
-                Text (
-                    text = affirmation.number,
+                IconButton(onClick = {
+                    isLiked = !isLiked
+                    onLikeClicked()
+                }) {
+                    Icon(
+                        painter = painterResource(
+                            if (isLiked) R.drawable.heart_filled else R.drawable.heart_empty
+                        ),
+                        contentDescription = if (isLiked) "Unlike" else "Like",
+                        tint = if (isLiked) Color(0xFFB11014) else Color(0xFFB11014)
+                    )
+                }
+                // Id number of pokemon
+                Text(
+                    text = affirmation.number.toString(),
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(top = 4.dp)
                 )
@@ -159,6 +155,3 @@ fun AffirmationCard(
         }
     }
 }
-
-
-

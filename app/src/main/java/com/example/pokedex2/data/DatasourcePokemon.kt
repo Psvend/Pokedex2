@@ -4,7 +4,7 @@ import com.example.pokedex2.R
 import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.viewModel.AffirmationViewModel
 
-
+/*
 object DatasourcePokemon {
     fun loadAffirmations(): List<Affirmation> {
         return listOf<Affirmation>(
@@ -72,4 +72,4 @@ object DatasourcePokemon {
     }
 }
 
-
+    */

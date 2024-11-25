@@ -32,12 +32,15 @@ class TestViewModel @Inject constructor(
                 pokeViewModel.fetchPokemonDetail(id)
             }
         }
+        /*
     fun fetchPokemonDetail(name: String) {
         viewModelScope.launch {
             val result = PokemonApiService.getPokemonDetail(name)
             _pokemontest.value = result
         }
     }
+
+         */
 
     fun ofetchPokemonDetail(pokeViewModel: PokeViewModel) {
         viewModelScope.launch {
