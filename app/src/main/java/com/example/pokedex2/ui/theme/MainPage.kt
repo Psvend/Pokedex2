@@ -33,38 +33,30 @@ import com.example.pokedex2.R
 import com.example.pokedex2.data.DatasourcePokemon
 import com.example.pokedex2.viewModel.AffirmationViewModel
 import androidx.compose.runtime.*
-
+import com.example.pokedex2.viewModel.PokemonPageViewModel
 
 
 @Composable
 fun MainPageBackGround(
     viewModel: AffirmationViewModel,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
-
     val affirmationList by viewModel.affirmations.collectAsState(initial = emptyList())
 
-    //var expanded by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFE55655))
-            //.background(Color.Transparent)
-
-
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(140.dp)
-                //.background(Color(0xFFE55655).copy(alpha = 0.5f))
-
         ) {
             Image(
                 painter = painterResource(id = R.drawable.top_bar_background),
                 contentDescription = "Top Bar Background",
-                //alpha = 0.2f, hvis opacity skal ændres
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -72,20 +64,19 @@ fun MainPageBackGround(
                     .fillMaxWidth()
             )
             Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp)
-                    ) {
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp)
+            ) {
                 Button(
-                    onClick = { /*expanded = !expanded or navController.navigate("placeholder")
-                    */ },
+                    onClick = { /* navController.navigate("placeholder") */ },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
                         .padding(top = 20.dp, end = 16.dp)
                         .size(50.dp)
                 ) {
-
+                    // Button content
                 }
             }
         }
@@ -94,7 +85,6 @@ fun MainPageBackGround(
                 .fillMaxSize()
                 .padding(top = 30.dp)
         ) {
-            //Edit header spacing
             Spacer(modifier = Modifier.height(60.dp))
 
             val layoutDirection = LocalLayoutDirection.current

@@ -25,6 +25,7 @@ import com.example.pokedex2.ui.theme.MenuBar
 import com.example.pokedex2.ui.theme.NavGraph
 import com.example.pokedex2.ui.theme.Pokedex2Theme
 import com.example.pokedex2.ui.theme.PokemonListScreen
+import com.example.pokedex2.ui.theme.PokemonPage2
 import com.example.pokedex2.viewModel.MenuBarViewModel
 import com.example.pokedex2.viewModel.PokeViewModel
 import com.example.pokedex2.viewModel.PokemonPageViewModel
@@ -61,8 +62,8 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     when(selectedItemIndex){
                         0 ->  NavGraph(navController = navController,
-                            startDestination = "mainPage" , pokemonPageViewModel = pokemonPageViewModel)
-                       // 1 -> MainPageBackGround(viewModel = menuBarViewModel, navController = navController, modifier = Modifier.padding(innerPadding))
+                            startDestination = "mainPage" )
+                        1 -> PokemonPage2(viewModel = pokemonPageViewModel, )
                         2 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))
                         3 -> PokemonListScreen(pokemon = pokemon)
                         else -> MainPageBackGround(viewModel = viewModel(), navController = navController, modifier = Modifier.padding(innerPadding))

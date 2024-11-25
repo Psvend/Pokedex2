@@ -11,13 +11,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.example.pokedex2.data.remote.PokemonResult
+import com.example.pokedex2.viewModel.PokemonPageViewModel
 
 @Composable
 fun PokemonListScreen(
@@ -59,5 +63,27 @@ fun PokemonListScreen(
 fun PokemonCard(pokemon: PokemonResult) {
     Box(modifier = Modifier.fillMaxWidth()) {
         Text(text = pokemon.name, style = MaterialTheme.typography.titleLarge)
+    }
+}
+
+@Composable
+fun PokemonPage2(
+    viewModel: PokemonPageViewModel = hiltViewModel()
+) {
+    val pokemonDetail by viewModel.pokemonDetail.collectAsState()
+
+    // Fetch the Pokemon detail (you can call this based on some event or condition)
+    viewModel.fetchPokemonDetail("pikachu") // Example name
+
+    // Display the Pokemon detail
+    pokemonDetail?.let { detail ->
+        // Display the details of the Pokemon
+        Text(text = "Name: ${detail.name}")
+        Text(text = "ID: ${detail.id}")
+        Text(text = "Image URL: ${detail.sprites.front_default}")
+        // Add more fields as needed
+    } ?: run {
+        // Display a loading or error state
+        Text(text = "Loading...")
     }
 }
