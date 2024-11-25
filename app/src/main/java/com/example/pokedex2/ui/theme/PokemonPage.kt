@@ -36,18 +36,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.pokedex2.viewModel.PokemonPageViewModel
 
 @Composable
 fun PokemonPage(
-    viewModel: PokemonPageViewModel= viewModel(),
+    viewModel: PokemonPageViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
-    val pokemon by viewModel.pokemon.collectAsState()
+    val pokemonDetail by viewModel.pokemonDetail.collectAsState()
 
-    pokemon?.let {
+    // Fetch the Pokemon detail (you can call this based on some event or condition)
+    viewModel.fetchPokemonDetail("bulbasaur") // Example name
+
+    // Display the Pokemon detail
+    pokemonDetail?.let { detail ->
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -80,8 +85,8 @@ fun PokemonPage(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            PokemonName(name = it.name)
-            PokemonNr(nr = it.id)
+            PokemonName(name = detail.name)
+            PokemonNr(nr = detail.id)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -94,7 +99,7 @@ fun PokemonPage(
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
-            PokemonImage(url = it.imageUrl)
+            PokemonImage(url = detail.sprites.front_default)
             LikeButton()
         }
 
@@ -106,19 +111,14 @@ fun PokemonPage(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            it.types.forEach { type ->
-                PokemonType(type = type)
+            detail.types.forEach { type ->
+                PokemonType(type = type.type.name)
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         // Description Section
-        PokemonDescription(
-description = it.description
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
 
         // Stats Section
         //PokemonStats(url = it.stats)
@@ -168,12 +168,17 @@ fun PokemonImage(url: String){
 
 }
 @Composable
-fun PokemonType(type: String){
+fun PokemonType(type: String) {
     Text(
         text = type.uppercase(),
         modifier = Modifier
             .background(
-                color = if (type == "Grass") Color(0xFF78C850) else Color(0xFFA040A0),
+                color = when (type) {
+                    "Grass" -> Color(0xFF78C850)
+                    "Fire" -> Color(0xFFF08030)
+                    "Water" -> Color(0xFF6890F0)
+                    else -> Color(0xFFA040A0)
+                },
                 shape = RoundedCornerShape(16.dp)
             )
             .padding(horizontal = 8.dp, vertical = 4.dp),

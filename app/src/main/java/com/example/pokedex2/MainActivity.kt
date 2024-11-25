@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
                     when(selectedItemIndex){
                         0 ->  NavGraph(navController = navController,
                             startDestination = "mainPage" )
-                        1 -> PokemonPage2(viewModel = pokemonPageViewModel, )
+                        1 -> PokemonPage2(pokemonPageViewModel )
                         2 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))
                         3 -> PokemonListScreen(pokemon = pokemon)
                         else -> MainPageBackGround(viewModel = viewModel(), navController = navController, modifier = Modifier.padding(innerPadding))
