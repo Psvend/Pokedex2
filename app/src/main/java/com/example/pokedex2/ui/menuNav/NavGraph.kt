@@ -6,11 +6,12 @@ import androidx.navigation.NavHostController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.pokedex2.ui.home.MainPageBackGround
-import com.example.pokedex2.ui.home.PokemonPage
-import com.example.pokedex2.ui.home.pokemonAffirmation
+//import com.example.pokedex2.ui.home.MainPageBackGround
+//import com.example.pokedex2.ui.home.PokemonPage
+//import com.example.pokedex2.ui.home.pokemonAffirmation
 import com.example.pokedex2.viewModel.PokemonPageViewModel
 
+/*
 @Composable
 fun NavGraph(navController: NavHostController,
              startDestination: String,
@@ -26,3 +27,5 @@ fun NavGraph(navController: NavHostController,
         //composable("MainPageBackGround") {  MainPageBackGround(navController, modifier = Modifier.padding(it)) }
         //composable("PlaceHolder") { Placeholder(navController)}
     }
+
+ */

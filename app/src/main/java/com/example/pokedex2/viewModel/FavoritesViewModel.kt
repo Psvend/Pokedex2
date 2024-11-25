@@ -1,5 +1,6 @@
 package com.example.pokedex2.viewModel
 
+/*
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.pokedex2.model.Affirmation
@@ -29,6 +30,8 @@ val affirmationViewModel: AffirmationViewModel = viewModel(factory = object : Vi
         return AffirmationViewModel(favoritesViewModel) as T
     }
 })
+
+ */
 
  */
 

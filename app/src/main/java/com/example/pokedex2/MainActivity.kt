@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -15,7 +14,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.pokedex2.ui.search.SearchScreen
 import com.example.pokedex2.ui.menuNav.MenuBar
-import com.example.pokedex2.ui.menuNav.NavGraph
+//import com.example.pokedex2.ui.menuNav.NavGraph
 import com.example.pokedex2.ui.theme.Pokedex2Theme
 import com.example.pokedex2.ui.util.RotatingLoader
 import com.example.pokedex2.viewModel.MenuBarViewModel
@@ -34,23 +33,25 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Pokedex2Theme {
-                val navController = rememberNavController()
+                //val navController = rememberNavController()
                 val menuBarViewModel: MenuBarViewModel = viewModel()
-                val pokemonPageViewModel: PokemonPageViewModel = viewModel()
+                //val pokemonPageViewModel: PokemonPageViewModel = viewModel()
                 val selectedItemIndex by menuBarViewModel.selectedItemIndex.collectAsState()
 
                 Scaffold(
-                    modifier = Modifier.fillMaxSize(),
+
                     bottomBar = {
                         MenuBar(
                           viewModel = menuBarViewModel
                         )
                     }
-                ) { innerPadding ->
+                ) { it
                     when(selectedItemIndex){
-                        0 ->  NavGraph(navController = navController,
+                        /*0 ->  NavGraph(navController = navController,
                             startDestination = "mainPage" , pokemonPageViewModel = pokemonPageViewModel,
                             modifier = Modifier.padding(innerPadding))
+
+                         */
                         //1 -> FavoritesView(modifier = Modifier.padding(it))
                         2 -> SearchScreen()
                         //3 -> FilterScreen()

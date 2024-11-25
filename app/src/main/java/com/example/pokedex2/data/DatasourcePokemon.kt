@@ -1,5 +1,6 @@
 package com.example.pokedex2.data
 
+/*
 import androidx.compose.ui.res.stringResource
 import com.example.pokedex2.R
 import com.example.pokedex2.model.Affirmation
@@ -93,4 +94,6 @@ object DatasourcePokemon {
     }
 }
 
+
+ */
 

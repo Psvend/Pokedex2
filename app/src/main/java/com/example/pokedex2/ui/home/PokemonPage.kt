@@ -1,7 +1,7 @@
 package com.example.pokedex2.ui.home
 
 import androidx.compose.foundation.Image
-import com.example.pokedex2.model.Affirmation
+//import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -44,10 +44,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.pokedex2.data.DatasourcePokemon
+//import com.example.pokedex2.data.DatasourcePokemon
 
 
 //Our now specific pokemon, can be changed by nav and API later on
+/*
 val datasource = DatasourcePokemon.loadAffirmations()
 val bulbasaurAffirmation = datasource[0]
 val pokemonAffirmation = bulbasaurAffirmation
@@ -306,3 +307,5 @@ fun LikeButton(modifier : Modifier = Modifier){
         }
     }
 }
+
+ */

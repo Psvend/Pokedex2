@@ -1,5 +1,6 @@
 package com.example.pokedex2.viewModel
 
+/*
 import com.example.pokedex2.data.DatasourcePokemon
 import androidx.lifecycle.ViewModel
 import com.example.pokedex2.model.Affirmation
@@ -36,3 +37,5 @@ class AffirmationViewModel(private val favoritesViewModel: FavoritesViewModel) :
         }
     }
 }
+
+ */

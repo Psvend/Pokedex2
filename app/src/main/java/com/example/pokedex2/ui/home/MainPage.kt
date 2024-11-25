@@ -29,10 +29,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.pokedex2.R
-import com.example.pokedex2.viewModel.AffirmationViewModel
+//import com.example.pokedex2.viewModel.AffirmationViewModel
 import androidx.compose.runtime.*
 
-
+/*
 @Composable
 fun MainPageBackGround(
     viewModel: AffirmationViewModel,
@@ -114,3 +114,4 @@ fun MainPageBackGround(
         }
     }
 }
+*/

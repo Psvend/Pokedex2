@@ -1,6 +1,6 @@
 package com.example.pokedex2.ui.home
-import com.example.pokedex2.model.Affirmation
-import com.example.pokedex2.viewModel.AffirmationViewModel
+//import com.example.pokedex2.model.Affirmation
+//import com.example.pokedex2.viewModel.AffirmationViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -38,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.navigation.NavHostController
 
+/*
 @Composable
 fun AffirmationsList(
     viewModel: AffirmationViewModel,
@@ -157,6 +158,6 @@ fun AffirmationCard(
         }
     }
 }
-
+*/
 
 

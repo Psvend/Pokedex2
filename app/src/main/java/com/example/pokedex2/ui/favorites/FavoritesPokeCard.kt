@@ -11,8 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.pokedex2.viewModel.FavoritesViewModel
+//import com.example.pokedex2.viewModel.FavoritesViewModel
 
+/*
 @Composable
 fun FavPokeCard(){
     val favoritesViewModel: FavoritesViewModel = viewModel()
@@ -30,3 +31,5 @@ fun FavPokeCard(){
         Text(text = "Hello, world!")
     }
 }
+
+ */
