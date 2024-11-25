@@ -24,6 +24,7 @@ import com.example.pokedex2.ui.theme.MainPageBackGround
 import com.example.pokedex2.ui.theme.MenuBar
 import com.example.pokedex2.ui.theme.NavGraph
 import com.example.pokedex2.ui.theme.Pokedex2Theme
+import com.example.pokedex2.ui.theme.PokemonDetailScreen
 import com.example.pokedex2.ui.theme.PokemonListScreen
 import com.example.pokedex2.ui.theme.PokemonPage2
 import com.example.pokedex2.viewModel.MenuBarViewModel
@@ -65,7 +66,7 @@ class MainActivity : ComponentActivity() {
                             startDestination = "mainPage" )
                         1 -> PokemonPage2(pokemonPageViewModel )
                         2 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))
-                        3 -> PokemonListScreen(pokemon = pokemon)
+                        3 -> PokemonDetailScreen(pokeViewModel = viewModel, modifier = Modifier.padding(innerPadding))
                         else -> MainPageBackGround(viewModel = viewModel(), navController = navController, modifier = Modifier.padding(innerPadding))
                     }
 

@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import coil.compose.rememberAsyncImagePainter
@@ -71,6 +72,8 @@ fun PokemonListScreen(
 
 @Composable
 fun PokemonCard(pokemon: PokemonResult) {
+
+
     Box(modifier = Modifier.fillMaxWidth()) {
         Text(text = pokemon.name, style = MaterialTheme.typography.titleLarge)
     }
