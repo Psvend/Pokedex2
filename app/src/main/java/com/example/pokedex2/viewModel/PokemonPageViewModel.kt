@@ -1,5 +1,6 @@
 package com.example.pokedex2.viewModel
 
+/*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -69,3 +70,5 @@ class PokemonPageViewModel @Inject constructor(
         }
     }
 }
+
+ */

@@ -1,6 +1,7 @@
 package com.example.pokedex2.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
@@ -29,29 +29,29 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.pokedex2.data.DataPokeTypes
+import com.example.pokedex2.model.LocalPokeTypes
+import com.example.pokedex2.utils.RotatingLoader
+import com.example.pokedex2.viewModel.SearchViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TypeFilterUI(modifier: Modifier = Modifier) {
-    modifier.background(color =  Color.Black)
-    val pokeTypes = DataPokeTypes().loadTypes().sortedBy{it.name}
-    val selectionMap = remember { mutableStateMapOf<Int, Boolean>() }
-    var searchQuery by remember { mutableStateOf("Name, number or description") }
-    var active by remember { mutableStateOf(false) }
-    var showDialog by remember { mutableStateOf(false) }
-    var acceptSearchCriteria by remember { mutableStateOf(false) }
+fun TypeFilterUI(
+    modifier: Modifier = Modifier,
+    searchViewModel: SearchViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
+    val isLoading = searchViewModel.isLoading.value
+    val pokeTypes = searchViewModel.pokeTypes.value
+    val selectionMap = searchViewModel.selectionMap
+    val searchQuery = searchViewModel.searchQuery
+    val allTypesSelected = selectionMap.values.all { it } // Check if all are selected
+    val showDialog = searchViewModel.showDialog
+    val acceptSearchCriteria = searchViewModel.acceptSearchCriteria
 
     Scaffold(
         modifier = Modifier
@@ -62,36 +62,31 @@ fun TypeFilterUI(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(Color.Black),
+                .background(Color.Black)
         ) {
+            // Search Bar
             SearchBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
                     .onFocusChanged { focusState ->
-                        if (focusState.isFocused && searchQuery == "Name, number or description") {
-                            searchQuery = ""
+                        if (focusState.isFocused && searchQuery.value == "Name, number or description") {
+                            searchViewModel.searchQuery.value = ""
                         } else {
-                            searchQuery = "Name, number or description"
+                            searchViewModel.searchQuery.value = "Name, number or description"
                         }
-
                     },
-
-                query = searchQuery,
-                onQueryChange = { searchQuery = it },
+                query = searchQuery.value,
+                onQueryChange = { searchViewModel.searchQuery.value = it },
                 onSearch = {},
-                active = acceptSearchCriteria,
-                onActiveChange = { active = it },
+                active = acceptSearchCriteria.value,
+                onActiveChange = { searchViewModel.active.value = it },
                 trailingIcon = {
                     IconButton(
-                        onClick = {
-                            searchQuery = ""
-                            active = false
-                            acceptSearchCriteria = false
-                        }
+                        onClick = { searchViewModel.clearSearch() }
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Clear, // Choose an icon, e.g., Clear or Close icon
+                            imageVector = Icons.Default.Clear,
                             contentDescription = "Clear Search",
                             tint = Color.Gray
                         )
@@ -99,9 +94,9 @@ fun TypeFilterUI(modifier: Modifier = Modifier) {
                 }
             ) {
                 Column(modifier = Modifier.padding(8.dp)) {
-                    if (searchQuery.isNotBlank()) {
+                    if (searchQuery.value.isNotBlank()) {
                         Text(
-                            text = "Search Query: $searchQuery",
+                            text = "Search Query: ${searchQuery.value}",
                             color = Color.Black,
                             style = MaterialTheme.typography.bodyMedium
                         )
@@ -125,52 +120,49 @@ fun TypeFilterUI(modifier: Modifier = Modifier) {
                 }
             }
 
-
             Text(
                 text = "Choose type filter",
                 style = MaterialTheme.typography.headlineSmall,
                 color = Color.White,
                 modifier = Modifier.padding(16.dp)
             )
-            LazyVerticalStaggeredGrid(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 16.dp, vertical = 5.dp),
-                columns = StaggeredGridCells.Fixed(3),
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                verticalItemSpacing = 10.dp
-            ) {
-                items(pokeTypes) { localPokeType ->
-                    val isSelected = selectionMap[localPokeType.id] ?: false
 
+            // Conditional TypeGrid
+            when {
+                isLoading -> {
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(3.0f)
-                            .background(
-                                color = if (isSelected) Color(android.graphics.Color.parseColor(localPokeType.color)) else Color.White,
-                                shape = RoundedCornerShape(25.dp)
-                            )
-                            //.padding(8.dp)
-                            //.clip(RoundedCornerShape(100.dp)) No rounded corners?
-                            .clickable {
-                                selectionMap[localPokeType.id] = !isSelected
-                            },
+                            .fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = localPokeType.name,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = if (isSelected) Color.White else Color.Black
-                        )
+                        RotatingLoader()
                     }
+                }
+                pokeTypes.isEmpty() -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("No types available", color = Color.Red)
+                    }
+                }
+                else -> {
+                    TypeGrid(
+                        modifier = Modifier,
+                        pokeTypes = pokeTypes,
+                        selectionMap = selectionMap,
+                        onToggleSelection = { id -> searchViewModel.toggleSelection(id) },
+                        getTypeColor = { id, color -> searchViewModel.getTypeColor(id, color) }
+                    )
                 }
             }
 
+            // Buttons
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                    .padding(horizontal = 16.dp, vertical = 22.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Row(
@@ -179,20 +171,19 @@ fun TypeFilterUI(modifier: Modifier = Modifier) {
                 ) {
                     Button(
                         onClick = {
-                            pokeTypes.forEach { localPokeType ->
-                                selectionMap[localPokeType.id] = true
+                            if (allTypesSelected) {
+                                // Deselect all types
+                                pokeTypes.forEach { selectionMap[it.id] = false }
+                            } else {
+                                // Select all types
+                                pokeTypes.forEach { selectionMap[it.id] = true }
                             }
                         }
                     ) {
-                        Text(text = "Show all types")
+                        Text(text = if (allTypesSelected) "Deselect all" else "Show all types")
                     }
                     Button(
-                        onClick = {
-                            if (selectionMap.containsValue(true) || searchQuery.isNotBlank() && searchQuery != "Name, number or description") {
-                                acceptSearchCriteria = true
-                            } else
-                                showDialog = true
-                        }
+                        onClick = { searchViewModel.validateCriteria() }
                     ) {
                         Text(text = "Confirm")
                     }
@@ -200,11 +191,13 @@ fun TypeFilterUI(modifier: Modifier = Modifier) {
             }
         }
     }
-    if (showDialog) {
+
+    // Dialog
+    if (showDialog.value) {
         AlertDialog(
-            onDismissRequest = { showDialog = false },
+            onDismissRequest = { searchViewModel.showDialog.value = false },
             confirmButton = {
-                Button(onClick = { showDialog = false }) {
+                Button(onClick = { searchViewModel.showDialog.value = false }) {
                     Text("OK")
                 }
             },
@@ -214,8 +207,54 @@ fun TypeFilterUI(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true)
+
 @Composable
-fun TypeFilterUIPreview() {
-    TypeFilterUI(modifier = Modifier)
+fun TypeGrid(
+    modifier: Modifier = Modifier,
+    pokeTypes: List<LocalPokeTypes>,
+    selectionMap: Map<Int, Boolean>,
+    onToggleSelection: (Int) -> Unit,
+    getTypeColor: (Int, String) -> Color
+) {
+    LazyVerticalStaggeredGrid(
+        modifier = modifier
+            //.weight(1f)
+            .padding(horizontal = 18.dp, vertical = 12.dp),
+        columns = StaggeredGridCells.Fixed(3),
+        horizontalArrangement = Arrangement.spacedBy(20.dp),
+        verticalItemSpacing = 32.dp
+    ) {
+        if (pokeTypes.isEmpty()) {
+            item {
+                RotatingLoader() // Show a loader while the data is empty
+            }
+        }
+        items(pokeTypes) { localPokeType ->
+            val isSelected = selectionMap[localPokeType.id] ?: false
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(3.0f)
+                    .border(1.dp, Color.White, RoundedCornerShape(25.dp))
+                    .background(
+                        color = getTypeColor(localPokeType.id, localPokeType.color),
+                        shape = RoundedCornerShape(25.dp)
+                    )
+                    .clickable {
+                        onToggleSelection(localPokeType.id)
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = localPokeType.name,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = if (isSelected) Color.Black else Color.White
+                )
+            }
+        }
+    }
 }
+
+
+

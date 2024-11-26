@@ -1,5 +1,6 @@
 package com.example.pokedex2.ui.theme
 
+/*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -203,22 +204,6 @@ fun PokemonDescription(description: String){
     )
 }
 
-/*
-
-@Composable
-fun PokemonStats(url: String, modifier: Modifier){
-    AsyncImage(
-        model = url,
-        contentDescription = "Stats",
-        contentScale = ContentScale.FillBounds,
-        modifier = modifier.size(
-            width = 200.dp,
-            height = 200.dp
-        )
-    )
-}
- */
-
 
 @Composable
 fun LikeButton(){
@@ -245,3 +230,4 @@ fun LikeButton(){
         }
     }
 }
+*/

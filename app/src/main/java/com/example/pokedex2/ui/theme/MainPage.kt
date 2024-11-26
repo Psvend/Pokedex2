@@ -27,13 +27,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.pokedex2.R
 
 import com.example.pokedex2.viewModel.AffirmationViewModel
 import androidx.compose.runtime.*
-import com.example.pokedex2.viewModel.PokemonPageViewModel
 
 
 @Composable
@@ -98,7 +96,7 @@ fun MainPageBackGround(
                             .calculateStartPadding(layoutDirection),
                     )
             ) {
-                AffirmationsList(
+                HomePokemonScroll(
                     viewModel,
                     modifier = modifier,
                     navController = navController,
