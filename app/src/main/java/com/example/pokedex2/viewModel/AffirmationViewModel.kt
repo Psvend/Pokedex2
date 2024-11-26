@@ -1,5 +1,6 @@
 package com.example.pokedex2.viewModel
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedex2.data.remote.PokemonApiService
@@ -20,14 +21,24 @@ class AffirmationViewModel @Inject constructor(
     private val _affirmations = MutableStateFlow<List<Affirmation>>(emptyList())
     val affirmations: StateFlow<List<Affirmation>> = _affirmations
 
+    val isLoading = mutableStateOf(true)
+    val isPaginating = mutableStateOf(false)
+    val errorMessage = mutableStateOf<String?>(null)
+    private var currentPage = 0
+
     init {
         fetchAffirmations()
     }
 
-    private fun fetchAffirmations() {
+    // Make fetchAffirmations public
+    fun fetchAffirmations(page: Int = 0) {
         viewModelScope.launch {
             try {
-                val response = pokemonApiService.getPokemonList(0, 20)
+                if (page == 0) isLoading.value = true else isPaginating.value = true
+
+                val offset = page * 20
+                val response = pokemonApiService.getPokemonList(offset, 20)
+
                 val affirmationsList = response.results.map { result ->
                     val detail = pokemonApiService.getPokemonDetail(result.name)
                     Affirmation(
@@ -39,11 +50,22 @@ class AffirmationViewModel @Inject constructor(
                         number = detail.id
                     )
                 }
-                _affirmations.value = affirmationsList
+
+                _affirmations.update { it + affirmationsList }
+                currentPage = page
+                errorMessage.value = null
             } catch (e: Exception) {
-                // Handle the error
+                errorMessage.value = "Oops! Something went wrong. Please try again."
+            } finally {
+                isLoading.value = false
+                isPaginating.value = false
             }
         }
+    }
+
+    // Add a helper function to calculate the next page
+    fun loadNextPage() {
+        fetchAffirmations(currentPage + 1)
     }
 
     fun toggleLike(affirmation: Affirmation) {
