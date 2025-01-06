@@ -24,9 +24,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import com.example.pokedex2.R
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.navigation.NavHostController
@@ -41,26 +44,41 @@ import androidx.navigation.NavHostController
 @Composable
 fun AffirmationsList(
     viewModel: AffirmationViewModel,
-    navController: NavHostController ,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-
+    var searchQuery by rememberSaveable { mutableStateOf("") }
     val affirmationLIST by viewModel.affirmations.collectAsState(initial = emptyList())
 
-    LazyColumn(
+    Column(
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFFD9D9D9))
-            .padding(top = 10.dp)
     ) {
-        items(affirmationLIST) { affirmation ->
-            AffirmationCard(
-                affirmation = affirmation,
-                navController = navController,
-                onLikeClicked = { viewModel.toggleLike(affirmation)},
-                modifier = Modifier
-                    .padding(4.dp)
-            )
+        TextField(
+            value = searchQuery,
+            onValueChange = { searchQuery = it },
+            placeholder = { Text("Search...") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .background(Color.White, shape = RoundedCornerShape(8.dp))
+        )
+
+        // List of affirmations
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            items(affirmationLIST) { affirmation ->
+                AffirmationCard(
+                    affirmation = affirmation,
+                    navController = navController,
+                    onLikeClicked = { viewModel.toggleLike(affirmation) },
+                    modifier = Modifier
+                        .padding(4.dp)
+                )
+            }
         }
     }
 }

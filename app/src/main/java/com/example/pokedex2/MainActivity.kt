@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.collectAsState
@@ -12,13 +11,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.pokedex2.ui.topbar.TopBar
-import com.example.pokedex2.ui.search.SearchScreen
 import com.example.pokedex2.ui.menuNav.MenuBar
 import com.example.pokedex2.ui.menuNav.NavGraph
+import com.example.pokedex2.ui.search.SearchScreen
 import com.example.pokedex2.ui.theme.Pokedex2Theme
+import com.example.pokedex2.ui.topbar.TopBar
 import com.example.pokedex2.ui.util.RotatingLoader
 import com.example.pokedex2.viewModel.MenuBarViewModel
 import com.example.pokedex2.viewModel.PokemonPageViewModel
@@ -44,7 +42,6 @@ class MainActivity : ComponentActivity() {
                 val selectedItemIndex by menuBarViewModel.selectedItemIndex.collectAsState()
 
                 Scaffold(
-                    modifier = Modifier.fillMaxSize(),
                     topBar = {
                         TopBar(
                             viewModel = topBarViewModel,
