@@ -51,7 +51,7 @@ fun AffirmationsList(
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFFD9D9D9))
-
+            .padding(top = 10.dp)
     ) {
         items(affirmationLIST) { affirmation ->
             AffirmationCard(
