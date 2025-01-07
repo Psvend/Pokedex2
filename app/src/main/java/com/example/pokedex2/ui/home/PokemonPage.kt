@@ -70,20 +70,8 @@ fun PokemonPage(affirmation: Affirmation, modifier: Modifier = Modifier) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(120.dp)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.top_bar_background),
-                contentDescription = "Top Bar Background",
-                //alpha = 0.2f, hvis opacity skal ændres
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 4.dp)
-                    .fillMaxWidth()
-            )
-
-        }
+                .height(5.dp)
+        )
 
         Spacer(modifier = Modifier.height(2.dp))
 
