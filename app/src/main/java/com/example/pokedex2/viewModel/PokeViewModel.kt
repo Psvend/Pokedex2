@@ -8,7 +8,6 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.pokedex2.data.remote.PokemonApiService
 import com.example.pokedex2.data.remote.PokemonPagingSource
-import com.example.pokedex2.data.remote.PokemonResult
 import com.example.pokedex2.data.remote.json.testPokemon
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +22,7 @@ class PokeViewModel @Inject() constructor(
 
 
 ) : ViewModel() {
-    val pokemonPagingFlow: Flow<PagingData<PokemonResult>> = Pager(
+    val pokemonPagingFlow: Flow<PagingData<testPokemon>> = Pager(
         config = PagingConfig(pageSize = 20),
         pagingSourceFactory = { PokemonPagingSource(pokemonApiService) }
     ).flow.cachedIn(viewModelScope)

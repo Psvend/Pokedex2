@@ -10,5 +10,10 @@ data class PokemonEntity(
     val name: String,
     val height: Int,
     val weight: Int,
-    val types: List<String>
+    val imageUrl: String,
+    val types: List<String>,
+    val baseExperience: Int,
+    val isDefault: Boolean,
+    val order: Int,
+    val isLiked: Boolean
 )
