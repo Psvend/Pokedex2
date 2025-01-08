@@ -1,4 +1,4 @@
-package com.example.pokedex2.ui.components
+package com.example.pokedex2.ui.SearchAndFilters
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
