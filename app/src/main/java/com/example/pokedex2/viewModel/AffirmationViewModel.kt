@@ -1,5 +1,6 @@
 package com.example.pokedex2.viewModel
 
+import android.graphics.Color
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -47,7 +48,7 @@ class AffirmationViewModel @Inject constructor(
                         id = detail.id,
                         name = detail.name.capitalizeFirstLetter(),   //changed first letter to upper case
                         imageResourceId = detail.sprites.front_default ?: "",
-                        typeIcon = detail.types.map { it.type.name },
+                        typeIcon = detail.types.map { it.type.name.capitalizeFirstLetter() },
                         isLiked = false,
                         number = detail.id
                     )
@@ -77,4 +78,30 @@ class AffirmationViewModel @Inject constructor(
             }
         }
     }
+
+    //color boxes for
+    fun getTypeColor(type: String): Any {
+        return when (type.lowercase()) {
+            "fire" -> Color.RED
+            "grass" -> Color.GREEN
+            "water" -> Color.BLUE
+            "electric" -> Color.YELLOW
+            "bug" -> Color.GREEN
+            "poison" -> Color.MAGENTA
+            "ice" -> Color.CYAN
+            "normal" -> Color.WHITE
+            "ground" -> Color.BLACK
+            "flying" -> Color.BLUE
+            "fairy" -> Color.DKGRAY
+            "fighting" -> Color.LTGRAY
+            "psychic" -> Color.TRANSPARENT
+            else -> Color.GRAY
+        }
+    }
+
+
+
+
+
+
 }
