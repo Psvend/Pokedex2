@@ -79,27 +79,6 @@ class AffirmationViewModel @Inject() constructor(
         }
     }
 
-    //color boxes for the pokemon types
-    fun getTypeColor(type: String): Any {
-        return when (type.lowercase()) {
-            "fire" -> Color.RED
-            "grass" -> Color.GREEN
-            "water" -> Color.BLUE
-            "electric" -> Color.YELLOW
-            "bug" -> Color.GREEN
-            "poison" -> Color.MAGENTA
-            "ice" -> Color.CYAN
-            "normal" -> Color.WHITE
-            "ground" -> Color.BLACK
-            "flying" -> Color.BLUE
-            "fairy" -> Color.DKGRAY
-            "fighting" -> Color.LTGRAY
-            "psychic" -> Color.TRANSPARENT
-            else -> Color.GRAY
-        }
-    }
-
-
 
 
 }
