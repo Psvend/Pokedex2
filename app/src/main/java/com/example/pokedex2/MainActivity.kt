@@ -17,12 +17,14 @@ import androidx.navigation.compose.rememberNavController
 import com.example.pokedex2.ui.SearchAndFilters.TypeFilterUI
 import com.example.pokedex2.ui.MenuBar.MenuBar
 import com.example.pokedex2.ui.Navigation.NavGraph
+import com.example.pokedex2.ui.PokePage.PokemonPage
 import com.example.pokedex2.ui.theme.Pokedex2Theme
 import com.example.pokedex2.ui.TopBar.TopBar
 //import com.example.pokedex2.ui.theme.PokemonDetailScreen
 //import com.example.pokedex2.ui.theme.PokemonPage2
 import com.example.pokedex2.utils.RotatingLoader
 import com.example.pokedex2.viewModel.MenuBarViewModel
+import com.example.pokedex2.viewModel.PokePageViewModel
 import com.example.pokedex2.viewModel.PokeViewModel
 import com.example.pokedex2.viewModel.TopBarViewModel
 //import com.example.pokedex2.viewModel.PokemonPageViewModel
@@ -68,7 +70,7 @@ class MainActivity : ComponentActivity() {
                         //1-> PokemonDetailScreen(
                         //    pokeViewModel = pokeViewModel
                         //)
-                        //1 -> PokemonPage2(pokemonPageViewModel )
+                       // 1 -> PokemonPage(pokemonPageViewModel = PokePageViewModel )
                         2 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))
                         //3 -> PokemonDetailScreen(pokeViewModel = viewModel, modifier = Modifier.padding(innerPadding))
                         else -> RotatingLoader()
