@@ -28,6 +28,7 @@ import com.example.pokedex2.viewModel.PokeViewModel
 //import com.example.pokedex2.viewModel.PokemonPageViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+
 data class BottomNavItem(
     val title: String,
     val selectedIcon: ImageVector,
