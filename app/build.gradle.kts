@@ -1,9 +1,11 @@
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
+    alias(libs.plugins.protobuf)
 }
 
 android {
@@ -42,10 +44,14 @@ android {
 }
 
 dependencies {
+    // Proto and datastore
+    // DataStore and Protobuf
+    implementation(libs.androidx.datastore) // DataStore dependency
+    implementation(libs.protobuf.javalite) // Protobuf Lite
 
     // Retrofit
     implementation(libs.retrofit)
-// Retrofit with Scalar Converter
+    // Retrofit with Scalar Converter
     implementation(libs.converter.gson)
 
     implementation(libs.androidx.navigation.compose)
@@ -58,6 +64,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation (libs.coil.kt.coil.compose)
+    implementation(libs.support.annotations)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -85,4 +92,21 @@ dependencies {
     // Paging
     implementation (libs.androidx.paging.runtime.ktx)
     implementation (libs.androidx.paging.compose)
+}
+
+// Setup protobuf configuration, generating lite Java and Kotlin classes
+
+protobuf {
+    protoc {
+        artifact = libs.protobuf.protoc.get().toString() // Correct Protobuf artifact
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                create("java") {
+                    option("lite") // Generate lightweight Protobuf classes
+                }
+            }
+        }
+    }
 }
