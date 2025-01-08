@@ -146,8 +146,6 @@ fun HomePokemonScroll(
         }
     }
 }
-
-
 @Composable
 fun AffirmationCard(
     affirmation: Affirmation,
@@ -160,7 +158,10 @@ fun AffirmationCard(
     Card(
         modifier = modifier
             .padding(4.dp)
-            .clickable { navController.navigate("pokemonPage") },
+            .clickable {
+                // Navigate to pokemonPage with the Pokémon name
+                navController.navigate("pokemonPage/${affirmation.name.lowercase()}")
+            },
         colors = CardDefaults.cardColors(Color(0xFFFFF9E6)),
         shape = RectangleShape
     ) {
@@ -170,7 +171,7 @@ fun AffirmationCard(
                 .fillMaxWidth()
                 .padding(8.dp),
         ) {
-            // Pokemon image
+            // Pokémon image
             Image(
                 painter = rememberAsyncImagePainter(affirmation.imageResourceId),
                 contentDescription = affirmation.name,
@@ -179,24 +180,20 @@ fun AffirmationCard(
                     .padding(8.dp),
                 contentScale = ContentScale.Crop
             )
-            // Text and category icons in the middle
+            // Pokémon name and type
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 16.dp)
             ) {
-                // Name of pokemon
                 Text(
                     text = affirmation.name,
                     style = MaterialTheme.typography.headlineSmall
                 )
-
-                // Colored type icons
                 PokemonTypeIcons(types = affirmation.typeIcon)
             }
-
-            // The like button and number
+            // Like button and ID
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(start = 8.dp)
@@ -213,7 +210,6 @@ fun AffirmationCard(
                         tint = if (isLiked) Color(0xFFB11014) else Color(0xFFB11014)
                     )
                 }
-                // Id number of pokemon
                 Text(
                     text = "#" + affirmation.number.toString(),
                     style = MaterialTheme.typography.bodySmall,
@@ -223,7 +219,6 @@ fun AffirmationCard(
         }
     }
 }
-
 
 
 //Creates the boxes around each type
