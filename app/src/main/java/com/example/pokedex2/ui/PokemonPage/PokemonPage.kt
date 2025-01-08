@@ -17,6 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.pokedex2.viewModel.PokePageViewModel
+
+
 @Composable
 fun PokemonPage(
     pokemonIdOrName: String,
