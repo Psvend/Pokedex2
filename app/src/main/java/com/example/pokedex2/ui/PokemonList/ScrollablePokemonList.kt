@@ -25,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -147,7 +148,6 @@ fun HomePokemonScroll(
 }
 
 
-
 @Composable
 fun AffirmationCard(
     affirmation: Affirmation,
@@ -158,7 +158,8 @@ fun AffirmationCard(
     var isLiked by remember { mutableStateOf(affirmation.isLiked) }
 
     Card(
-        modifier = modifier.padding(4.dp)
+        modifier = modifier
+            .padding(4.dp)
             .clickable { navController.navigate("pokemonPage") },
         colors = CardDefaults.cardColors(Color(0xFFFFF9E6)),
         shape = RectangleShape
@@ -191,21 +192,8 @@ fun AffirmationCard(
                     style = MaterialTheme.typography.headlineSmall
                 )
 
-                // Row for dynamic pokemon type text
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    modifier = Modifier.padding(top = 4.dp)
-                ) {
-                    // Our category icons
-                    affirmation.typeIcon.forEach { type ->
-                        Text(
-                            text = type,
-                            style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier
-                                .padding(4.dp)
-                        )
-                    }
-                }
+                // Colored type icons
+                PokemonTypeIcons(types = affirmation.typeIcon)
             }
 
             // The like button and number
@@ -233,5 +221,59 @@ fun AffirmationCard(
                 )
             }
         }
+    }
+}
+
+
+
+//Creates the boxes around each type
+@Composable
+fun PokemonTypeIcons(types: List<String>, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier.padding(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        types.forEach { type ->
+            Box(
+                modifier = Modifier
+                    .background(
+                        color = getTypeColor(type),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .padding(horizontal = 12.dp, vertical = 4.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = type,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.White
+                )
+            }
+        }
+    }
+}
+
+
+//color boxes for the pokemon types
+fun getTypeColor(type: String): Color {
+    return when (type.lowercase()) {
+        "fire" -> Color(0xFFd61717) // Red
+        "grass" -> Color(0xFF89de65) // Green
+        "water" -> Color(0xFF0000FF) // Blue
+        "electric" -> Color(0xFFdddc11) // Yellow
+        "bug" -> Color(0xFFa4c81a) // Light Green
+        "poison" -> Color(0xFF8E44AD) // Purple
+        "ice" -> Color(0xFF00FFFF) // Cyan
+        "normal" -> Color(0xfff68d53) // White
+        "ground" -> Color(0xFF8B4513) // Brown
+        "flying" -> Color(0xFFADD8E6) // Light Blue
+        "fairy" -> Color(0xFFEE99AC) // Pink
+        "fighting" -> Color(0xFFa41353) // Reddish Brown
+        "psychic" -> Color(0xFFFF69B4) // Hot Pink
+        "dragon" -> Color(0xff11ddd6)
+        "dark" -> Color(0xff3f4948)
+        "ghost" -> Color(0xff6a8180)
+        "rock" -> Color(0xff908065)
+        else -> Color.Gray // Default Gray
     }
 }

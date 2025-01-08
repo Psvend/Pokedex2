@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class AffirmationViewModel @Inject constructor(
+class AffirmationViewModel @Inject() constructor(
     private val pokemonApiService: PokemonApiService
 ) : ViewModel() {
     private val _affirmations = MutableStateFlow<List<Affirmation>>(emptyList())
@@ -79,7 +79,7 @@ class AffirmationViewModel @Inject constructor(
         }
     }
 
-    //color boxes for
+    //color boxes for the pokemon types
     fun getTypeColor(type: String): Any {
         return when (type.lowercase()) {
             "fire" -> Color.RED
@@ -98,8 +98,6 @@ class AffirmationViewModel @Inject constructor(
             else -> Color.GRAY
         }
     }
-
-
 
 
 
