@@ -11,20 +11,18 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.pokedex2.ui.components.TypeFilterUI
-import com.example.pokedex2.ui.theme.MainPageBackGround
-import com.example.pokedex2.ui.theme.MenuBar
-import com.example.pokedex2.ui.theme.NavGraph
+import com.example.pokedex2.ui.MenuBar.MenuBar
+import com.example.pokedex2.ui.Navigation.NavGraph
 import com.example.pokedex2.ui.theme.Pokedex2Theme
+import com.example.pokedex2.ui.TopBar.TopBar
 //import com.example.pokedex2.ui.theme.PokemonDetailScreen
 //import com.example.pokedex2.ui.theme.PokemonPage2
 import com.example.pokedex2.utils.RotatingLoader
 import com.example.pokedex2.viewModel.MenuBarViewModel
-import com.example.pokedex2.viewModel.PokeViewModel
+import com.example.pokedex2.viewModel.TopBarViewModel
 //import com.example.pokedex2.viewModel.PokemonPageViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -43,11 +41,18 @@ class MainActivity : ComponentActivity() {
         setContent {
             Pokedex2Theme {
                 val navController = rememberNavController()
+                val topBarViewModel: TopBarViewModel = viewModel()
                 val menuBarViewModel: MenuBarViewModel = viewModel()
                 val selectedItemIndex by menuBarViewModel.selectedItemIndex.collectAsState()
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
+                    topBar = {
+                        TopBar(
+                            viewModel = topBarViewModel,
+                            navController = navController
+                        )
+                    },
                     bottomBar = {
                         MenuBar(
                           viewModel = menuBarViewModel

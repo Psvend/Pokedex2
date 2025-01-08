@@ -1,4 +1,4 @@
-package com.example.pokedex2.ui.theme
+package com.example.pokedex2.ui.TopBar
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

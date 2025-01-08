@@ -1,4 +1,4 @@
-package com.example.pokedex2.ui.theme
+package com.example.pokedex2.ui.PokemonList
 import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.viewModel.AffirmationViewModel
 import androidx.compose.foundation.Image

@@ -1,4 +1,4 @@
-package com.example.pokedex2.ui.theme
+package com.example.pokedex2.ui.PokemonPage
 
 /*
 import androidx.compose.foundation.Image
