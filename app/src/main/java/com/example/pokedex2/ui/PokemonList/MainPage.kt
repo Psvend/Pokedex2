@@ -43,7 +43,7 @@ fun MainPageBackGround(
                 .fillMaxSize()
                 .padding(top = 30.dp)
         ) {
-            Spacer(modifier = Modifier.height(60.dp))
+            Spacer(modifier = Modifier.height(65.dp))
 
             val layoutDirection = LocalLayoutDirection.current
             Surface(
