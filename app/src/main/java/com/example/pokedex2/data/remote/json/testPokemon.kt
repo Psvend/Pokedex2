@@ -21,5 +21,6 @@ data class testPokemon(
     val stats: List<Stat>,
     val types: List<Type>,
     val weight: Int,
-    val isLiked: Boolean= false
+    val isLiked: Boolean= false,
+
 )

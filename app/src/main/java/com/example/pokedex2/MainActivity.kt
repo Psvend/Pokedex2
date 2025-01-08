@@ -11,6 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.pokedex2.ui.SearchAndFilters.TypeFilterUI
@@ -22,6 +23,7 @@ import com.example.pokedex2.ui.TopBar.TopBar
 //import com.example.pokedex2.ui.theme.PokemonPage2
 import com.example.pokedex2.utils.RotatingLoader
 import com.example.pokedex2.viewModel.MenuBarViewModel
+import com.example.pokedex2.viewModel.PokeViewModel
 import com.example.pokedex2.viewModel.TopBarViewModel
 //import com.example.pokedex2.viewModel.PokemonPageViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,6 +45,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val topBarViewModel: TopBarViewModel = viewModel()
                 val menuBarViewModel: MenuBarViewModel = viewModel()
+                val pokeViewModel: PokeViewModel = hiltViewModel() // Injecting PokeViewModel
                 val selectedItemIndex by menuBarViewModel.selectedItemIndex.collectAsState()
 
                 Scaffold(
@@ -62,6 +65,9 @@ class MainActivity : ComponentActivity() {
                     when(selectedItemIndex){
                         0 ->  NavGraph(navController = navController,
                             startDestination = "mainPage" )
+                        //1-> PokemonDetailScreen(
+                        //    pokeViewModel = pokeViewModel
+                        //)
                         //1 -> PokemonPage2(pokemonPageViewModel )
                         2 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))
                         //3 -> PokemonDetailScreen(pokeViewModel = viewModel, modifier = Modifier.padding(innerPadding))
@@ -72,4 +78,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+
 
