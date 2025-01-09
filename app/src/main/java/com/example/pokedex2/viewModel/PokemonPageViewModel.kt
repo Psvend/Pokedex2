@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokedex2.data.remote.PokemonApiService
 import com.example.pokedex2.data.remote.json.testPokemon
 import com.example.pokedex2.model.Affirmation
+import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,10 +30,11 @@ class PokePageViewModel @Inject constructor(
     private val _pokemonImage = MutableStateFlow<String?>(null)
     val pokemonImage: StateFlow<String?> = _pokemonImage
 
-
     private val _pokemonId = MutableStateFlow<String?>(null)
-    val pokemonId: StateFlow<String?> = _pokemonImage
+    val pokemonId: StateFlow<String?> = _pokemonId
 
+    private val _pokemonHabitat = MutableStateFlow<String?>(null)
+    val pokemonHabitat: StateFlow<String?> = _pokemonHabitat
 
 
     //Then add it here and then at PokemonPage
@@ -41,15 +43,16 @@ class PokePageViewModel @Inject constructor(
             try {
                 _errorMessage.value = null
                 val detail = pokemonApiService.getPokemonDetail(nameOrId)
+                //val habitat = pokemonApiService.
 
-                // Set pokemon details
+                    // Set pokemon details
                 _pokemonDetail.value = detail
 
                 //Extract and set the image url
-                _pokemonImage.value = detail.sprites.front_default
+                //_pokemonImage.value = detail.sprites.front_default
 
                 //Set Id
-                _pokemonId.value = detail.id.toString()
+                // _pokemonId.value = detail.id.toString()
 
             } catch (e: Exception) {
                 _errorMessage.value = "Failed to fetch Pokemon details: ${e.message}"
@@ -58,6 +61,20 @@ class PokePageViewModel @Inject constructor(
             }
         }
     }
+
+
+    fun fetchPokemonHabitat(idOrName: String) {
+        viewModelScope.launch {
+            try {
+                val habitat = pokemonApiService.getPokemonHabitat(idOrName)
+                _pokemonHabitat.value = habitat.name.capitalizeFirstLetter()
+            } catch (e: Exception) {
+                _pokemonHabitat.value = "Uknown Habitat"
+            }
+        }
+    }
+
+
 }
 
 

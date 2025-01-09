@@ -17,6 +17,12 @@ interface PokemonApiService {
         @Path("name") name: String
     ): testPokemon
 
+    @GET("pokemon-habitat/{idOrName}")
+    suspend fun getPokemonHabitat (
+        @Path("idOrName") idOrName: String
+    ): PokemonHabitatResponse
+
+
     companion object {
             const val BASE_URL= "https://pokeapi.co/api/v2/"
     }

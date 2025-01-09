@@ -51,25 +51,31 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.example.pokedex2.model.Affirmation
+import com.example.pokedex2.ui.PokemonList.PokemonTypeIcons
+import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
 
 
 @Composable
 fun PokemonPage(
     pokemonIdOrName: String,
     viewModel: PokePageViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier)
-{
+    modifier: Modifier = Modifier) {
     //Add new items here to show
     val pokemonDetail by viewModel.pokemonDetail.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
     //val pokemonImage by viewModel.pokemonImage.collectAsState()
     val pokemonId by viewModel.pokemonId.collectAsState()
+    val pokemonHabitat by viewModel.pokemonHabitat.collectAsState()
+
 
     // Fetch Pokémon details when the page is displayed
     LaunchedEffect(pokemonIdOrName) {
         viewModel.fetchPokemonDetail(pokemonIdOrName.lowercase()) // Ensure lowercase is passed
     }
 
+    LaunchedEffect(pokemonIdOrName) {
+        viewModel.fetchPokemonHabitat(pokemonIdOrName)
+    }
 
 
     Column(
@@ -85,7 +91,7 @@ fun PokemonPage(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(5.dp)
+                .height(130.dp)
         )
 
         Spacer(modifier = Modifier.height(2.dp))
@@ -96,7 +102,9 @@ fun PokemonPage(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             PokemonName(name = pokemonDetail?.name ?: "Unknown")
-            PokemonNr(id = pokemonId? :
+            pokemonDetail?.id?.let { id ->
+                PokemonNr(id = id)
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -120,42 +128,43 @@ fun PokemonPage(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        /*
+
         // Types Section
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 1.dp),
 
-            horizontalArrangement = Arrangement.Center,
+            horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            PokemonType(affirmation = pokemonAffirmation)
+            pokemonDetail?.types?.map { it.type.name }?.let { types ->
+                PokemonTypeIcons(types = types)
+            }
+
+
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Description Section
+            PokemonDescription(affirmation = pokemonAffirmation)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            //Graph section
+            //PokemonStats(affirmation = pokemonAffirmation)
+
+
         }
-
-     */
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Description Section
-        //PokemonDescription(affirmation = pokemonAffirmation)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        //Graph section
-        //PokemonStats(affirmation = pokemonAffirmation)
-
-
     }
 }
-
 
 
 
 @Composable
 fun PokemonName(name: String) {
     Text(
-        text = name ?: "Loading...",
+        text = name.capitalizeFirstLetter() ?: "Loading...",
         style = TextStyle(
             fontSize = 24.sp,
             fontFamily = FontFamily.Default
@@ -167,9 +176,9 @@ fun PokemonName(name: String) {
 
 
 @Composable
-fun PokemonNr(id: String){
+fun PokemonNr(id: Int){
     Text(
-        text = id,
+        text = "#$id" ?: "Loading...",
         style = TextStyle(
             fontSize = 24.sp,
             fontFamily = FontFamily.Default
@@ -202,7 +211,7 @@ fun PokemonImage(model: String?) {
                     model = model,
                     contentDescription = "{pokemonDetail?.name} sprite",
                     modifier = Modifier
-                        .size(240.dp, 240.dp)
+                        .size(280.dp, 280.dp)
                         .clip(RoundedCornerShape(12.dp))
 
                 )
@@ -250,10 +259,10 @@ fun PokemonType(affirmation: Affirmation) {
         }
     }
 }
+*/
 
 
-
-
+//CHANGE TO HABITAT - ALREADY SET UP JUST FINISH THE FUNCTION
 @Composable
 fun PokemonDescription(affirmation: Affirmation){
     Text(
