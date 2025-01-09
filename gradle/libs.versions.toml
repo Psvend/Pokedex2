@@ -1,6 +1,5 @@
 [versions]
 agp = "8.7.3"
-coilCompose = "3.0.0-rc02"
 coilComposeVersion = "2.4.0"
 converterGson = "2.9.0"
 daggerAndroid = "2.38.1"
@@ -15,6 +14,7 @@ coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
+kotlinGradlePlugin = "2.0.21"
 lifecycleRuntimeCompose = "2.8.7"
 lifecycleRuntimeKtx = "2.8.6"
 activityCompose = "1.9.3"
@@ -28,6 +28,7 @@ roomKtx = "2.6.1"
 supportAnnotations = "28.0.0"
 
 [libraries]
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
 protobuf-javalite = { module = "com.google.protobuf:protobuf-javalite", version.ref = "protobufJavalite" }
 
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,7 +43,6 @@ androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", v
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomKtx" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
 androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "roomKtx" }
-coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil-kt-coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilComposeVersion" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 dagger-android = { module = "com.google.dagger:dagger-android", version.ref = "daggerAndroid" }

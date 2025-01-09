@@ -9,7 +9,7 @@ plugins {
 buildscript{
 
     dependencies{
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21")
+        classpath(libs.kotlin.gradle.plugin)
 
         classpath(libs.hilt.android.gradle.plugin)
     }

@@ -1,14 +1,18 @@
 package com.example.pokedex2.viewModel
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pokedex.Pokemon
+import com.example.pokedex2.data.local.removeFavouritePokemon
+import com.example.pokedex2.data.local.saveFavouritePokemon
 import com.example.pokedex2.data.remote.PokemonApiService
 import com.example.pokedex2.model.Affirmation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import com.example.pokedex2.viewModel.AffirmationViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -68,10 +72,33 @@ class AffirmationViewModel @Inject constructor(
         fetchAffirmations(currentPage + 1)
     }
 
-    fun toggleLike(affirmation: Affirmation) {
+    fun toggleLike(context: Context, affirmation: Affirmation) {
+        Log.d("ToggleLike", "Before: ${affirmation.isLiked}")
         _affirmations.update { list ->
             list.map {
-                if (it == affirmation) it.copy(isLiked = !it.isLiked) else it
+                if (it == affirmation) {
+                    val updatedAffirmation = it.copy(isLiked = !it.isLiked)
+                    updateCache(context, updatedAffirmation) // Persist to DataStore
+                    updatedAffirmation
+
+                } else it
+            }
+        }
+    }
+
+    private fun updateCache(context: Context, affirmation: Affirmation) {
+        viewModelScope.launch {
+            val pokemon = Pokemon.newBuilder()
+                .setId(affirmation.id)
+                .setName(affirmation.name)
+                .setImageUrl(affirmation.imageResourceId)
+                .addAllTypes(affirmation.typeIcon)
+                .build()
+
+            if (affirmation.isLiked) {
+                saveFavouritePokemon(context, pokemon)
+            } else {
+                removeFavouritePokemon(context, pokemon.id)
             }
         }
     }

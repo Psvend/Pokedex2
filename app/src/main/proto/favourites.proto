@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package com.example.pokedex;
+
+option java_multiple_files = true;
+
+message Pokemon {
+  int32 id = 1;
+  string name = 2;
+  string image_url = 3;
+  repeated string types = 4;
+}
+
+message Favourites {
+  repeated Pokemon favourites = 1;
+}

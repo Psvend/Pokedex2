@@ -40,6 +40,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.pokedex2.utils.RotatingLoader
@@ -81,7 +82,7 @@ fun HomePokemonScroll(
             ) {
                 // Error image
                 Image(
-                    painter = painterResource(R.drawable.bug_image), // Replace with your bug image resource
+                    painter = painterResource(R.drawable.bug_image), // Bug image when no internet
                     contentDescription = "Error",
                     modifier = Modifier.size(128.dp)
                 )
@@ -116,11 +117,16 @@ fun HomePokemonScroll(
                 AffirmationCard(
                     affirmation = affirmation,
                     navController = navController,
-                    onLikeClicked = { viewModel.toggleLike(affirmation) },
-                    modifier = Modifier
-                        .padding(4.dp)
+                    onLikeClicked = {
+                        viewModel.toggleLike(
+                            context = LocalContext.current,
+                            affirmation = affirmation
+                        )
+                    },
+                    modifier = Modifier.padding(4.dp)
                 )
             }
+
             if (isPaginating) {
                 item {
                     Box(
@@ -146,19 +152,16 @@ fun HomePokemonScroll(
     }
 }
 
-
-
 @Composable
 fun AffirmationCard(
     affirmation: Affirmation,
-    onLikeClicked: () -> Unit,
+    onLikeClicked: @Composable (Affirmation) -> Unit, // Composable callback
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    var isLiked by remember { mutableStateOf(affirmation.isLiked) }
-
     Card(
-        modifier = modifier.padding(4.dp)
+        modifier = modifier
+            .padding(4.dp)
             .clickable { navController.navigate("pokemonPage") },
         colors = CardDefaults.cardColors(Color(0xFFFFF9E6)),
         shape = RectangleShape
@@ -169,7 +172,7 @@ fun AffirmationCard(
                 .fillMaxWidth()
                 .padding(8.dp),
         ) {
-            // Pokemon image
+            // Pokémon image
             Image(
                 painter = rememberAsyncImagePainter(affirmation.imageResourceId),
                 contentDescription = affirmation.name,
@@ -178,54 +181,43 @@ fun AffirmationCard(
                     .padding(8.dp),
                 contentScale = ContentScale.Crop
             )
-            // Text and category icons in the middle
+
+            // Text and category icons
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 16.dp)
             ) {
-                // Name of pokemon
+                // Pokémon name
                 Text(
                     text = affirmation.name,
                     style = MaterialTheme.typography.headlineSmall
                 )
 
-                // Row for dynamic pokemon type text
+                // Pokémon types
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     modifier = Modifier.padding(top = 4.dp)
                 ) {
-                    // Our category icons
                     affirmation.typeIcon.forEach { type ->
                         Text(
                             text = type,
                             style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier
-                                .padding(4.dp)
+                            modifier = Modifier.padding(4.dp)
                         )
                     }
                 }
             }
 
-            // The like button and number
+            // Like button and Pokémon ID
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(start = 8.dp)
             ) {
-                IconButton(onClick = {
-                    isLiked = !isLiked
-                    onLikeClicked()
-                }) {
-                    Icon(
-                        painter = painterResource(
-                            if (isLiked) R.drawable.heart_filled else R.drawable.heart_empty
-                        ),
-                        contentDescription = if (isLiked) "Unlike" else "Like",
-                        tint = if (isLiked) Color(0xFFB11014) else Color(0xFFB11014)
-                    )
-                }
-                // Id number of pokemon
+                // Heart icon for like/unlike
+                onLikeClicked(affirmation) // Invoke the composable function
+
                 Text(
                     text = "#" + affirmation.number.toString(),
                     style = MaterialTheme.typography.bodySmall,

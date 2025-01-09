@@ -1,5 +1,6 @@
 package com.example.pokedex2.data.remote
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState.Loading.endOfPaginationReached
 import androidx.paging.LoadType
@@ -35,6 +36,7 @@ class PokemonRemoteMediator (
                 }
             }
             val response = pokemonApi.getPokemonList(offset = loadKey, limit = state.config.pageSize)
+            Log.d("API_CALL", "Response: $response")
             val pokemonEntities = response.results.map { it.toPokemonEntity() }
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
