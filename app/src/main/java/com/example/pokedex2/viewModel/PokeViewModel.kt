@@ -1,5 +1,14 @@
 package com.example.pokedex2.viewModel
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -17,7 +26,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PokeViewModel @Inject() constructor(
+class PokeViewModel @Inject constructor(
    private val pokemonApiService: PokemonApiService
 
 
@@ -30,11 +39,20 @@ class PokeViewModel @Inject() constructor(
     private val _pokemonDetail = MutableStateFlow<testPokemon?>(null)
     val pokemonDetail: StateFlow<testPokemon?> = _pokemonDetail
 
+
+
+
     fun fetchPokemonDetail(name: String) {
         viewModelScope.launch {
             val result = pokemonApiService.getPokemonDetail(name)
             _pokemonDetail.value = result
     }
 }
+
+
 }
+
+
+
+
 

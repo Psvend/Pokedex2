@@ -1,4 +1,4 @@
-package com.example.pokedex2.ui.theme
+package com.example.pokedex2.ui.PokemonList
 import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.viewModel.AffirmationViewModel
 import androidx.compose.foundation.Image
@@ -25,10 +25,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import com.example.pokedex2.R
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.graphics.RectangleShape
@@ -57,6 +64,8 @@ fun HomePokemonScroll(
     val isPaginating = viewModel.isPaginating.value
     val errorMessage = viewModel.errorMessage.value
     val listState = rememberLazyListState()
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    var showFilterOverlay by remember {mutableStateOf(false)}
 
     if (isLoading && affirmationList.isEmpty()) {
         // Show a loading spinner during initial load
@@ -227,3 +236,59 @@ fun AffirmationCard(
         }
     }
 }
+
+/*
+*
+//Creates the boxes around each type
+@Composable
+fun PokemonTypeIcons(types: List<String>, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier.padding(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        types.forEach { type ->
+            Box(
+                modifier = Modifier
+                    .background(
+                        color = getTypeColor(type),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .padding(horizontal = 12.dp, vertical = 4.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = type,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.White
+                )
+            }
+        }
+    }
+}
+
+*
+//color boxes for the pokemon types
+fun getTypeColor(type: String): Color {
+    return when (type.lowercase()) {
+        "fire" -> Color(0xFFd61717) // Red
+        "grass" -> Color(0xFF89de65) // Green
+        "water" -> Color(0xFF0000FF) // Blue
+        "electric" -> Color(0xFFdddc11) // Yellow
+        "bug" -> Color(0xFFa4c81a) // Light Green
+        "poison" -> Color(0xFF8E44AD) // Purple
+        "ice" -> Color(0xFF00FFFF) // Cyan
+        "normal" -> Color(0xfff68d53) // White
+        "ground" -> Color(0xFF8B4513) // Brown
+        "flying" -> Color(0xFFADD8E6) // Light Blue
+        "fairy" -> Color(0xFFEE99AC) // Pink
+        "fighting" -> Color(0xFFa41353) // Reddish Brown
+        "psychic" -> Color(0xFFFF69B4) // Hot Pink
+        "dragon" -> Color(0xff11ddd6)
+        "dark" -> Color(0xff3f4948)
+        "ghost" -> Color(0xff6a8180)
+        "rock" -> Color(0xff908065)
+        else -> Color.Gray // Default Gray
+    }
+}
+
+* */

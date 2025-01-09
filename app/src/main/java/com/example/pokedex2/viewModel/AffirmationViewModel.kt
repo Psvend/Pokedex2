@@ -2,6 +2,7 @@ package com.example.pokedex2.viewModel
 
 import android.content.Context
 import android.util.Log
+import android.graphics.Color
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +11,7 @@ import com.example.pokedex2.data.local.removeFavouritePokemon
 import com.example.pokedex2.data.local.saveFavouritePokemon
 import com.example.pokedex2.data.remote.PokemonApiService
 import com.example.pokedex2.model.Affirmation
+import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -47,9 +49,9 @@ class AffirmationViewModel @Inject constructor(
                     val detail = pokemonApiService.getPokemonDetail(result.name)
                     Affirmation(
                         id = detail.id,
-                        name = detail.name,
+                        name = detail.name.capitalizeFirstLetter(),   //changed first letter to upper case
                         imageResourceId = detail.sprites.front_default ?: "",
-                        typeIcon = detail.types.map { it.type.name },
+                        typeIcon = detail.types.map { it.type.name.capitalizeFirstLetter() },
                         isLiked = false,
                         number = detail.id
                     )

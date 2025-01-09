@@ -1,4 +1,4 @@
-package com.example.pokedex2.ui.components
+package com.example.pokedex2.ui.SearchAndFilters
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -246,14 +246,22 @@ fun TypeGrid(
                     },
                 contentAlignment = Alignment.Center
             ) {
+
                 Text(
                     text = localPokeType.name,
                     style = MaterialTheme.typography.bodyMedium,
                     color = if (isSelected) Color.Black else Color.White
                 )
+
+
             }
         }
     }
+}
+
+
+fun String.capitalizeFirstLetter(): String {
+    return this.lowercase().replaceFirstChar { it.uppercase() }
 }
 
 
