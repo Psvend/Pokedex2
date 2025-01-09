@@ -1,7 +1,10 @@
 package com.example.pokedex2.ui.PokePage
 
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,18 +30,39 @@ import com.example.pokedex2.viewModel.PokePageViewModel
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import com.example.pokedex2.model.Affirmation
 
 
 @Composable
-fun PokemonPage(affirmation: Affirmation, modifier: Modifier = Modifier) {
+fun PokemonPage(
+    pokemonIdOrName: String,
+    viewModel: PokePageViewModel = hiltViewModel(),
+    modifier: Modifier = Modifier)
+{
     //Add new items here to show
     val pokemonDetail by viewModel.pokemonDetail.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
-    val pokemonImage by viewModel.pokemonImage.collectAsState()
+    //val pokemonImage by viewModel.pokemonImage.collectAsState()
 
     // Fetch Pokémon details when the page is displayed
     LaunchedEffect(pokemonIdOrName) {
@@ -70,8 +94,8 @@ fun PokemonPage(affirmation: Affirmation, modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            PokemonName()
-            PokemonNr(affirmation = pokemonAffirmation)
+            PokemonName(name = pokemonDetail?.name ?: "Unknown")
+            //PokemonNr()
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -84,17 +108,18 @@ fun PokemonPage(affirmation: Affirmation, modifier: Modifier = Modifier) {
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
-            PokemonImage(affirmation = pokemonAffirmation)
+            PokemonImage(model = pokemonDetail?.sprites?.front_default)
+
             LikeButton(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .offset(y=20.dp)
+                    .offset(y = 20.dp)
             )
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
-    /*
+        /*
         // Types Section
         Row(
             modifier = Modifier
@@ -125,26 +150,181 @@ fun PokemonPage(affirmation: Affirmation, modifier: Modifier = Modifier) {
 
 
 
+
 @Composable
-fun PokemonName() {
+fun PokemonName(name: String) {
     Text(
-        text = pokemonDetail?.name ?: "Loading...",
-        style = MaterialTheme.typography.headlineMedium,
-        color = Color.Black
+        text = name ?: "Loading...",
+        style = TextStyle(
+            fontSize = 24.sp,
+            fontFamily = FontFamily.Default
+        ),
+        color = Color.DarkGray
     )
 }
+
+/*
+
+@Composable
+fun PokemonNr(){
+    Text(
+        //text = pokemonDetail?.
+        style = TextStyle(
+            fontSize = 24.sp,
+            fontFamily = FontFamily.Default
+        ),
+        color = Color.DarkGray
+    )
+}
+
+
+ */
+
+@Composable
+fun PokemonImage(model: String?) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Box(
+            modifier = Modifier
+                .height(300.dp)
+                .width(300.dp)
+                .shadow(8.dp, shape = RoundedCornerShape(12.dp))
+                .border(2.dp, Color.Gray, shape = RoundedCornerShape(12.dp))
+                .background(Color.White, shape = RoundedCornerShape(12.dp))
+        ) {
+            if (model != null) {
+                AsyncImage(
+                    model = model,
+                    contentDescription = "{pokemonDetail?.name} sprite",
+                    modifier = Modifier
+                        .size(240.dp, 240.dp)
+                        .clip(RoundedCornerShape(12.dp))
+
+                )
+            } else {
+                Text(
+                    text = "Image not available",
+                    color = Color.Gray,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+
+        }
+    }
+}
+
+
+    /*
+@Composable
+fun PokemonType(affirmation: Affirmation) {
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 14.dp),
+    ) {
+
+        //Our category icons
+        affirmation.typeIcon.forEach { typeIcon ->
+            Image(
+                painter = painterResource(typeIcon),
+                contentDescription = stringResource(affirmation.stringResourceId),
+                modifier = Modifier
+                    .width(50.dp)
+                    .height(20.dp)
+                    .padding(2.dp) //space between the categories
+                    .border(2.dp, Color.Gray, shape = RoundedCornerShape(12.dp))
+                    .clip(RoundedCornerShape(12.dp))
+                    .size(30.dp),
+                contentScale = ContentScale.Crop
+            )
+
+        }
+    }
+}
+
 
 
 
 @Composable
-fun PokemonImage () {
-    AsyncImage(
-        model = pokemonDetail?.sprites?.front_default,
-        contentDescription = "{pokemonDetail?.name} sprite",
-        modifier = Modifier.size(500.dp)
+fun PokemonDescription(affirmation: Affirmation){
+    Text(
+        text = affirmation.description,
+        style = TextStyle(
+            fontSize = 16.sp,
+            fontFamily = FontFamily.Default
+        ),
+        textAlign = TextAlign.Start,
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .fillMaxWidth()
     )
 }
 
+
+//The graph section
+@Composable
+fun PokemonStats(affirmation: Affirmation){
+    Box (
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+
+        Image(
+            painter = painterResource(affirmation.graph),
+            contentDescription = "Graph",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .align(Alignment.CenterStart)
+
+        )
+    }
+}
+*/
+
+    //Reuse of likebutton
+    @Composable
+    fun LikeButton(modifier: Modifier = Modifier) {
+        var isSelect by remember { mutableStateOf(false) }
+        val iconModifier = Modifier
+            .size(40.dp)
+            .clickable { isSelect = !isSelect }
+
+        Box(modifier = Modifier) {
+            if (isSelect) {
+                Icon(
+                    imageVector = Icons.Filled.Favorite,
+                    contentDescription = "Like",
+                    tint = Color.Red,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .align(Alignment.TopEnd)
+                        .offset(x = 110.dp, y = -85.dp)
+                        .clickable { isSelect = !isSelect }
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Outlined.FavoriteBorder,
+                    contentDescription = "Unlike",
+                    tint = Color.Gray,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .align(Alignment.TopEnd)
+                        .offset(x = 110.dp, y = -85.dp)
+                        .clickable { isSelect = !isSelect }
+                )
+            }
+        }
+    }
 
 
 
