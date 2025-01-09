@@ -63,6 +63,7 @@ fun PokemonPage(
     val pokemonDetail by viewModel.pokemonDetail.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
     //val pokemonImage by viewModel.pokemonImage.collectAsState()
+    val pokemonId by viewModel.pokemonId.collectAsState()
 
     // Fetch Pokémon details when the page is displayed
     LaunchedEffect(pokemonIdOrName) {
@@ -95,7 +96,7 @@ fun PokemonPage(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             PokemonName(name = pokemonDetail?.name ?: "Unknown")
-            //PokemonNr()
+            PokemonNr(id = pokemonId? :
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -163,12 +164,12 @@ fun PokemonName(name: String) {
     )
 }
 
-/*
+
 
 @Composable
-fun PokemonNr(){
+fun PokemonNr(id: String){
     Text(
-        //text = pokemonDetail?.
+        text = id,
         style = TextStyle(
             fontSize = 24.sp,
             fontFamily = FontFamily.Default
@@ -178,7 +179,7 @@ fun PokemonNr(){
 }
 
 
- */
+
 
 @Composable
 fun PokemonImage(model: String?) {

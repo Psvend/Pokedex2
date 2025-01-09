@@ -30,6 +30,10 @@ class PokePageViewModel @Inject constructor(
     val pokemonImage: StateFlow<String?> = _pokemonImage
 
 
+    private val _pokemonId = MutableStateFlow<String?>(null)
+    val pokemonId: StateFlow<String?> = _pokemonImage
+
+
 
     //Then add it here and then at PokemonPage
     fun fetchPokemonDetail(nameOrId: String) {
@@ -43,6 +47,9 @@ class PokePageViewModel @Inject constructor(
 
                 //Extract and set the image url
                 _pokemonImage.value = detail.sprites.front_default
+
+                //Set Id
+                _pokemonId.value = detail.id.toString()
 
             } catch (e: Exception) {
                 _errorMessage.value = "Failed to fetch Pokemon details: ${e.message}"
