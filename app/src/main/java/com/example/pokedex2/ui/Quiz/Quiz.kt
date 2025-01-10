@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,10 +41,16 @@ fun Quiz(
     modifier: Modifier = Modifier
 ) {
     val pokemonDetail = viewModel.pokemonDetail.collectAsState()
-    val randomPokemonId = remember { Random.nextInt(1, 898) } // Assuming there are 898 Pokémon
-LaunchedEffect (Unit) {
+    val pokemonNames = viewModel.pokemonNames.collectAsState()
+    val randomPokemonId = remember { viewModel.getRandomPokemonId() }
+
+    LaunchedEffect(Unit) {
         viewModel.fetchPokemonDetail(randomPokemonId.toString())
-}
+    }
+
+    val answerOptions = remember {
+        pokemonNames.value.shuffled().take(3) + (pokemonDetail.value?.name ?: "Unknown")
+    }.shuffled()
 
     Column (modifier = modifier.fillMaxSize()
         .background(Color(0xFFFFF9E6))
@@ -66,38 +73,26 @@ LaunchedEffect (Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp),
-            textAlign = TextAlign.Center)
-        QuizText(
-            text = pokemonDetail.value?.name ?: "Unknown",
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .align(Alignment.CenterHorizontally)
+            textAlign = TextAlign.Center
         )
-        QuizText(
-            text = pokemonDetail.value?.name ?: "Unknown",
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .align(Alignment.CenterHorizontally)
-        )
-        QuizText(
-            text = pokemonDetail.value?.name ?: "Unknown",
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .align(Alignment.CenterHorizontally)
-        )
-        QuizText(
-            text = pokemonDetail.value?.name ?: "Unknown",
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .align(Alignment.CenterHorizontally)
-        )
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            answerOptions.forEach { option ->
+                Button(
+                    onClick = { /* Handle answer selection */ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                ) {
+                    Text(text = option)
+                }
+            }
         }
     }
 
+}
 @Composable
 fun QuizImagae(
     model : String?
@@ -136,25 +131,7 @@ fun QuizImagae(
         }
     }
 }
-@Composable
-fun QuizText(
-    text: String,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .background(Color.Red)
-            .padding(8.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = text?: "Loading...",
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.White,
-            textAlign = TextAlign.Center
-        )
-    }
-}
+
 
     @Preview
     @Composable

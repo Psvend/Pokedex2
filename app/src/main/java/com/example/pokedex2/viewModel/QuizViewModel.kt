@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
+
 
 @HiltViewModel
 class QuizViewModel @Inject constructor(
@@ -30,12 +32,31 @@ class QuizViewModel @Inject constructor(
     private val _pokemonDetail = MutableStateFlow<testPokemon?>(null)
     val pokemonDetail: StateFlow<testPokemon?> = _pokemonDetail
 
+    private val _pokemonNames = MutableStateFlow<List<String>>(emptyList())
+    val pokemonNames: StateFlow<List<String>> = _pokemonNames
+
+    init {
+        fetchPokemonNames()
+    }
+
     fun fetchPokemonDetail(name: String) {
         viewModelScope.launch {
             val result = pokemonApiService.getPokemonDetail(name)
             _pokemonDetail.value = result
         }
     }
+    private fun fetchPokemonNames() {
+        viewModelScope.launch {
+            val response = pokemonApiService.getPokemonList(0, 100) // Fetch first 100 Pokémon names
+            val names = response.results.map { it.name }
+            _pokemonNames.value = names
+        }
+    }
+
+    fun getRandomPokemonId(): Int {
+        return Random.nextInt(1, 898) // Assuming there are 898 Pokémon
+    }
+
 
 
 }
