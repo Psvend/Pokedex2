@@ -1,6 +1,6 @@
 package com.example.pokedex2.ui.PokemonList
 import com.example.pokedex2.model.Affirmation
-import com.example.pokedex2.viewModel.AffirmationViewModel
+import com.example.pokedex2.viewModel.MainPageViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,16 +25,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -55,7 +48,7 @@ import kotlinx.coroutines.flow.filter
 
 @Composable
 fun HomePokemonScroll(
-    viewModel: AffirmationViewModel,
+    viewModel: MainPageViewModel,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -127,10 +120,13 @@ fun HomePokemonScroll(
                     affirmation = affirmation,
                     navController = navController,
                     onLikeClicked = {
+                        /*
                         viewModel.toggleLike(
                             context = LocalContext.current,
                             affirmation = affirmation
                         )
+
+                         */
                     },
                     modifier = Modifier.padding(4.dp)
                 )
@@ -144,7 +140,7 @@ fun HomePokemonScroll(
                             .padding(16.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        RotatingLoader()
+                       CircularProgressIndicator(modifier = Modifier.size(24.dp))
                     }
                 }
             }

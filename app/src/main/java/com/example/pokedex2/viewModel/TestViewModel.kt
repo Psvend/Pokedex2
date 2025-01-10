@@ -1,5 +1,6 @@
 package com.example.pokedex2.viewModel
 
+/*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -42,3 +43,5 @@ class TestViewModel @Inject constructor(
         }
     }
 }
+
+ */

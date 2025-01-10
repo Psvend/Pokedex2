@@ -2,13 +2,10 @@ package com.example.pokedex2.viewModel
 
 import android.content.Context
 import android.util.Log
-import android.graphics.Color
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pokedex.Pokemon
-import com.example.pokedex2.data.local.removeFavouritePokemon
-import com.example.pokedex2.data.local.saveFavouritePokemon
+
 import com.example.pokedex2.data.remote.PokemonApiService
 import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
@@ -21,9 +18,10 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class AffirmationViewModel @Inject constructor(
+class MainPageViewModel @Inject constructor(
     private val pokemonApiService: PokemonApiService
 ) : ViewModel() {
+
     private val _affirmations = MutableStateFlow<List<Affirmation>>(emptyList())
     val affirmations: StateFlow<List<Affirmation>> = _affirmations
 
@@ -32,11 +30,6 @@ class AffirmationViewModel @Inject constructor(
     val errorMessage = mutableStateOf<String?>(null)
     private var currentPage = 0
 
-    init {
-        fetchAffirmations()
-    }
-
-    // Make fetchAffirmations public
     fun fetchAffirmations(page: Int = 0) {
         viewModelScope.launch {
             try {
@@ -49,10 +42,10 @@ class AffirmationViewModel @Inject constructor(
                     val detail = pokemonApiService.getPokemonDetail(result.name)
                     Affirmation(
                         id = detail.id,
-                        name = detail.name.capitalizeFirstLetter(),   //changed first letter to upper case
+                        name = detail.name.capitalizeFirstLetter(),
                         imageResourceId = detail.sprites.front_default ?: "",
                         typeIcon = detail.types.map { it.type.name.capitalizeFirstLetter() },
-                        isLiked = false,
+                        isLiked = false, // Initially not liked
                         number = detail.id
                     )
                 }
@@ -74,6 +67,20 @@ class AffirmationViewModel @Inject constructor(
         fetchAffirmations(currentPage + 1)
     }
 
+    /*fun updateAffirmation(updatedAffirmation: Affirmation) {
+        _affirmations.update { affirmations ->
+            affirmations.map {
+                if (it.id == updatedAffirmation.id) updatedAffirmation else it
+            }
+        }
+        }
+     */
+
+}
+
+
+/*
+
     fun toggleLike(context: Context, affirmation: Affirmation) {
         Log.d("ToggleLike", "Before: ${affirmation.isLiked}")
         _affirmations.update { list ->
@@ -90,18 +97,17 @@ class AffirmationViewModel @Inject constructor(
 
     private fun updateCache(context: Context, affirmation: Affirmation) {
         viewModelScope.launch {
-            val pokemon = Pokemon.newBuilder()
-                .setId(affirmation.id)
-                .setName(affirmation.name)
-                .setImageUrl(affirmation.imageResourceId)
-                .addAllTypes(affirmation.typeIcon)
-                .build()
+            val updatedAffirmation = affirmation.copy(
+                isLiked = !affirmation.isLiked
+            )
 
-            if (affirmation.isLiked) {
-                saveFavouritePokemon(context, pokemon)
+            if (updatedAffirmation.isLiked) {
+                saveFavouritePokemon(context, updatedAffirmation)
             } else {
-                removeFavouritePokemon(context, pokemon.id)
+                removeFavouriteAffirmation(context, updatedAffirmation)
             }
         }
     }
 }
+
+*/

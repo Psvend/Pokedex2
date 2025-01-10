@@ -26,6 +26,7 @@ protobufGradlePlugin = "0.9.4"
 retrofit = "2.9.0"
 roomKtx = "2.6.1"
 supportAnnotations = "28.0.0"
+constraintlayout = "2.2.0"
 
 [libraries]
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
@@ -68,6 +69,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 support-annotations = { group = "com.android.support", name = "support-annotations", version.ref = "supportAnnotations" }
 protobuf-protoc = { module = "com.google.protobuf:protoc", version = "3.21.12" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 
 
 [plugins]

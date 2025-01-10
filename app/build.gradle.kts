@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation (libs.coil.kt.coil.compose)
     implementation(libs.support.annotations)
+    implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

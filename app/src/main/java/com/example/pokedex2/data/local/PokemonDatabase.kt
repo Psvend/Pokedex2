@@ -1,5 +1,5 @@
 package com.example.pokedex2.data.local
-
+/*
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -10,3 +10,5 @@ abstract class PokemonDatabase: RoomDatabase() {
     abstract fun pokemonDao(): PokemonDao
 
 }
+
+ */

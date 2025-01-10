@@ -4,13 +4,15 @@ package com.example.pokedex;
 
 option java_multiple_files = true;
 
-message Pokemon {
-  int32 id = 1;
-  string name = 2;
-  string image_url = 3;
-  repeated string types = 4;
+message FavouriteAffirmation {
+    int32 id = 1;
+    string name = 2;
+    string imageResourceId = 3;
+    repeated string typeIcon = 4;
+    bool isLiked = 5;
+    int32 number = 6;
 }
 
 message Favourites {
-  repeated Pokemon favourites = 1;
+    repeated FavouriteAffirmation favouritesList = 1;
 }

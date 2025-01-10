@@ -21,13 +21,13 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 
-import com.example.pokedex2.viewModel.AffirmationViewModel
+import com.example.pokedex2.viewModel.MainPageViewModel
 import androidx.compose.runtime.*
 
 
 @Composable
 fun MainPageBackGround(
-    viewModel: AffirmationViewModel,
+    viewModel: MainPageViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController
 ) {

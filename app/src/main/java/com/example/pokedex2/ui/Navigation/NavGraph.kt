@@ -10,10 +10,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.pokedex2.ui.PokePage.PokemonPage
-import com.example.pokedex2.ui.PokemonList.HomePokemonScroll
+import com.example.pokedex2.ui.PokemonList.FavouritePokemonList
 import com.example.pokedex2.ui.PokemonList.MainPageBackGround
-import com.example.pokedex2.viewModel.AffirmationViewModel
-import com.example.pokedex2.viewModel.PokePageViewModel
+import com.example.pokedex2.viewModel.MainPageViewModel
 
 //import com.example.pokedex2.viewModel.PokemonPageViewModel
 
@@ -25,9 +24,9 @@ fun NavGraph(
 ) {
     NavHost(navController = navController, startDestination = startDestination) {
         composable("mainPage") {
-            val affirmationViewModel: AffirmationViewModel = hiltViewModel()
+            val mainPageViewModel: MainPageViewModel = hiltViewModel()
             MainPageBackGround(
-                viewModel = affirmationViewModel,
+                viewModel = mainPageViewModel,
                 modifier = modifier,
                 navController = navController
             )
@@ -38,6 +37,9 @@ fun NavGraph(
         ) { backStackEntry ->
             val pokemonName = backStackEntry.arguments?.getString("pokemonName") ?: ""
             PokemonPage(pokemonIdOrName = pokemonName)
+        }
+        composable("favouritePokemon") {
+            FavouritePokemonList(viewModel = viewModel(), navController = navController)
         }
     }
 }
