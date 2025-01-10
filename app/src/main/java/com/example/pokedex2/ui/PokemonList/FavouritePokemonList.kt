@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -16,17 +17,22 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.pokedex2.viewModel.FavouritesViewModel
+import com.example.pokedex2.viewModel.SyncViewModel
 
-/*
+
 @Composable
 fun FavouritePokemonList(
-    viewModel: FavouritesViewModel = hiltViewModel(),
+    syncViewModel: SyncViewModel = hiltViewModel(),
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val favouriteAffirmations by viewModel.getFavouriteAffirmations().collectAsState(initial = emptyList())
+    // Collect the synced list of liked Pokémon
+    val favouriteAffirmations by syncViewModel.pokemonList.collectAsState(initial = emptyList())
 
-    if (favouriteAffirmations.isEmpty()) {
+    // Filter the list to show only liked Pokémon
+    val likedPokemons = favouriteAffirmations.filter { it.isLiked }
+
+    if (likedPokemons.isEmpty()) {
         // Show empty state
         Box(
             modifier = Modifier
@@ -43,12 +49,13 @@ fun FavouritePokemonList(
                 .fillMaxSize()
                 .background(Color(0xFFD9D9D9))
         ) {
-            items(favouriteAffirmations) { affirmation ->
+            items(likedPokemons) { affirmation ->
                 AffirmationCard(
                     affirmation = affirmation,
                     navController = navController,
                     onLikeClicked = {
-                        viewModel.removeFavourite(affirmation.id)
+                        // Call toggleLike from SyncViewModel
+                        syncViewModel.toggleLike(affirmation)
                     },
                     modifier = Modifier.padding(4.dp)
                 )
@@ -56,5 +63,3 @@ fun FavouritePokemonList(
         }
     }
 }
-
- */

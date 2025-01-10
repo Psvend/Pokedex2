@@ -1,7 +1,5 @@
 package com.example.pokedex2.viewModel
 
-import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,9 +14,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
-class MainPageViewModel @Inject constructor(
+class AllPokemonsViewModel @Inject constructor(
     private val pokemonApiService: PokemonApiService
 ) : ViewModel() {
 
@@ -28,7 +25,6 @@ class MainPageViewModel @Inject constructor(
     val isLoading = mutableStateOf(true)
     val isPaginating = mutableStateOf(false)
     val errorMessage = mutableStateOf<String?>(null)
-    private var currentPage = 0
 
     fun fetchAffirmations(page: Int = 0) {
         viewModelScope.launch {
@@ -45,14 +41,12 @@ class MainPageViewModel @Inject constructor(
                         name = detail.name.capitalizeFirstLetter(),
                         imageResourceId = detail.sprites.front_default ?: "",
                         typeIcon = detail.types.map { it.type.name.capitalizeFirstLetter() },
-                        isLiked = false, // Initially not liked
+                        isLiked = false,
                         number = detail.id
                     )
                 }
 
                 _affirmations.update { it + affirmationsList }
-                currentPage = page
-                errorMessage.value = null
             } catch (e: Exception) {
                 errorMessage.value = "Oops! Something went wrong. Please try again."
             } finally {
@@ -61,53 +55,4 @@ class MainPageViewModel @Inject constructor(
             }
         }
     }
-
-    // Add a helper function to calculate the next page
-    fun loadNextPage() {
-        fetchAffirmations(currentPage + 1)
-    }
-
-    /*fun updateAffirmation(updatedAffirmation: Affirmation) {
-        _affirmations.update { affirmations ->
-            affirmations.map {
-                if (it.id == updatedAffirmation.id) updatedAffirmation else it
-            }
-        }
-        }
-     */
-
 }
-
-
-/*
-
-    fun toggleLike(context: Context, affirmation: Affirmation) {
-        Log.d("ToggleLike", "Before: ${affirmation.isLiked}")
-        _affirmations.update { list ->
-            list.map {
-                if (it == affirmation) {
-                    val updatedAffirmation = it.copy(isLiked = !it.isLiked)
-                    updateCache(context, updatedAffirmation) // Persist to DataStore
-                    updatedAffirmation
-
-                } else it
-            }
-        }
-    }
-
-    private fun updateCache(context: Context, affirmation: Affirmation) {
-        viewModelScope.launch {
-            val updatedAffirmation = affirmation.copy(
-                isLiked = !affirmation.isLiked
-            )
-
-            if (updatedAffirmation.isLiked) {
-                saveFavouritePokemon(context, updatedAffirmation)
-            } else {
-                removeFavouriteAffirmation(context, updatedAffirmation)
-            }
-        }
-    }
-}
-
-*/

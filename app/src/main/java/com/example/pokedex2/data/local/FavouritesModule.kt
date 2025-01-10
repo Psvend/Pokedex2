@@ -1,5 +1,5 @@
 package com.example.pokedex2.data.local
-/*
+
 import android.content.Context
 import com.example.pokedex2.data.local.FavouritesRepository
 import com.example.pokedex2.data.local.FavouritesRepositoryImpl
@@ -24,4 +24,3 @@ object FavouritesModule {
 }
 
 
- */

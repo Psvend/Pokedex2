@@ -12,7 +12,7 @@ import androidx.navigation.navArgument
 import com.example.pokedex2.ui.PokePage.PokemonPage
 import com.example.pokedex2.ui.PokemonList.FavouritePokemonList
 import com.example.pokedex2.ui.PokemonList.MainPageBackGround
-import com.example.pokedex2.viewModel.MainPageViewModel
+import com.example.pokedex2.viewModel.AllPokemonsViewModel
 
 //import com.example.pokedex2.viewModel.PokemonPageViewModel
 
@@ -24,9 +24,9 @@ fun NavGraph(
 ) {
     NavHost(navController = navController, startDestination = startDestination) {
         composable("mainPage") {
-            val mainPageViewModel: MainPageViewModel = hiltViewModel()
+            val allPokemonsViewModel: AllPokemonsViewModel = hiltViewModel()
             MainPageBackGround(
-                viewModel = mainPageViewModel,
+                viewModel = allPokemonsViewModel,
                 modifier = modifier,
                 navController = navController
             )
@@ -39,7 +39,7 @@ fun NavGraph(
             PokemonPage(pokemonIdOrName = pokemonName)
         }
         composable("favouritePokemon") {
-            FavouritePokemonList(viewModel = viewModel(), navController = navController)
+            FavouritePokemonList(syncViewModel = viewModel(), navController = navController)
         }
     }
 }

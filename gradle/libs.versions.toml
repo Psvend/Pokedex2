@@ -27,6 +27,7 @@ retrofit = "2.9.0"
 roomKtx = "2.6.1"
 supportAnnotations = "28.0.0"
 constraintlayout = "2.2.0"
+datastoreCoreAndroid = "1.1.1"
 
 [libraries]
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
@@ -70,6 +71,7 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 support-annotations = { group = "com.android.support", name = "support-annotations", version.ref = "supportAnnotations" }
 protobuf-protoc = { module = "com.google.protobuf:protoc", version = "3.21.12" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-datastore-core-android = { group = "androidx.datastore", name = "datastore-core-android", version.ref = "datastoreCoreAndroid" }
 
 
 [plugins]

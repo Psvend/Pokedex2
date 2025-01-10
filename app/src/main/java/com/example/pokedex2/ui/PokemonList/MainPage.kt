@@ -21,17 +21,18 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 
-import com.example.pokedex2.viewModel.MainPageViewModel
+import com.example.pokedex2.viewModel.AllPokemonsViewModel
 import androidx.compose.runtime.*
+import com.example.pokedex2.viewModel.SyncViewModel
 
 
 @Composable
 fun MainPageBackGround(
-    viewModel: MainPageViewModel,
+    viewModel: AllPokemonsViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
-    val affirmationList by viewModel.affirmations.collectAsState(initial = emptyList())
+//    val affirmationList by viewModel.affirmations.collectAsState(initial = emptyList())
 
     Box(
         modifier = Modifier
@@ -57,9 +58,8 @@ fun MainPageBackGround(
                     )
             ) {
                 HomePokemonScroll(
-                    viewModel,
-                    modifier = modifier,
                     navController = navController,
+                    modifier = modifier
                 )
             }
         }

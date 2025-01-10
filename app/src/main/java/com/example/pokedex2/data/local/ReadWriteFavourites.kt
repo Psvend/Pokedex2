@@ -1,13 +1,14 @@
 package com.example.pokedex2.data.local
 
 import android.content.Context
-import com.example.pokedex.FavouriteAffirmation
 import com.example.pokedex2.model.Affirmation
+import com.example.pokedex2.proto.FavouriteAffirmation
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import com.example.pokedex2.proto.FavouriteAffirmations
 
-/*
-// Save a favourite affirmation
+
+
 suspend fun saveFavouritePokemon(context: Context, affirmation: Affirmation) {
     context.favouritesDataStore.updateData { currentFavourites ->
         currentFavourites.toBuilder()
@@ -16,7 +17,9 @@ suspend fun saveFavouritePokemon(context: Context, affirmation: Affirmation) {
     }
 }
 
-// Convert `Affirmation` to its proto representation
+
+
+// Convert `Affirmation` to Proto
 private fun Affirmation.toProto(): FavouriteAffirmation {
     return FavouriteAffirmation.newBuilder()
         .setId(id)
@@ -28,15 +31,15 @@ private fun Affirmation.toProto(): FavouriteAffirmation {
         .build()
 }
 
-// Retrieve all favourite affirmations
 fun getFavouriteAffirmations(context: Context): Flow<List<Affirmation>> {
-    return context.favouritesDataStore.data
-        .map { favourites ->
-            favourites.favouritesList.map { it.toAffirmation() }
+    return context.favouritesDataStore.data.map { currentFavourites ->
+        currentFavourites.favouritesList.map {
+            val it = c
+            it.toAffirmation()
         }
+    }
 }
 
-// Convert `FavouriteAffirmation` proto back to `Affirmation`
 private fun FavouriteAffirmation.toAffirmation(): Affirmation {
     return Affirmation(
         id = id,
@@ -48,7 +51,7 @@ private fun FavouriteAffirmation.toAffirmation(): Affirmation {
     )
 }
 
-// Remove a favourite affirmation by ID
+
 suspend fun removeFavouriteAffirmation(context: Context, affirmationId: Int) {
     context.favouritesDataStore.updateData { currentFavourites ->
         val updatedFavourites = currentFavourites.favouritesList.filter { it.id != affirmationId }
@@ -59,4 +62,4 @@ suspend fun removeFavouriteAffirmation(context: Context, affirmationId: Int) {
     }
 }
 
- */
+
