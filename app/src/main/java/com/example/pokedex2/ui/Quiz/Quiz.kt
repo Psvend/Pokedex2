@@ -14,10 +14,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,13 +26,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.example.pokedex2.viewModel.QuizViewModel
 
 @Composable
 fun Quiz(
-    pokmeon : String,
+    viewModel: QuizViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
+    val pokemonDetail = viewModel.pokemonDetail.collectAsState()
+    viewModel.fetchPokemonDetail("pikachu")
 
     Column (modifier = modifier.fillMaxSize()
         .background(Color(0xFFFFF9E6))
@@ -45,11 +49,11 @@ fun Quiz(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                QuizImagae(model = pokmeon)
+                QuizImagae(model = pokemonDetail.value?.sprites?.front_default)
             }
 
         Text(
-            text = "What is the name of this pokemon?",
+            text = "Who´s that pokemon?",
             style = MaterialTheme.typography.bodyLarge,
             color = Color.Black,
             modifier = Modifier
@@ -57,28 +61,28 @@ fun Quiz(
                 .padding(top = 16.dp),
             textAlign = TextAlign.Center)
         QuizText(
-            text = "Pikachu",
+            text = pokemonDetail.value?.name ?: "Unknown",
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
                 .align(Alignment.CenterHorizontally)
         )
         QuizText(
-            text = "Pikachu",
+            text = pokemonDetail.value?.name ?: "Unknown",
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
                 .align(Alignment.CenterHorizontally)
         )
         QuizText(
-            text = "Pikachu",
+            text = pokemonDetail.value?.name ?: "Unknown",
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
                 .align(Alignment.CenterHorizontally)
         )
         QuizText(
-            text = "Pikachu",
+            text = pokemonDetail.value?.name ?: "Unknown",
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
@@ -89,7 +93,7 @@ fun Quiz(
 
 @Composable
 fun QuizImagae(
-    model : String
+    model : String?
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -137,7 +141,7 @@ fun QuizText(
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = text,
+            text = text?: "Loading...",
             style = MaterialTheme.typography.bodyMedium,
             color = Color.White,
             textAlign = TextAlign.Center
@@ -148,5 +152,7 @@ fun QuizText(
     @Preview
     @Composable
     fun QuizPreview() {
-        Quiz(pokmeon = "Pikachu")
+val viewModel: QuizViewModel = hiltViewModel()
+
+        Quiz(viewModel)
     }
