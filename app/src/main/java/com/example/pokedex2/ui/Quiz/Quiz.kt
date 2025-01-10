@@ -20,6 +20,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.pokedex2.viewModel.QuizViewModel
-import kotlin.random.Random
 
 
 @Composable
@@ -43,15 +44,20 @@ fun Quiz(
     val pokemonDetail = viewModel.pokemonDetail.collectAsState()
     val pokemonNames = viewModel.pokemonNames.collectAsState()
     val randomPokemonId = remember { viewModel.getRandomPokemonId() }
+    val points = remember { mutableIntStateOf(0) }
+
 
     LaunchedEffect(Unit) {
         viewModel.fetchPokemonDetail(randomPokemonId.toString())
     }
-
-    val answerOptions = remember {
-        pokemonNames.value.shuffled().take(3) + (pokemonDetail.value?.name ?: "Unknown")
-    }.shuffled()
-
+    val answerOptions = remember(pokemonDetail.value, pokemonNames.value) {
+        if (pokemonDetail.value != null) {
+            val correctAnswer = pokemonDetail.value?.name ?: "Unknown"
+            (pokemonNames.value.shuffled().take(3) + correctAnswer).shuffled()
+        } else {
+            emptyList()
+        }
+    }
     Column (modifier = modifier.fillMaxSize()
         .background(Color(0xFFFFF9E6))
         .padding(16.dp),
@@ -75,13 +81,31 @@ fun Quiz(
                 .padding(top = 16.dp),
             textAlign = TextAlign.Center
         )
+        Text(
+            text =  points.value.toString(),
+            style = MaterialTheme.typography.bodyLarge,
+            color = Color.Black,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            textAlign = TextAlign.Center
+        )
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             answerOptions.forEach { option ->
                 Button(
-                    onClick = { /* Handle answer selection */ },
+                    onClick = {
+                        if (option == pokemonDetail.value?.name) {
+                            points.value += 1
+                            val newRandomPokemonId = viewModel.getRandomPokemonId()
+                            viewModel.fetchPokemonDetail(newRandomPokemonId.toString())
+
+                        } else {
+                            /* Handle wrong answer */
+                        }
+                    /* Handle answer selection */ },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp)
