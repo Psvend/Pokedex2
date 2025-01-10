@@ -17,7 +17,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.pokedex2.viewModel.QuizViewModel
+import kotlin.random.Random
+
 
 @Composable
 fun Quiz(
@@ -36,7 +40,10 @@ fun Quiz(
     modifier: Modifier = Modifier
 ) {
     val pokemonDetail = viewModel.pokemonDetail.collectAsState()
-    viewModel.fetchPokemonDetail("pikachu")
+    val randomPokemonId = remember { Random.nextInt(1, 898) } // Assuming there are 898 Pokémon
+LaunchedEffect (Unit) {
+        viewModel.fetchPokemonDetail(randomPokemonId.toString())
+}
 
     Column (modifier = modifier.fillMaxSize()
         .background(Color(0xFFFFF9E6))
