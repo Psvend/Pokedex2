@@ -122,14 +122,14 @@ fun HomePokemonScroll(
             Row (
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.SpaceBetween
             ){
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
                     placeholder = { Text("Search...") },
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .weight(1f)
                         .padding(2.dp)
                         .background(Color.White, shape = RoundedCornerShape(25.dp)),
                     leadingIcon = {
@@ -151,7 +151,6 @@ fun HomePokemonScroll(
                     shape = RoundedCornerShape(25.dp)
                 )
 
-                Column {
                     IconButton(
                         onClick = {
                             if(showFilterOverlay){
@@ -167,7 +166,6 @@ fun HomePokemonScroll(
                             contentDescription = "Open Filters"
                         )
                     }
-                }
             }
 
             // Show the Pokémon list

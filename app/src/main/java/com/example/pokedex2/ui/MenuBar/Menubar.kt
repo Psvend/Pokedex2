@@ -1,14 +1,10 @@
 package com.example.pokedex2.ui.MenuBar
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -39,8 +35,6 @@ fun MenuBar(
     val items = listOf(
         BottomNavItem("Home", Icons.Filled.Home, Icons.Outlined.Home),
         BottomNavItem("Favorites", Icons.Filled.FavoriteBorder, Icons.Outlined.FavoriteBorder),
-        BottomNavItem("Search", Icons.Filled.Search, Icons.Outlined.Search),
-        BottomNavItem("Filter", Icons.Filled.Edit, Icons.Outlined.Edit)
     )
 
     // Determine the background color based on the selected index for custom searchView..
