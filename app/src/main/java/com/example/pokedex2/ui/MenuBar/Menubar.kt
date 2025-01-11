@@ -18,15 +18,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokedex2.BottomNavItem
 import com.example.pokedex2.viewModel.MenuBarViewModel
 
-/*
-data class BottomNavItem(
-    val title: String,
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector
-)
- */
-
-
 @Composable
 fun MenuBar(
     viewModel: MenuBarViewModel = viewModel()

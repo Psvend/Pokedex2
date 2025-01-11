@@ -31,8 +31,6 @@ fun MainPageBackGround(
     modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
-    val affirmationList by viewModel.affirmations.collectAsState(initial = emptyList())
-
     Box(
         modifier = Modifier
             .fillMaxSize()
