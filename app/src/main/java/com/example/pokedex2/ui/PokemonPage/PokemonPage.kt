@@ -48,6 +48,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.example.pokedex2.model.Affirmation
@@ -59,23 +60,35 @@ import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
 fun PokemonPage(
     pokemonIdOrName: String,
     viewModel: PokePageViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier) {
+    modifier: Modifier = Modifier
+) {
     //Add new items here to show
     val pokemonDetail by viewModel.pokemonDetail.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
     //val pokemonImage by viewModel.pokemonImage.collectAsState()
     val pokemonId by viewModel.pokemonId.collectAsState()
-    val pokemonHabitat by viewModel.pokemonHabitat.collectAsState()
-
+    val pokemonLocations by viewModel.pokemonLocations.collectAsState()
+    val pokemonForms by viewModel.pokemonForms.collectAsState()
 
     // Fetch Pokémon details when the page is displayed
     LaunchedEffect(pokemonIdOrName) {
         viewModel.fetchPokemonDetail(pokemonIdOrName.lowercase()) // Ensure lowercase is passed
+        //viewModel.fetchPokemonHabitat(pokemonIdOrName.lowercase())
     }
 
-    LaunchedEffect(pokemonIdOrName) {
-        viewModel.fetchPokemonHabitat(pokemonIdOrName)
+    // Fetch encounter locations when `location_area_encounters` is available
+    LaunchedEffect(pokemonDetail?.location_area_encounters) {
+        pokemonDetail?.location_area_encounters?.let { url ->
+            viewModel.fetchPokemonEncounters(url)
+        }
     }
+
+    LaunchedEffect(pokemonDetail?.forms) {
+        pokemonDetail?.forms?.map { it.url }?.let { urls ->
+            viewModel.fetchPokemonForms(urls)
+        }
+    }
+
 
 
     Column(
@@ -102,6 +115,7 @@ fun PokemonPage(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             PokemonName(name = pokemonDetail?.name ?: "Unknown")
+
             pokemonDetail?.id?.let { id ->
                 PokemonNr(id = id)
             }
@@ -141,23 +155,25 @@ fun PokemonPage(
             pokemonDetail?.types?.map { it.type.name }?.let { types ->
                 PokemonTypeIcons(types = types)
             }
-
+        }
 
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Description Section
-            PokemonDescription(affirmation = pokemonAffirmation)
+
+            //Pokemon Location Encounter
+            PokemonLocation(locations = pokemonLocations)
+
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            //Graph section
-            //PokemonStats(affirmation = pokemonAffirmation)
+            //Pokemon forms
+            PokemonForms(forms = pokemonForms)
 
-
+            //add more sections under here
         }
     }
-}
+
 
 
 
@@ -228,8 +244,8 @@ fun PokemonImage(model: String?) {
     }
 }
 
+/*
 
-    /*
 @Composable
 fun PokemonType(affirmation: Affirmation) {
 
@@ -262,23 +278,95 @@ fun PokemonType(affirmation: Affirmation) {
 */
 
 
-//CHANGE TO HABITAT - ALREADY SET UP JUST FINISH THE FUNCTION
 @Composable
-fun PokemonDescription(affirmation: Affirmation){
-    Text(
-        text = affirmation.description,
-        style = TextStyle(
-            fontSize = 16.sp,
-            fontFamily = FontFamily.Default
-        ),
-        textAlign = TextAlign.Start,
+fun PokemonLocation(locations: List<String>) {
+    Column(
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .fillMaxWidth()
-    )
+    ) {
+        Text(
+            text = "Encounters",
+            style = TextStyle(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Default
+            ),
+            textAlign = TextAlign.Start,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        if (locations.isEmpty()) {
+            Text(
+                text = "No encounter data available",
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily.Default
+                ),
+                textAlign = TextAlign.Start
+            )
+        } else {
+            locations.forEach { location ->
+                Text(
+                    text = location,
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontFamily = FontFamily.Default
+                    ),
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun PokemonForms(forms: List<String>) {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .fillMaxWidth()
+    ) {
+        Text(
+            text = "Forms",
+            style = TextStyle(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Default
+            ),
+            textAlign = TextAlign.Start,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        if (forms.isEmpty()) {
+            Text(
+                text = "No forms data available",
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily.Default
+                ),
+                textAlign = TextAlign.Start
+            )
+        } else {
+            forms.forEach { form ->
+                Text(
+                    text = form,
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontFamily = FontFamily.Default
+                    ),
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
+        }
+    }
 }
 
 
+
+
+
+/*
 //The graph section
 @Composable
 fun PokemonStats(affirmation: Affirmation){

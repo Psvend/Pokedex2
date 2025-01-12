@@ -33,8 +33,14 @@ class PokePageViewModel @Inject constructor(
     private val _pokemonId = MutableStateFlow<String?>(null)
     val pokemonId: StateFlow<String?> = _pokemonId
 
-    private val _pokemonHabitat = MutableStateFlow<String?>(null)
-    val pokemonHabitat: StateFlow<String?> = _pokemonHabitat
+    //private val _pokemonHabitat = MutableStateFlow<String?>(null)
+    //val pokemonHabitat: StateFlow<String?> = _pokemonHabitat
+
+    private val _pokemonLocations = MutableStateFlow<List<String>>(emptyList())
+    val pokemonLocations: StateFlow<List<String>> = _pokemonLocations
+
+    private val _pokemonForms = MutableStateFlow<List<String>>(emptyList())
+    val pokemonForms: StateFlow<List<String>> = _pokemonForms
 
 
     //Then add it here and then at PokemonPage
@@ -45,34 +51,50 @@ class PokePageViewModel @Inject constructor(
                 val detail = pokemonApiService.getPokemonDetail(nameOrId)
                 //val habitat = pokemonApiService.
 
-                    // Set pokemon details
+                // Set pokemon details
                 _pokemonDetail.value = detail
 
-                //Extract and set the image url
-                //_pokemonImage.value = detail.sprites.front_default
-
-                //Set Id
-                // _pokemonId.value = detail.id.toString()
+                //fetch location
+                //val locationEncounters = detail.location_area_encounters
+                //_pokemonLocation.value = null
 
             } catch (e: Exception) {
                 _errorMessage.value = "Failed to fetch Pokemon details: ${e.message}"
                 _pokemonDetail.value = null
                 _pokemonImage.value = null
+                //_pokemonLocation.value = null
             }
         }
     }
 
 
-    fun fetchPokemonHabitat(idOrName: String) {
+    fun fetchPokemonEncounters(encountersUrl: String) {
         viewModelScope.launch {
             try {
-                val habitat = pokemonApiService.getPokemonHabitat(idOrName)
-                _pokemonHabitat.value = habitat.name.capitalizeFirstLetter()
+                val encounters = pokemonApiService.getPokemonEncounters(encountersUrl)
+                _pokemonLocations.value = encounters.map { it.location_area.name.capitalizeFirstLetter() }
             } catch (e: Exception) {
-                _pokemonHabitat.value = "Uknown Habitat"
+                _pokemonLocations.value = listOf("No locations available")
             }
         }
     }
+
+
+    fun fetchPokemonForms(urls: List<String>) {
+        viewModelScope.launch {
+            try {
+                val formsNames = urls.map { url ->
+                    val formsResponse = pokemonApiService.getPokemonForms(url)
+                    formsResponse.pokemon_forms.map { it.name }
+                }.flatten()
+                _pokemonForms.value = formsNames
+            } catch (e: Exception) {
+                _pokemonForms.value = listOf("No forms available")
+            }
+        }
+    }
+
+
 
 
 }

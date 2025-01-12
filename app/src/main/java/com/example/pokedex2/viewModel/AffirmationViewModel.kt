@@ -44,13 +44,29 @@ class AffirmationViewModel @Inject() constructor(
                 val affirmationsList = response.results.map { result ->
                     val detail = pokemonApiService.getPokemonDetail(result.name)
 
+                    //fetching encounter locations
+                    val encounters = pokemonApiService.getPokemonEncounters(detail.location_area_encounters)
+                    val locationNames = encounters.map { it.location_area.name.capitalizeFirstLetter()}
+
+                    //fetching pokemon forms
+                    val formsUrls = detail.forms.map { it.url } // Extract URLs from the forms list
+                    val formsNames = formsUrls.flatMap { url ->
+                        // Directly fetch forms using each URL and extract the form names
+                        val formsResponse = pokemonApiService.getPokemonForms(url)
+                        formsResponse.pokemon_forms.map { it.name.capitalizeFirstLetter() } // Extract and capitalize form names
+                    }
+
+
                     Affirmation(
                         id = detail.id,
                         name = detail.name.capitalizeFirstLetter(),   //changed first letter to upper case
                         imageResourceId = detail.sprites.front_default ?: "",
                         typeIcon = detail.types.map { it.type.name.capitalizeFirstLetter() },
                         isLiked = false,
-                        number = detail.id
+                        number = detail.id,
+                        encounterLocations = locationNames,
+                        forms = formsNames
+
                     )
                 }
 
