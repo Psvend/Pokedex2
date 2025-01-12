@@ -49,12 +49,15 @@ class AffirmationViewModel @Inject() constructor(
                     val locationNames = encounters.map { it.location_area.name.capitalizeFirstLetter()}
 
                     //fetching pokemon forms
+                    /*
                     val formsUrls = detail.forms.map { it.url } // Extract URLs from the forms list
                     val formsNames = formsUrls.flatMap { url ->
                         // Directly fetch forms using each URL and extract the form names
                         val formsResponse = pokemonApiService.getPokemonForms(url)
                         formsResponse.pokemon_forms.map { it.name.capitalizeFirstLetter() } // Extract and capitalize form names
                     }
+
+                     */
 
 
                     Affirmation(
@@ -65,7 +68,7 @@ class AffirmationViewModel @Inject() constructor(
                         isLiked = false,
                         number = detail.id,
                         encounterLocations = locationNames,
-                        forms = formsNames
+                        //forms = formsNames
 
                     )
                 }

@@ -23,9 +23,13 @@ interface PokemonApiService {
     suspend fun getPokemonEncounters(@Url encountersUrl: String
     ): List<EncounterResponse>
 
-    @GET
-    suspend fun getPokemonForms(@Url formsUrl: String
+    /*
+    @GET("pokemon-form/{idOrName}")
+    suspend fun getPokemonForms(
+        @Path("idOrName") idOrName: String
     ): FormsResponse
+     */
+
 
     companion object {
             const val BASE_URL= "https://pokeapi.co/api/v2/"

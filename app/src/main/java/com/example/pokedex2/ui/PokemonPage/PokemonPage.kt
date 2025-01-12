@@ -68,7 +68,7 @@ fun PokemonPage(
     //val pokemonImage by viewModel.pokemonImage.collectAsState()
     val pokemonId by viewModel.pokemonId.collectAsState()
     val pokemonLocations by viewModel.pokemonLocations.collectAsState()
-    val pokemonForms by viewModel.pokemonForms.collectAsState()
+    //val pokemonForms by viewModel.pokemonForms.collectAsState()
 
     // Fetch Pokémon details when the page is displayed
     LaunchedEffect(pokemonIdOrName) {
@@ -83,12 +83,15 @@ fun PokemonPage(
         }
     }
 
+    /*
     LaunchedEffect(pokemonDetail?.forms) {
         pokemonDetail?.forms?.map { it.url }?.let { urls ->
             viewModel.fetchPokemonForms(urls)
         }
     }
 
+
+     */
 
 
     Column(
@@ -104,7 +107,7 @@ fun PokemonPage(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(130.dp)
+                .weight(1f)
         )
 
         Spacer(modifier = Modifier.height(2.dp))
@@ -121,7 +124,7 @@ fun PokemonPage(
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.weight(1f))
 
         // Center Image and Like Button
         Box(
@@ -140,7 +143,7 @@ fun PokemonPage(
             )
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.weight(2f))
 
 
         // Types Section
@@ -158,21 +161,22 @@ fun PokemonPage(
         }
 
 
-            Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.weight(2f))
 
 
-            //Pokemon Location Encounter
-            PokemonLocation(locations = pokemonLocations)
+        //Pokemon Location Encounter
+        PokemonLocation(locations = pokemonLocations)
 
 
-            Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.weight(2f))
 
-            //Pokemon forms
-            PokemonForms(forms = pokemonForms)
+        //Pokemon forms
+        //PokemonForms(forms = pokemonForms)
 
-            //add more sections under here
-        }
+        //add more sections under here
     }
+}
+
 
 
 

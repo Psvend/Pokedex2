@@ -39,8 +39,8 @@ class PokePageViewModel @Inject constructor(
     private val _pokemonLocations = MutableStateFlow<List<String>>(emptyList())
     val pokemonLocations: StateFlow<List<String>> = _pokemonLocations
 
-    private val _pokemonForms = MutableStateFlow<List<String>>(emptyList())
-    val pokemonForms: StateFlow<List<String>> = _pokemonForms
+    //private val _pokemonForms = MutableStateFlow<List<String>>(emptyList())
+    //val pokemonForms: StateFlow<List<String>> = _pokemonForms
 
 
     //Then add it here and then at PokemonPage
@@ -79,7 +79,7 @@ class PokePageViewModel @Inject constructor(
         }
     }
 
-
+/*
     fun fetchPokemonForms(urls: List<String>) {
         viewModelScope.launch {
             try {
@@ -93,6 +93,8 @@ class PokePageViewModel @Inject constructor(
             }
         }
     }
+
+ */
 
 
 
