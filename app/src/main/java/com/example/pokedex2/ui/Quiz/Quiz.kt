@@ -63,7 +63,7 @@ fun Quiz(
         .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-
+        Spacer(modifier = Modifier.height(80.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,

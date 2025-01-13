@@ -49,7 +49,7 @@ fun NavGraph(
 }
 //navcontroller from startingscreenforquiz to quiz
 @Composable
-fun navGraph2(
+fun NavGraph2(
     navController: NavHostController,
     startDestination: String = "startingScreenForQuiz",
 ) {

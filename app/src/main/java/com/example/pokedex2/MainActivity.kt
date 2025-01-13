@@ -1,5 +1,8 @@
 package com.example.pokedex2
 
+//import com.example.pokedex2.ui.theme.PokemonDetailScreen
+//import com.example.pokedex2.ui.theme.PokemonPage2
+//import com.example.pokedex2.viewModel.PokemonPageViewModel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,24 +17,17 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-import com.example.pokedex2.ui.SearchAndFilters.TypeFilterUI
 import com.example.pokedex2.ui.MenuBar.MenuBar
 import com.example.pokedex2.ui.Navigation.NavGraph
-import com.example.pokedex2.ui.Navigation.navGraph2
-import com.example.pokedex2.ui.PokePage.PokemonPage
-import com.example.pokedex2.ui.Quiz.Quiz
-import com.example.pokedex2.ui.Quiz.StartingScreenForQuiz
-import com.example.pokedex2.ui.theme.Pokedex2Theme
+import com.example.pokedex2.ui.Navigation.NavGraph2
+import com.example.pokedex2.ui.SearchAndFilters.TypeFilterUI
 import com.example.pokedex2.ui.TopBar.TopBar
-//import com.example.pokedex2.ui.theme.PokemonDetailScreen
-//import com.example.pokedex2.ui.theme.PokemonPage2
+import com.example.pokedex2.ui.theme.Pokedex2Theme
 import com.example.pokedex2.utils.RotatingLoader
 import com.example.pokedex2.viewModel.MenuBarViewModel
-import com.example.pokedex2.viewModel.PokePageViewModel
 import com.example.pokedex2.viewModel.PokeViewModel
 import com.example.pokedex2.viewModel.QuizViewModel
 import com.example.pokedex2.viewModel.TopBarViewModel
-//import com.example.pokedex2.viewModel.PokemonPageViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 data class BottomNavItem(
@@ -51,7 +47,6 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val topBarViewModel: TopBarViewModel = viewModel()
                 val menuBarViewModel: MenuBarViewModel = viewModel()
-                val quizViewModel: QuizViewModel= viewModel()
                 val pokeViewModel: PokeViewModel = hiltViewModel() // Injecting PokeViewModel
                 val selectedItemIndex by menuBarViewModel.selectedItemIndex.collectAsState()
 
@@ -72,13 +67,10 @@ class MainActivity : ComponentActivity() {
                     when(selectedItemIndex){
                         0 ->  NavGraph(navController = navController,
                             startDestination = "mainPage" )
-                        //1-> Quiz(
-                          //  viewModel = quizViewModel,
-                            //modifier = Modifier.padding(innerPadding)
-                      //  )
+
                        // 1 -> PokemonPage(pokemonPageViewModel = PokePageViewModel )
                         2 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))
-                        3 -> navGraph2(navController = navController,
+                        3 -> NavGraph2(navController = navController,
                             startDestination = "startingScreenForQuiz")
                         else -> RotatingLoader()
                     }
