@@ -12,7 +12,5 @@ data class Affirmation (
     val typeIcon: List<String>,
     val isLiked: Boolean,
     val number: Int,
-    val encounterLocations: List<String> = emptyList(),
-    //val forms: List<String> = emptyList()
-
+    val encounterLocations: List<String> = emptyList()
 )

@@ -23,12 +23,6 @@ interface PokemonApiService {
     suspend fun getPokemonEncounters(@Url encountersUrl: String
     ): List<EncounterResponse>
 
-    /*
-    @GET("pokemon-form/{idOrName}")
-    suspend fun getPokemonForms(
-        @Path("idOrName") idOrName: String
-    ): FormsResponse
-     */
 
 
     companion object {

@@ -31,6 +31,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -68,7 +70,7 @@ fun PokemonPage(
     //val pokemonImage by viewModel.pokemonImage.collectAsState()
     val pokemonId by viewModel.pokemonId.collectAsState()
     val pokemonLocations by viewModel.pokemonLocations.collectAsState()
-    //val pokemonForms by viewModel.pokemonForms.collectAsState()
+    val pokemonForms by viewModel.pokemonForms.collectAsState()
 
     // Fetch Pokémon details when the page is displayed
     LaunchedEffect(pokemonIdOrName) {
@@ -76,22 +78,14 @@ fun PokemonPage(
         //viewModel.fetchPokemonHabitat(pokemonIdOrName.lowercase())
     }
 
-    // Fetch encounter locations when `location_area_encounters` is available
+    // Fetch encounter locations when location_area_encounters is available
     LaunchedEffect(pokemonDetail?.location_area_encounters) {
         pokemonDetail?.location_area_encounters?.let { url ->
             viewModel.fetchPokemonEncounters(url)
         }
     }
 
-    /*
-    LaunchedEffect(pokemonDetail?.forms) {
-        pokemonDetail?.forms?.map { it.url }?.let { urls ->
-            viewModel.fetchPokemonForms(urls)
-        }
-    }
 
-
-     */
 
 
     Column(
@@ -107,14 +101,15 @@ fun PokemonPage(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .height(130.dp)
         )
 
-        Spacer(modifier = Modifier.height(2.dp))
+        //Spacer(modifier = Modifier.height(2.dp))
 
         // Top Section - Name and Number
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             PokemonName(name = pokemonDetail?.name ?: "Unknown")
@@ -124,7 +119,7 @@ fun PokemonPage(
             }
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        // Spacer(modifier = Modifier.height(16.dp))
 
         // Center Image and Like Button
         Box(
@@ -143,39 +138,17 @@ fun PokemonPage(
             )
         }
 
-        Spacer(modifier = Modifier.weight(2f))
-
-
-        // Types Section
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 1.dp),
-
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            pokemonDetail?.types?.map { it.type.name }?.let { types ->
-                PokemonTypeIcons(types = types)
-            }
+        pokemonDetail?.types?.map { it.type.name }?.let { types ->
+            PokemonTypeIcons(types = types)
         }
-
-
-        Spacer(modifier = Modifier.weight(2f))
-
 
         //Pokemon Location Encounter
         PokemonLocation(locations = pokemonLocations)
 
-
-        Spacer(modifier = Modifier.weight(2f))
-
-        //Pokemon forms
-        //PokemonForms(forms = pokemonForms)
-
-        //add more sections under here
     }
 }
+
+
 
 
 
@@ -216,7 +189,7 @@ fun PokemonImage(model: String?) {
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
+        //Spacer(modifier = Modifier.height(24.dp))
 
         Box(
             modifier = Modifier
@@ -289,25 +262,26 @@ fun PokemonLocation(locations: List<String>) {
             .padding(horizontal = 16.dp)
             .fillMaxWidth()
     ) {
-        Text(
-            text = "Encounters",
-            style = TextStyle(
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Default
-            ),
-            textAlign = TextAlign.Start,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        if (locations.isEmpty()) {
             Text(
-                text = "No encounter data available",
+                text = "Encounters",
                 style = TextStyle(
-                    fontSize = 16.sp,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Default
                 ),
-                textAlign = TextAlign.Start
+                textAlign = TextAlign.Start,
+                modifier = Modifier.padding(bottom = 8.dp)
             )
+
+        if (locations.isEmpty()) {
+                Text(
+                    text = "No encounter data available",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontFamily = FontFamily.Default
+                    ),
+                    textAlign = TextAlign.Start
+                )
         } else {
             locations.forEach { location ->
                 Text(
@@ -323,6 +297,8 @@ fun PokemonLocation(locations: List<String>) {
         }
     }
 }
+
+
 
 @Composable
 fun PokemonForms(forms: List<String>) {
