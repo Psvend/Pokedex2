@@ -17,8 +17,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.pokedex2.ui.SearchAndFilters.TypeFilterUI
 import com.example.pokedex2.ui.MenuBar.MenuBar
 import com.example.pokedex2.ui.Navigation.NavGraph
+import com.example.pokedex2.ui.Navigation.navGraph2
 import com.example.pokedex2.ui.PokePage.PokemonPage
 import com.example.pokedex2.ui.Quiz.Quiz
+import com.example.pokedex2.ui.Quiz.StartingScreenForQuiz
 import com.example.pokedex2.ui.theme.Pokedex2Theme
 import com.example.pokedex2.ui.TopBar.TopBar
 //import com.example.pokedex2.ui.theme.PokemonDetailScreen
@@ -70,13 +72,14 @@ class MainActivity : ComponentActivity() {
                     when(selectedItemIndex){
                         0 ->  NavGraph(navController = navController,
                             startDestination = "mainPage" )
-                        1-> Quiz(
-                            viewModel = quizViewModel,
-                            modifier = Modifier.padding(innerPadding)
-                        )
+                        //1-> Quiz(
+                          //  viewModel = quizViewModel,
+                            //modifier = Modifier.padding(innerPadding)
+                      //  )
                        // 1 -> PokemonPage(pokemonPageViewModel = PokePageViewModel )
                         2 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))
-                        //3 -> PokemonDetailScreen(pokeViewModel = viewModel, modifier = Modifier.padding(innerPadding))
+                        3 -> navGraph2(navController = navController,
+                            startDestination = "startingScreenForQuiz")
                         else -> RotatingLoader()
                     }
                 }
