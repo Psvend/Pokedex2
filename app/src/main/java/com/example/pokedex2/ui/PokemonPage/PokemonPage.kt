@@ -113,19 +113,30 @@ fun PokemonPage(
             modifier = Modifier
                 .fillMaxWidth() // Ensure the spacer spans the width of the column
                 .height(16.dp) // Adjust the height to control the space
-                .background(Color.Red) // Optional: Add transparency for visibility
+                .background(Color.Transparent) //To test if its being added
         )
 
 
-        PokemonImage(model = pokemonDetail?.sprites?.front_default)
 
         PokemonImage(model = pokemonDetail?.sprites?.front_default)
 
-        PokemonImage(model = pokemonDetail?.sprites?.front_default)
+
+        pokemonDetail?.types?.map { it.type.name }?.let { types ->
+            PokemonTypeIcons(types = types)
+        }
 
 
+        Spacer(modifier = Modifier.height(20.dp))
 
 
+        PokemonLocation(locations = pokemonLocations)
+
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth() // Ensure the spacer spans the width of the column
+                .height(200.dp) // Adjust the height to control the space
+                .background(Color.Transparent) //To test
+        )
 
     }
 }
@@ -203,50 +214,12 @@ fun PokemonImage(model: String?) {
         // LikeButton added directly inside the Box
         LikeButton(
             modifier = Modifier
-                .align(Alignment.TopEnd) // Aligns the button to the bottom-right
-                .offset(x = (-25).dp, y = 25.dp) // Slight offset for better positioning
+                .align(Alignment.TopEnd)
+                .offset(x = (-25).dp, y = 25.dp) //edit the position of the likebutton inside the box of the pokemon image
         )
     }
 }
 
-
-/*
-@Composable
-fun PokemonImage(model: String?) {
-    Column(
-        modifier = Modifier
-            .wrapContentHeight() // Ensures the column doesn't consume all available height
-            .padding(vertical = 8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Box(
-            modifier = Modifier
-                .height(300.dp)
-                .width(300.dp)
-                .shadow(8.dp, shape = RoundedCornerShape(12.dp))
-                .border(2.dp, Color.Gray, shape = RoundedCornerShape(12.dp))
-                .background(Color.White, shape = RoundedCornerShape(12.dp))
-        ) {
-            if (model != null) {
-                AsyncImage(
-                    model = model,
-                    contentDescription = "Pokemon sprite",
-                    modifier = Modifier
-                        .size(280.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                )
-            } else {
-                Text(
-                    text = "Image not available",
-                    color = Color.Gray,
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
-        }
-    }
-}
-
- */
 
 
 @Composable
@@ -292,6 +265,7 @@ fun PokemonLocation(locations: List<String>) {
     }
 }
 
+
 @Composable
 fun LikeButton(modifier: Modifier = Modifier) {
     var isSelect by remember { mutableStateOf(false) }
@@ -304,6 +278,56 @@ fun LikeButton(modifier: Modifier = Modifier) {
             .clickable { isSelect = !isSelect }
     )
 }
+
+
+
+/*
+@Composable
+fun PokemonLocation(locations: List<String>) {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .fillMaxWidth()
+    ) {
+            Text(
+                text = "Encounters",
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.Default
+                ),
+                textAlign = TextAlign.Start,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+        if (locations.isEmpty()) {
+                Text(
+                    text = "No encounter data available",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontFamily = FontFamily.Default
+                    ),
+                    textAlign = TextAlign.Start
+                )
+        } else {
+            locations.forEach { location ->
+                Text(
+                    text = location,
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontFamily = FontFamily.Default
+                    ),
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
+        }
+    }
+}
+
+
+
+*/
 
 
 
@@ -400,166 +424,7 @@ fun PokemonPage(
 
     }
 }
-
-
-
-
-@Composable
-fun PokemonName(name: String) {
-    Text(
-        text = name.capitalizeFirstLetter() ?: "Loading...",
-        style = TextStyle(
-            fontSize = 24.sp,
-            fontFamily = FontFamily.Default
-        ),
-        color = Color.DarkGray
-    )
-}
-
-
-
-@Composable
-fun PokemonNr(id: Int){
-    Text(
-        text = "#$id" ?: "Loading...",
-        style = TextStyle(
-            fontSize = 24.sp,
-            fontFamily = FontFamily.Default
-        ),
-        color = Color.DarkGray
-    )
-}
-
-
-
-
-@Composable
-fun PokemonImage(model: String?) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        //Spacer(modifier = Modifier.height(24.dp))
-
-        Box(
-            modifier = Modifier
-                .height(300.dp)
-                .width(300.dp)
-                .shadow(8.dp, shape = RoundedCornerShape(12.dp))
-                .border(2.dp, Color.Gray, shape = RoundedCornerShape(12.dp))
-                .background(Color.White, shape = RoundedCornerShape(12.dp))
-        ) {
-            if (model != null) {
-                AsyncImage(
-                    model = model,
-                    contentDescription = "{pokemonDetail?.name} sprite",
-                    modifier = Modifier
-                        .size(280.dp, 280.dp)
-                        .clip(RoundedCornerShape(12.dp))
-
-                )
-            } else {
-                Text(
-                    text = "Image not available",
-                    color = Color.Gray,
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-
-        }
-    }
-}
-
-
-
-@Composable
-fun PokemonLocation(locations: List<String>) {
-    Column(
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .fillMaxWidth()
-    ) {
-            Text(
-                text = "Encounters",
-                style = TextStyle(
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Default
-                ),
-                textAlign = TextAlign.Start,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-
-        if (locations.isEmpty()) {
-                Text(
-                    text = "No encounter data available",
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontFamily = FontFamily.Default
-                    ),
-                    textAlign = TextAlign.Start
-                )
-        } else {
-            locations.forEach { location ->
-                Text(
-                    text = location,
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontFamily = FontFamily.Default
-                    ),
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
-            }
-        }
-    }
-}
-
-
-
-    //Reuse of likebutton
-    @Composable
-    fun LikeButton(modifier: Modifier = Modifier) {
-        var isSelect by remember { mutableStateOf(false) }
-        val iconModifier = Modifier
-            .size(40.dp)
-            .clickable { isSelect = !isSelect }
-
-        Box(modifier = Modifier) {
-            if (isSelect) {
-                Icon(
-                    imageVector = Icons.Filled.Favorite,
-                    contentDescription = "Like",
-                    tint = Color.Red,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .align(Alignment.TopEnd)
-                        .offset(x = 110.dp, y = -85.dp)
-                        .clickable { isSelect = !isSelect }
-                )
-            } else {
-                Icon(
-                    imageVector = Icons.Outlined.FavoriteBorder,
-                    contentDescription = "Unlike",
-                    tint = Color.Gray,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .align(Alignment.TopEnd)
-                        .offset(x = 110.dp, y = -85.dp)
-                        .clickable { isSelect = !isSelect }
-                )
-            }
-        }
-    }
-
-
-
 */
-
-
-
-
 
 
 
