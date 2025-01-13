@@ -66,10 +66,8 @@ class MainActivity : ComponentActivity() {
                     when(selectedItemIndex){
                         0 ->  NavGraph(navController = navController,
                             startDestination = "mainPage" )
-                        1 -> FavouritePokemonList(
-                            navController = navController,
-                            modifier = Modifier
-                        )
+                        1 ->  NavGraph(navController = navController,
+                            startDestination = "favouritePokemon")
 
                         2 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))
                         //3 -> PokemonDetailScreen(pokeViewModel = viewModel, modifier = Modifier.padding(innerPadding))

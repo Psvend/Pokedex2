@@ -1,12 +1,9 @@
 package com.example.pokedex2.viewModel
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedex2.data.local.FavouritesRepository
-import com.example.pokedex2.data.remote.PokemonApiService
 import com.example.pokedex2.model.Affirmation
-import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,16 +15,13 @@ import javax.inject.Inject
 @HiltViewModel
 class SyncViewModel @Inject constructor(
     private val favouritesRepository: FavouritesRepository,
-    private val mainPageViewModel: MainPageViewModel
+    //private val mainPageViewModel: MainPageViewModel
 ) : ViewModel() {
 
     private val _pokemonList = MutableStateFlow<List<Affirmation>>(emptyList())
     val pokemonList: StateFlow<List<Affirmation>> = _pokemonList
 
-    val isLoading: StateFlow<Boolean> = mainPageViewModel.isLoading
-    val isPaginating: StateFlow<Boolean> = mainPageViewModel.isPaginating
-    val errorMessage: StateFlow<String?> = mainPageViewModel.errorMessage
-
+    /*
     init {
         viewModelScope.launch {
             mainPageViewModel.apiPokemons.collect { apiPokemons ->
@@ -39,6 +33,17 @@ class SyncViewModel @Inject constructor(
 
                 _pokemonList.value = syncedPokemons
             }
+        }
+    }
+     */
+
+    fun syncPokemons(apiPokemons: List<Affirmation>) {
+        viewModelScope.launch {
+            val likedPokemons = favouritesRepository.getFavourites().firstOrNull() ?: emptyList()
+            val syncedPokemons = apiPokemons.map { fetched ->
+                fetched.copy(isLiked = likedPokemons.any { it.id == fetched.id })
+            }
+            _pokemonList.value = syncedPokemons
         }
     }
 
@@ -59,9 +64,5 @@ class SyncViewModel @Inject constructor(
                 list.map { if (it.id == affirmation.id) updatedAffirmation else it }
             }
         }
-    }
-
-    fun loadNextPage() {
-        mainPageViewModel.loadNextPage()
     }
 }

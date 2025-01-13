@@ -25,14 +25,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import com.example.pokedex2.R
@@ -55,13 +54,18 @@ fun HomePokemonScroll(
     syncViewModel: SyncViewModel = hiltViewModel(),
     fetchAPIViewModel: MainPageViewModel = hiltViewModel()
 ) {
-    val affirmationList by syncViewModel.pokemonList.collectAsState(initial = emptyList())
     val isLoading by fetchAPIViewModel.isLoading.collectAsState()
     val isPaginating by fetchAPIViewModel.isPaginating.collectAsState()
     val errorMessage by fetchAPIViewModel.errorMessage.collectAsState()
     val listState = rememberLazyListState()
+    val apiPokemons by fetchAPIViewModel.apiPokemons.collectAsState(initial = emptyList())
+    val syncedPokemons by syncViewModel.pokemonList.collectAsState(initial = emptyList())
 
-    if (isLoading && affirmationList.isEmpty()) {
+    LaunchedEffect(apiPokemons) {
+        syncViewModel.syncPokemons(apiPokemons)
+    }
+
+    if (isLoading && syncedPokemons.isEmpty()) {
         // Show loading spinner
         Box(
             modifier = Modifier
@@ -71,7 +75,7 @@ fun HomePokemonScroll(
         ) {
             RotatingLoader()
         }
-    } else if (errorMessage != null && affirmationList.isEmpty()) {
+    } else if (errorMessage != null && syncedPokemons.isEmpty()) {
         // Show error state
         Box(
             modifier = Modifier
@@ -96,7 +100,7 @@ fun HomePokemonScroll(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = { syncViewModel.loadNextPage() }) {
+                Button(onClick = { fetchAPIViewModel.loadNextPage() }) {
                     Text("Retry")
                 }
             }
@@ -109,7 +113,7 @@ fun HomePokemonScroll(
                 .fillMaxSize()
                 .background(Color(0xFFD9D9D9))
         ) {
-            items(affirmationList) { affirmation ->
+            items(syncedPokemons) { affirmation ->
                 AffirmationCard(
                     affirmation = affirmation,
                     navController = navController,
@@ -125,6 +129,7 @@ fun HomePokemonScroll(
                             .padding(16.dp),
                         contentAlignment = Alignment.Center
                     ) {
+                        /*Create another overlay loader*/
                         RotatingLoader()
                     }
                 }
@@ -134,9 +139,9 @@ fun HomePokemonScroll(
         // Detect scroll to bottom
         LaunchedEffect(listState) {
             snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
-                .filter { it == affirmationList.size - 1 && !isPaginating && !isLoading }
+                .filter { it == syncedPokemons.size - 1 && !isPaginating && !isLoading }
                 .collect {
-                    syncViewModel.loadNextPage()
+                    fetchAPIViewModel.loadNextPage()
                 }
         }
     }
@@ -182,18 +187,7 @@ fun AffirmationCard(
                     text = affirmation.name,
                     style = MaterialTheme.typography.headlineSmall
                 )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    modifier = Modifier.padding(top = 4.dp)
-                ) {
-                    affirmation.typeIcon.forEach { type ->
-                        Text(
-                            text = type,
-                            style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier.padding(4.dp)
-                        )
-                    }
-                }
+                PokemonTypeIcons(types = affirmation.typeIcon)
             }
 
             // Like button
@@ -220,9 +214,6 @@ fun AffirmationCard(
     }
 }
 
-
-/*
-*
 //Creates the boxes around each type
 @Composable
 fun PokemonTypeIcons(types: List<String>, modifier: Modifier = Modifier) {
@@ -250,7 +241,6 @@ fun PokemonTypeIcons(types: List<String>, modifier: Modifier = Modifier) {
     }
 }
 
-*
 //color boxes for the pokemon types
 fun getTypeColor(type: String): Color {
     return when (type.lowercase()) {
@@ -267,12 +257,10 @@ fun getTypeColor(type: String): Color {
         "fairy" -> Color(0xFFEE99AC) // Pink
         "fighting" -> Color(0xFFa41353) // Reddish Brown
         "psychic" -> Color(0xFFFF69B4) // Hot Pink
-        "dragon" -> Color(0xff11ddd6)
-        "dark" -> Color(0xff3f4948)
-        "ghost" -> Color(0xff6a8180)
-        "rock" -> Color(0xff908065)
+        "dragon" -> Color(0xff11ddd6) // Light Blue
+        "dark" -> Color(0xff3f4948) // Dark Gray
+        "ghost" -> Color(0xff6a8180) // Muddy green
+        "rock" -> Color(0xff908065) // Sand brown
         else -> Color.Gray // Default Gray
     }
 }
-
-* */

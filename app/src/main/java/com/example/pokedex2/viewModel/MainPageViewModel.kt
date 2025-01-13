@@ -1,11 +1,8 @@
 package com.example.pokedex2.viewModel
 
-import android.content.Context
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-
 import com.example.pokedex2.data.remote.PokemonApiService
 import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
@@ -13,13 +10,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainPageViewModel @Inject constructor(
+class MainPageViewModel @Inject constructor (
     private val pokemonApiService: PokemonApiService
 ) : ViewModel() {
 
@@ -36,6 +32,10 @@ class MainPageViewModel @Inject constructor(
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
     private var currentPage = 0
+
+    init {
+        fetchAffirmations() // Fetch API data on ViewModel initialization
+    }
 
     private fun fetchAffirmations(page: Int = 0) {
         viewModelScope.launch {

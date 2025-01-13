@@ -9,11 +9,22 @@ import kotlinx.coroutines.flow.map
 
 suspend fun saveFavouritePokemon(context: Context, affirmation: Affirmation) {
     context.favouritesDataStore.updateData { currentFavourites ->
+        // Remove any existing entry with the same ID
+        val updatedFavourites = currentFavourites.favouritesList
+            .filter { it.id != affirmation.id }
+            .toMutableList()
+
+        // Add the new Pokémon to the updated list
+        updatedFavourites.add(affirmation.toProto())
+
+        // Rebuild the favourites list with the updated list
         currentFavourites.toBuilder()
-            .addAllFavourites(currentFavourites.favouritesList + affirmation.toProto())
+            .clearFavourites() // Clear the old list
+            .addAllFavourites(updatedFavourites) // Add the updated list
             .build()
     }
 }
+
 
 private fun Affirmation.toProto(): FavouriteAffirmation {
     return FavouriteAffirmation.newBuilder()
