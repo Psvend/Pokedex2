@@ -1,5 +1,6 @@
 package com.example.pokedex2.ui.Quiz
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,21 +14,27 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.pokedex2.R
 
 @Composable
 fun StartingScreenForQuiz(
@@ -36,49 +43,44 @@ fun StartingScreenForQuiz(
 
 
 ) {
-    Column (   modifier = modifier.fillMaxSize()
+    Column (
+        modifier = modifier.fillMaxSize()
         .background(Color(0xFFFFF9E6))
-        .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)){
+        .padding(WindowInsets.safeDrawing.asPaddingValues()),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
 
 
-
-        Spacer(modifier = Modifier.height(80.dp))
-        val layoutDirection = LocalLayoutDirection.current
-
-        Surface (
-            modifier = modifier
-                .statusBarsPadding()
-                .padding(
-                    start = WindowInsets.safeDrawing.asPaddingValues()
-                        .calculateStartPadding(layoutDirection),
-                    end = WindowInsets.safeDrawing.asPaddingValues()
-                        .calculateStartPadding(layoutDirection),
-                )
-        ){
-            Text(
-                text = "Who´s that pokemon?",
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.Black,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp),
-                textAlign = TextAlign.Center
+            Image(
+                painter = painterResource(id = R.drawable.blankpokemon),
+                contentDescription = "pokemon",
+                modifier = Modifier.size(250.dp),
             )
 
-
-        }
         Button(
             onClick = { navController.navigate("Quiz") },
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp)
+                .fillMaxWidth(0.7f),
+            elevation = ButtonDefaults.buttonElevation(
+                defaultElevation = 6.dp,
+                pressedElevation = 12.dp
+            )
         ) {
             Text("Start Quiz")
         }
 
+        Spacer(modifier = Modifier.height(32.dp))
+        Image(
+            painter = painterResource(id = R.drawable.bug_image),
+            contentDescription = "pokemon",
+            modifier = Modifier.size(180.dp),
+            contentScale = ContentScale.Crop
+        )
+        }
+
+
     }
-}
 
 @Preview
 @Composable
