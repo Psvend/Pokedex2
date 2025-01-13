@@ -18,13 +18,13 @@ import com.example.pokedex2.viewModel.MainPageViewModel
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    startDestination: String = "mainPage",
-    modifier: Modifier = Modifier
+    startDestination: String = "mainPage"
 ) {
+    val mainPageViewModel: MainPageViewModel = hiltViewModel()
+
     NavHost(navController = navController, startDestination = startDestination) {
         composable("mainPage") {
-            val mainPageViewModel: MainPageViewModel = hiltViewModel()
-            ContentFrame(modifier = modifier) {
+            ContentFrame {
                 HomePokemonScroll(
                     navController = navController,
                     syncViewModel = hiltViewModel(),
@@ -32,17 +32,8 @@ fun NavGraph(
                 )
             }
         }
-        composable(
-            route = "pokemonPage/{pokemonName}",
-            arguments = listOf(navArgument("pokemonName") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val pokemonName = backStackEntry.arguments?.getString("pokemonName") ?: ""
-            ContentFrame(modifier = modifier) {
-                PokemonPage(pokemonIdOrName = pokemonName)
-            }
-        }
         composable("favouritePokemon") {
-            ContentFrame(modifier = modifier) {
+            ContentFrame {
                 FavouritePokemonList(
                     favouritesViewModel = hiltViewModel(),
                     syncViewModel = hiltViewModel(),
