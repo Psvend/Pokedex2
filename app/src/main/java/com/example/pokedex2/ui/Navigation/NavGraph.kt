@@ -39,7 +39,7 @@ fun NavGraph(
             PokemonPage(pokemonIdOrName = pokemonName)
         }
         composable("favouritePokemon") {
-            FavouritePokemonList(syncViewModel = viewModel(), navController = navController)
+            FavouritePokemonList(favouritesViewModel = viewModel(), navController = navController)
         }
     }
 }

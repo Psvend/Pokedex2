@@ -44,6 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.pokedex2.utils.RotatingLoader
+import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.SyncViewModel
 import kotlinx.coroutines.flow.filter
 
@@ -51,16 +52,17 @@ import kotlinx.coroutines.flow.filter
 fun HomePokemonScroll(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    syncViewModel: SyncViewModel = hiltViewModel() // Injected by Hilt
+    syncViewModel: SyncViewModel = hiltViewModel(),
+    fetchAPIViewModel: MainPageViewModel = hiltViewModel()
 ) {
     val affirmationList by syncViewModel.pokemonList.collectAsState(initial = emptyList())
-    val isLoading = syncViewModel.isLoading.value
-    val isPaginating = syncViewModel.isPaginating.value
-    val errorMessage = syncViewModel.errorMessage.value
+    val isLoading by fetchAPIViewModel.isLoading.collectAsState()
+    val isPaginating by fetchAPIViewModel.isPaginating.collectAsState()
+    val errorMessage by fetchAPIViewModel.errorMessage.collectAsState()
     val listState = rememberLazyListState()
 
     if (isLoading && affirmationList.isEmpty()) {
-        // Show a loading spinner during initial load
+        // Show loading spinner
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -70,7 +72,7 @@ fun HomePokemonScroll(
             RotatingLoader()
         }
     } else if (errorMessage != null && affirmationList.isEmpty()) {
-        // Show an error message, an image of a bug, and a refresh button
+        // Show error state
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -81,33 +83,26 @@ fun HomePokemonScroll(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(16.dp)
             ) {
-                // Error image
                 Image(
-                    painter = painterResource(R.drawable.bug_image), // Replace with your bug image resource
+                    painter = painterResource(R.drawable.bug_image),
                     contentDescription = "Error",
                     modifier = Modifier.size(128.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // Error message
                 Text(
-                    text = errorMessage,
+                    text = errorMessage!!,
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Black,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // Refresh button
-                Button(
-                    onClick = { syncViewModel.syncData() } // Retry fetching data
-                ) {
+                Button(onClick = { syncViewModel.loadNextPage() }) {
                     Text("Retry")
                 }
             }
         }
     } else {
-        // Show the Pokémon list
+        // Show Pokémon list
         LazyColumn(
             state = listState,
             modifier = modifier
@@ -119,8 +114,7 @@ fun HomePokemonScroll(
                     affirmation = affirmation,
                     navController = navController,
                     onLikeClicked = { syncViewModel.toggleLike(affirmation) },
-                    modifier = Modifier
-                        .padding(4.dp)
+                    modifier = Modifier.padding(4.dp)
                 )
             }
             if (isPaginating) {
@@ -137,17 +131,16 @@ fun HomePokemonScroll(
             }
         }
 
-        // Detect when the user scrolls to the bottom
+        // Detect scroll to bottom
         LaunchedEffect(listState) {
             snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
                 .filter { it == affirmationList.size - 1 && !isPaginating && !isLoading }
                 .collect {
-                    syncViewModel.loadNextPage() // Use the helper method
+                    syncViewModel.loadNextPage()
                 }
         }
     }
 }
-
 
 @Composable
 fun AffirmationCard(
@@ -226,6 +219,7 @@ fun AffirmationCard(
         }
     }
 }
+
 
 /*
 *

@@ -22,17 +22,15 @@ import com.example.pokedex2.viewModel.SyncViewModel
 
 @Composable
 fun FavouritePokemonList(
+    favouritesViewModel: FavouritesViewModel = hiltViewModel(),
     syncViewModel: SyncViewModel = hiltViewModel(),
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    // Collect the synced list of liked Pokémon
-    val favouriteAffirmations by syncViewModel.pokemonList.collectAsState(initial = emptyList())
+    // Collect the list of favourite Pokémon from FavouritesViewModel
+    val favouritePokemons by favouritesViewModel.getFavouriteAffirmations().collectAsState(initial = emptyList())
 
-    // Filter the list to show only liked Pokémon
-    val likedPokemons = favouriteAffirmations.filter { it.isLiked }
-
-    if (likedPokemons.isEmpty()) {
+    if (favouritePokemons.isEmpty()) {
         // Show empty state
         Box(
             modifier = Modifier
@@ -49,7 +47,7 @@ fun FavouritePokemonList(
                 .fillMaxSize()
                 .background(Color(0xFFD9D9D9))
         ) {
-            items(likedPokemons) { affirmation ->
+            items(favouritePokemons) { affirmation ->
                 AffirmationCard(
                     affirmation = affirmation,
                     navController = navController,
@@ -63,3 +61,4 @@ fun FavouritePokemonList(
         }
     }
 }
+

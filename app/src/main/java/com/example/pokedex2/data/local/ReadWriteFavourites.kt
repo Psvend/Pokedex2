@@ -5,40 +5,34 @@ import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.proto.FavouriteAffirmation
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import com.example.pokedex2.proto.FavouriteAffirmations
-
 
 
 suspend fun saveFavouritePokemon(context: Context, affirmation: Affirmation) {
     context.favouritesDataStore.updateData { currentFavourites ->
         currentFavourites.toBuilder()
-            .addFavourites(affirmation.toProto())
+            .addAllFavourites(currentFavourites.favouritesList + affirmation.toProto())
             .build()
     }
 }
 
-
-
-// Convert `Affirmation` to Proto
 private fun Affirmation.toProto(): FavouriteAffirmation {
     return FavouriteAffirmation.newBuilder()
         .setId(id)
         .setName(name)
         .setImageResourceId(imageResourceId)
-        .addAllTypeIcon(typeIcon)
+        .addAllTypeIcon(typeIcon) // Add all type icons
         .setIsLiked(isLiked)
         .setNumber(number)
         .build()
 }
 
+
 fun getFavouriteAffirmations(context: Context): Flow<List<Affirmation>> {
     return context.favouritesDataStore.data.map { currentFavourites ->
-        currentFavourites.favouritesList.map {
-            val it = c
-            it.toAffirmation()
-        }
+        currentFavourites.favouritesList.map { it.toAffirmation() }
     }
 }
+
 
 private fun FavouriteAffirmation.toAffirmation(): Affirmation {
     return Affirmation(
@@ -56,8 +50,8 @@ suspend fun removeFavouriteAffirmation(context: Context, affirmationId: Int) {
     context.favouritesDataStore.updateData { currentFavourites ->
         val updatedFavourites = currentFavourites.favouritesList.filter { it.id != affirmationId }
         currentFavourites.toBuilder()
-            .clearFavourites()
-            .addAllFavourites(updatedFavourites)
+            .clearFavourites() // Clear the old list
+            .addAllFavourites(updatedFavourites) // Add updated list
             .build()
     }
 }

@@ -3,8 +3,8 @@ syntax = "proto3";
 option java_package = "com.example.pokedex2.proto";
 option java_multiple_files = true;
 
-message Favourites {
-    repeated FavouriteAffirmation favouritesList = 1;
+message FavouriteAffirmations {
+    repeated FavouriteAffirmation favourites = 1;
 }
 
 message FavouriteAffirmation {

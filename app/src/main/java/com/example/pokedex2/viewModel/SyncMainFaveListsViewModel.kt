@@ -18,57 +18,27 @@ import javax.inject.Inject
 @HiltViewModel
 class SyncViewModel @Inject constructor(
     private val favouritesRepository: FavouritesRepository,
-    private val pokemonApiService: PokemonApiService
+    private val mainPageViewModel: MainPageViewModel
 ) : ViewModel() {
 
     private val _pokemonList = MutableStateFlow<List<Affirmation>>(emptyList())
     val pokemonList: StateFlow<List<Affirmation>> = _pokemonList
 
-    val isLoading = mutableStateOf(false)
-    val isPaginating = mutableStateOf(false)
-    val errorMessage = mutableStateOf<String?>(null)
-    private var currentPage = 0
+    val isLoading: StateFlow<Boolean> = mainPageViewModel.isLoading
+    val isPaginating: StateFlow<Boolean> = mainPageViewModel.isPaginating
+    val errorMessage: StateFlow<String?> = mainPageViewModel.errorMessage
 
     init {
-        syncData()
-    }
-
-    fun syncData(page: Int = 0) {
         viewModelScope.launch {
-            try {
-                if (page == 0) isLoading.value = true else isPaginating.value = true
-
+            mainPageViewModel.apiPokemons.collect { apiPokemons ->
                 val likedPokemons = favouritesRepository.getFavourites().firstOrNull() ?: emptyList()
-                val fetchedPokemons = fetchPokemonsFromApi(page)
 
-                val syncedPokemons = fetchedPokemons.map { fetched ->
+                val syncedPokemons = apiPokemons.map { fetched ->
                     fetched.copy(isLiked = likedPokemons.any { it.id == fetched.id })
                 }
 
-                _pokemonList.update { if (page == 0) syncedPokemons else it + syncedPokemons }
-                currentPage = page
-                errorMessage.value = null
-            } catch (e: Exception) {
-                errorMessage.value = "Oops! Something went wrong. Please try again."
-            } finally {
-                if (page == 0) isLoading.value = false else isPaginating.value = false
+                _pokemonList.value = syncedPokemons
             }
-        }
-    }
-
-    private suspend fun fetchPokemonsFromApi(page: Int): List<Affirmation> {
-        // Replace this with paginated API logic
-        val response = pokemonApiService.getPokemonList(0, 20)
-        return response.results.map { result ->
-            val detail = pokemonApiService.getPokemonDetail(result.name)
-            Affirmation(
-                id = detail.id,
-                name = detail.name.capitalizeFirstLetter(),
-                imageResourceId = detail.sprites.front_default ?: "",
-                typeIcon = detail.types.map { it.type.name.capitalizeFirstLetter() },
-                isLiked = false, // Will be updated during sync
-                number = detail.id
-            )
         }
     }
 
@@ -84,14 +54,14 @@ class SyncViewModel @Inject constructor(
                 favouritesRepository.removeFavourite(updatedAffirmation.id)
             }
 
-            // Update list
+            // Update synced list
             _pokemonList.update { list ->
                 list.map { if (it.id == affirmation.id) updatedAffirmation else it }
             }
         }
     }
+
     fun loadNextPage() {
-        syncData(currentPage + 1)
+        mainPageViewModel.loadNextPage()
     }
 }
-
