@@ -60,7 +60,13 @@ fun TopBar(
                 Text("Button")
             }
             Button(
-                onClick = { navController.navigate("mainPage") },
+                onClick = {
+                    if(navController.currentDestination?.route == "mainPage") {
+                        navController.navigate("mainPage")
+                    }else {
+                        navController.navigate("startingScreenForQuiz")
+                    }
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 modifier = Modifier
                     .align(Alignment.TopStart)
