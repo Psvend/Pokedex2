@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokedex2.data.remote.PokemonApiService
+import com.example.pokedex2.data.remote.PokemonFormResponse
 import com.example.pokedex2.data.remote.json.testPokemon
 import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
@@ -39,8 +40,8 @@ class PokePageViewModel @Inject constructor(
     private val _pokemonLocations = MutableStateFlow<List<String>>(emptyList())
     val pokemonLocations: StateFlow<List<String>> = _pokemonLocations
 
-    private val _pokemonForms = MutableStateFlow<List<String>>(emptyList())
-    val pokemonForms: StateFlow<List<String>> = _pokemonForms
+    private val _pokemonForm = MutableStateFlow<List<String>>(emptyList())
+    val pokemonForm: StateFlow<List<String>> = _pokemonForm
 
 
     //Then add it here and then at PokemonPage
@@ -78,6 +79,23 @@ class PokePageViewModel @Inject constructor(
             }
         }
     }
+
+
+    fun fetchPokemonForm(pokemonIdOrName: String) {
+        viewModelScope.launch {
+            try {
+                val formResponse = pokemonApiService.getPokemonForm(pokemonIdOrName)
+                val typeNames = formResponse.types.map { it.type.name.capitalizeFirstLetter() }
+                _pokemonForm.value = typeNames
+            } catch (e: Exception) {
+                _pokemonForm.value = listOf("No forms available")
+            }
+        }
+    }
+
+
+
+
 
 
 

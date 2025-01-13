@@ -24,6 +24,11 @@ interface PokemonApiService {
     ): List<EncounterResponse>
 
 
+    @GET("pokemon-form/{idOrName}")
+    suspend fun getPokemonForm(
+        @Path("idOrName") idOrName: String
+    ): PokemonFormResponse
+
 
     companion object {
             const val BASE_URL= "https://pokeapi.co/api/v2/"

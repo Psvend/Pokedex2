@@ -68,18 +68,25 @@ fun PokemonPage(
     val pokemonDetail by viewModel.pokemonDetail.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
     val pokemonLocations by viewModel.pokemonLocations.collectAsState()
+    val pokemonForm by viewModel.pokemonForm.collectAsState()
 
     // Fetch Pokémon details when the page is displayed
     LaunchedEffect(pokemonIdOrName) {
         viewModel.fetchPokemonDetail(pokemonIdOrName.lowercase()) // Ensure lowercase
     }
 
-    // Fetch encounter locations when `location_area_encounters` is available
+    // Fetch encounter locations
     LaunchedEffect(pokemonDetail?.location_area_encounters) {
         pokemonDetail?.location_area_encounters?.let { url ->
             viewModel.fetchPokemonEncounters(url)
         }
     }
+
+    //Fetch info about pokemon forms
+    LaunchedEffect(pokemonIdOrName) {
+        viewModel.fetchPokemonForm(pokemonIdOrName)
+    }
+
 
     Column(
         modifier = modifier
@@ -130,6 +137,13 @@ fun PokemonPage(
 
 
         PokemonLocation(locations = pokemonLocations)
+
+
+        PokemonForms(forms = pokemonForm)
+
+
+
+
 
         Spacer(
             modifier = Modifier
@@ -264,6 +278,66 @@ fun PokemonLocation(locations: List<String>) {
         }
     }
 }
+
+
+@Composable
+fun PokemonForms(forms: List<String>) {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .fillMaxWidth()
+    ) {
+        Text(
+            text = "Pokemon Forms",
+            style = TextStyle(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Default
+            ),
+            textAlign = TextAlign.Start,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        if (forms.isEmpty()) {
+            Text(
+                text = "No data on Pokémon forms available",
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily.Default
+                ),
+                textAlign = TextAlign.Start
+            )
+        } else {
+            forms.forEach { form ->
+                Text(
+                    text = form,
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontFamily = FontFamily.Default
+                    ),
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @Composable
