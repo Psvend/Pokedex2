@@ -60,7 +60,7 @@ fun TopBar(
                 Text("Button")
             }
             Button(
-                onClick = { navController.popBackStack() },
+                onClick = { navController.navigate("mainPage") },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 modifier = Modifier
                     .align(Alignment.TopStart)
