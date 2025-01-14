@@ -298,7 +298,7 @@ fun PokemonTypeIcons(types: List<String>, modifier: Modifier = Modifier) {
                         color = getTypeColor(type),
                         shape = RoundedCornerShape(8.dp)
                     )
-                    .padding(horizontal = 12.dp, vertical = 4.dp),
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(

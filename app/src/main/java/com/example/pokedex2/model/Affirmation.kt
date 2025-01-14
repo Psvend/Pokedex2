@@ -12,5 +12,5 @@ data class Affirmation (
     val isLiked: Boolean,
     val number: Int,
     val encounterLocations: List<String> = emptyList(),
-    val forms: List<String>
+    //val forms: List<String>
 )

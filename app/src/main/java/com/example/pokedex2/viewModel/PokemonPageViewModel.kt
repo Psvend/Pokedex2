@@ -1,11 +1,14 @@
 package com.example.pokedex2.viewModel
 
 
+
+import android.util.Log
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokedex2.data.remote.PokemonApiService
-import com.example.pokedex2.data.remote.PokemonFormResponse
+import com.example.pokedex2.data.remote.PokemonSpecies
 import com.example.pokedex2.data.remote.json.testPokemon
 import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
@@ -34,14 +37,17 @@ class PokePageViewModel @Inject constructor(
     private val _pokemonId = MutableStateFlow<String?>(null)
     val pokemonId: StateFlow<String?> = _pokemonId
 
-    //private val _pokemonHabitat = MutableStateFlow<String?>(null)
-    //val pokemonHabitat: StateFlow<String?> = _pokemonHabitat
-
     private val _pokemonLocations = MutableStateFlow<List<String>>(emptyList())
     val pokemonLocations: StateFlow<List<String>> = _pokemonLocations
 
-    private val _pokemonForm = MutableStateFlow<List<String>>(emptyList())
-    val pokemonForm: StateFlow<List<String>> = _pokemonForm
+    private val _abilities = MutableStateFlow<List<String>>(emptyList())
+    val abilities: StateFlow<List<String>> = _abilities
+
+    private val _pokemonSpecies = MutableStateFlow<PokemonSpecies?>(null)
+    val pokemonSpecies: StateFlow<PokemonSpecies?> = _pokemonSpecies
+
+    private val _growthRate = MutableStateFlow<String>("Unknown")
+    val growthRate: StateFlow<String> = _growthRate
 
 
     //Then add it here and then at PokemonPage
@@ -50,20 +56,14 @@ class PokePageViewModel @Inject constructor(
             try {
                 _errorMessage.value = null
                 val detail = pokemonApiService.getPokemonDetail(nameOrId)
-                //val habitat = pokemonApiService.
-
                 // Set pokemon details
                 _pokemonDetail.value = detail
-
-                //fetch location
-                //val locationEncounters = detail.location_area_encounters
-                //_pokemonLocation.value = null
 
             } catch (e: Exception) {
                 _errorMessage.value = "Failed to fetch Pokemon details: ${e.message}"
                 _pokemonDetail.value = null
                 _pokemonImage.value = null
-                //_pokemonLocation.value = null
+
             }
         }
     }
@@ -73,7 +73,8 @@ class PokePageViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val encounters = pokemonApiService.getPokemonEncounters(encountersUrl)
-                _pokemonLocations.value = encounters.map { it.location_area.name.capitalizeFirstLetter() }
+                _pokemonLocations.value =
+                    encounters.map { it.location_area.name.capitalizeFirstLetter() }
             } catch (e: Exception) {
                 _pokemonLocations.value = listOf("No locations available")
             }
@@ -81,23 +82,55 @@ class PokePageViewModel @Inject constructor(
     }
 
 
-    fun fetchPokemonForm(pokemonIdOrName: String) {
+    fun fetchPokemonAbilities(pokemonName: String) {
         viewModelScope.launch {
             try {
-                val formResponse = pokemonApiService.getPokemonForm(pokemonIdOrName)
-                val typeNames = formResponse.types.map { it.type.name.capitalizeFirstLetter() }
-                _pokemonForm.value = typeNames
+                val pokemonDetail = pokemonApiService.getPokemonDetail(pokemonName)
+                val abilityNames = pokemonDetail.abilities.map { it.ability.name }
+
+                _abilities.value = abilityNames
             } catch (e: Exception) {
-                _pokemonForm.value = listOf("No forms available")
+                _abilities.value = listOf("Error fetching abilities")
+            }
+        }
+    }
+
+    fun fetchPokemonSpecies(nameOrId: String) {
+        viewModelScope.launch {
+            try {
+                val species = pokemonApiService.getPokemonSpecies(nameOrId)
+                _pokemonSpecies.value = species
+                _growthRate.value = species.growth_rate.name // Normalize here
+                Log.d("PokemonGrowthRate", "Fetched Growth Rate: $growthRate")
+            } catch (e: Exception) {
+                _growthRate.value = "unknown"
             }
         }
     }
 
 
+    fun getGrowthRateProgress(growthRate: String): Float {
+        return when (growthRate.trim().lowercase()) {
+            "slow" -> 0.2f
+            "medium-slow" -> 0.4f
+            "medium" -> 0.6f
+            "fast" -> 0.8f
+            "very fast" -> 1.0f
+            else -> 0.0f // Default for unknown rates
+        }
+    }
 
 
-
-
+    fun getGrowthRateColor(growthRate: String): Color {
+        return when (growthRate.trim().lowercase()) {
+            "slow" -> Color.Blue // Slow = Blue
+            "medium-slow" -> Color.Green // Medium-Slow = Green
+            "medium" -> Color.Yellow // Medium = Yellow
+            "fast" -> Color(0xFFFFA500) // Fast = Orange
+            "very fast" -> Color.Red // Very Fast = Red
+            else -> Color.Gray // Default for unknown rates
+        }
+    }
 
 
 }

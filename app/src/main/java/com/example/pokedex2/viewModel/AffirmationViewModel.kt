@@ -48,15 +48,6 @@ class AffirmationViewModel @Inject() constructor(
                     val encounters = pokemonApiService.getPokemonEncounters(detail.location_area_encounters)
                     val locationNames = encounters.map { it.location_area.name.capitalizeFirstLetter()}
 
-                    //fetching pokemon forms
-                    val forms = detail.forms.map { formResource ->
-                        try {
-                            val formDetail = pokemonApiService.getPokemonForm(formResource.name)
-                            formDetail.form_name ?: formDetail.name.capitalizeFirstLetter()
-                        } catch (e: Exception) {
-                            "Error fetching forms"
-                        }
-                    }
 
 
                     Affirmation(
@@ -66,9 +57,7 @@ class AffirmationViewModel @Inject() constructor(
                         typeIcon = detail.types.map { it.type.name.capitalizeFirstLetter() },
                         isLiked = false,
                         number = detail.id,
-                        encounterLocations = locationNames,
-                        forms = forms
-
+                        encounterLocations = locationNames
                     )
                 }
 

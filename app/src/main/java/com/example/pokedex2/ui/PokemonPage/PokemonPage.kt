@@ -1,7 +1,7 @@
 package com.example.pokedex2.ui.PokePage
 
 
-import androidx.compose.foundation.Image
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -9,31 +9,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
-import com.example.pokedex2.viewModel.PokePageViewModel
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -41,23 +26,32 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.pokedex2.model.Affirmation
+import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.example.pokedex2.ui.PokemonList.PokemonTypeIcons
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
+import com.example.pokedex2.viewModel.PokePageViewModel
+
 
 @Composable
 fun PokemonPage(
@@ -68,11 +62,14 @@ fun PokemonPage(
     val pokemonDetail by viewModel.pokemonDetail.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
     val pokemonLocations by viewModel.pokemonLocations.collectAsState()
-    val pokemonForm by viewModel.pokemonForm.collectAsState()
+    val abilities by viewModel.abilities.collectAsState()
+    val growthRate by viewModel.growthRate.collectAsState()
 
     // Fetch Pokémon details when the page is displayed
     LaunchedEffect(pokemonIdOrName) {
-        viewModel.fetchPokemonDetail(pokemonIdOrName.lowercase()) // Ensure lowercase
+        viewModel.fetchPokemonDetail(pokemonIdOrName.lowercase())
+        viewModel.fetchPokemonAbilities(pokemonIdOrName.lowercase())
+        viewModel.fetchPokemonSpecies(pokemonIdOrName.lowercase())
     }
 
     // Fetch encounter locations
@@ -82,10 +79,6 @@ fun PokemonPage(
         }
     }
 
-    //Fetch info about pokemon forms
-    LaunchedEffect(pokemonIdOrName) {
-        viewModel.fetchPokemonForm(pokemonIdOrName)
-    }
 
 
     Column(
@@ -99,7 +92,7 @@ fun PokemonPage(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(130.dp)
+                .height(140.dp)
         )
 
 
@@ -119,7 +112,7 @@ fun PokemonPage(
         Spacer(
             modifier = Modifier
                 .fillMaxWidth() // Ensure the spacer spans the width of the column
-                .height(16.dp) // Adjust the height to control the space
+                .height(12.dp) // Adjust the height to control the space
                 .background(Color.Transparent) //To test if its being added
         )
 
@@ -138,11 +131,13 @@ fun PokemonPage(
 
         PokemonLocation(locations = pokemonLocations)
 
+        Spacer(modifier = Modifier.height(20.dp))
 
-        PokemonForms(forms = pokemonForm)
+        PokemonAbilities(abilities = abilities)
 
+        Spacer(modifier = Modifier.height(20.dp))
 
-
+        PokemonGrowthRate(growthRate = growthRate, viewModel = viewModel)
 
 
         Spacer(
@@ -245,13 +240,12 @@ fun PokemonLocation(locations: List<String>) {
     ) {
         Text(
             text = "Encounters",
-            style = TextStyle(
-                fontSize = 20.sp,
+            style = MaterialTheme.typography.bodyLarge.copy(
                 fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Default
+                color = Color.DarkGray
             ),
             textAlign = TextAlign.Start,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 4.dp)
         )
 
         if (locations.isEmpty()) {
@@ -280,42 +274,34 @@ fun PokemonLocation(locations: List<String>) {
 }
 
 
+
+
 @Composable
-fun PokemonForms(forms: List<String>) {
+fun PokemonAbilities(abilities: List<String>) {
     Column(
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .fillMaxWidth()
     ) {
         Text(
-            text = "Pokemon Forms",
-            style = TextStyle(
-                fontSize = 20.sp,
+            text = "Abilities",
+            style = MaterialTheme.typography.bodyLarge.copy(
                 fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Default
+                color = Color.DarkGray
             ),
-            textAlign = TextAlign.Start,
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
-        if (forms.isEmpty()) {
+        if (abilities.isEmpty()) {
             Text(
-                text = "No data on Pokémon forms available",
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontFamily = FontFamily.Default
-                ),
-                textAlign = TextAlign.Start
+                text = "No abilities available",
+                style = MaterialTheme.typography.bodyMedium
             )
         } else {
-            forms.forEach { form ->
+            abilities.forEach { ability ->
                 Text(
-                    text = form,
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontFamily = FontFamily.Default
-                    ),
-                    textAlign = TextAlign.Start,
+                    text = ability.capitalizeFirstLetter(),
+                    style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(vertical = 4.dp)
                 )
             }
@@ -324,17 +310,68 @@ fun PokemonForms(forms: List<String>) {
 }
 
 
+@Composable
+fun PokemonGrowthRate(growthRate: String, viewModel: PokePageViewModel) {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .fillMaxWidth()
+    ) {
+        // Title
+        Text(
+            text = "Growth Rate",
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontWeight = FontWeight.Bold,
+                color = Color.DarkGray
+            )
+        )
 
+        Spacer(modifier = Modifier.height(8.dp))
 
+        // Progress Bar with Label
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            // Progress Bar
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(20.dp)
+                    .background(
+                        Color.LightGray,
+                        shape = RoundedCornerShape(10.dp)
+                    )
+            ) {
+                // Fetch progress and color
+                val progress = viewModel.getGrowthRateProgress(growthRate)
+                val color = viewModel.getGrowthRateColor(growthRate)
 
+                // Log for debugging
+                Log.d("PokemonGrowthRate", "Progress: $progress, Color: $color")
 
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(progress)
+                        .fillMaxHeight()
+                        .background(color, shape = RoundedCornerShape(10.dp))
+                )
+            }
 
+            Spacer(modifier = Modifier.width(8.dp))
 
-
-
-
-
-
+            // Growth Rate Label
+            Text(
+                text = growthRate.capitalizeFirstLetter(),
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color.DarkGray
+                )
+            )
+        }
+    }
+}
 
 
 
@@ -355,150 +392,7 @@ fun LikeButton(modifier: Modifier = Modifier) {
 
 
 
-/*
-@Composable
-fun PokemonLocation(locations: List<String>) {
-    Column(
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .fillMaxWidth()
-    ) {
-            Text(
-                text = "Encounters",
-                style = TextStyle(
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Default
-                ),
-                textAlign = TextAlign.Start,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
 
-        if (locations.isEmpty()) {
-                Text(
-                    text = "No encounter data available",
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontFamily = FontFamily.Default
-                    ),
-                    textAlign = TextAlign.Start
-                )
-        } else {
-            locations.forEach { location ->
-                Text(
-                    text = location,
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontFamily = FontFamily.Default
-                    ),
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
-            }
-        }
-    }
-}
-
-
-
-*/
-
-
-
-
-//OLD WORKING CODE, NOT SCROLLABLE
-/*
-
-@Composable
-fun PokemonPage(
-    pokemonIdOrName: String,
-    viewModel: PokePageViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier
-) {
-    //Add new items here to show
-    val pokemonDetail by viewModel.pokemonDetail.collectAsState()
-    val errorMessage by viewModel.errorMessage.collectAsState()
-    //val pokemonImage by viewModel.pokemonImage.collectAsState()
-    val pokemonId by viewModel.pokemonId.collectAsState()
-    val pokemonLocations by viewModel.pokemonLocations.collectAsState()
-    val pokemonForms by viewModel.pokemonForms.collectAsState()
-
-    // Fetch Pokémon details when the page is displayed
-    LaunchedEffect(pokemonIdOrName) {
-        viewModel.fetchPokemonDetail(pokemonIdOrName.lowercase()) // Ensure lowercase is passed
-        //viewModel.fetchPokemonHabitat(pokemonIdOrName.lowercase())
-    }
-
-    // Fetch encounter locations when location_area_encounters is available
-    LaunchedEffect(pokemonDetail?.location_area_encounters) {
-        pokemonDetail?.location_area_encounters?.let { url ->
-            viewModel.fetchPokemonEncounters(url)
-        }
-    }
-
-
-
-
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(0xFFFFF9E6))
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        // Header Section
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(130.dp)
-        )
-
-        //Spacer(modifier = Modifier.height(2.dp))
-
-        // Top Section - Name and Number
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            PokemonName(name = pokemonDetail?.name ?: "Unknown")
-
-            pokemonDetail?.id?.let { id ->
-                PokemonNr(id = id)
-            }
-        }
-
-        // Spacer(modifier = Modifier.height(16.dp))
-
-        // Center Image and Like Button
-        Box(
-            modifier = Modifier
-                .size(300.dp)
-                .background(Color.LightGray, shape = RoundedCornerShape(12.dp))
-                .padding(16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            PokemonImage(model = pokemonDetail?.sprites?.front_default)
-
-            LikeButton(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .offset(y = 20.dp)
-            )
-        }
-
-        pokemonDetail?.types?.map { it.type.name }?.let { types ->
-            PokemonTypeIcons(types = types)
-        }
-
-        //Pokemon Location Encounter
-        PokemonLocation(locations = pokemonLocations)
-
-    }
-}
-*/
 
 
 
