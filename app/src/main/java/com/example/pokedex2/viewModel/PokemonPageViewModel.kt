@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.pokedex2.data.remote.ChainLink
 import com.example.pokedex2.data.remote.PokemonApiService
 import com.example.pokedex2.data.remote.PokemonSpecies
 import com.example.pokedex2.data.remote.json.testPokemon
@@ -48,6 +49,9 @@ class PokePageViewModel @Inject constructor(
 
     private val _growthRate = MutableStateFlow<String>("Unknown")
     val growthRate: StateFlow<String> = _growthRate
+
+    private val _evolvesTo = MutableStateFlow<List<String>>(emptyList())
+    val evolvesTo: StateFlow<List<String>> = _evolvesTo
 
 
     //Then add it here and then at PokemonPage
@@ -107,6 +111,91 @@ class PokePageViewModel @Inject constructor(
             }
         }
     }
+
+
+    fun fetchEvolutionChain(pokemonIdOrName: String) {
+        viewModelScope.launch {
+            try {
+                // Fetch Pokémon species to get the evolution chain URL
+                val species = pokemonApiService.getPokemonSpecies(pokemonIdOrName)
+                val evolutionChainUrl = species.evolution_chain.url
+
+                // Extract evolution chain ID from the URL
+                val evolutionChainId = evolutionChainUrl.split("/").last { it.isNotEmpty() }.toInt()
+
+                // Fetch the evolution chain using the extracted ID
+                val evolutionChain = pokemonApiService.getEvolutionChain(evolutionChainId)
+
+                // Find the current Pokémon in the chain
+                val currentPokemon = species.name.lowercase()
+                val evolvesToList = mutableListOf<String>()
+
+                var currentChainLink = evolutionChain.chain
+
+                // Traverse the evolution chain to find evolves_to for the current Pokémon
+                while (currentChainLink.species.name.lowercase() != currentPokemon) {
+                    if (currentChainLink.evolves_to.isEmpty()) {
+                        break // No further evolution links
+                    }
+                    currentChainLink = currentChainLink.evolves_to.first() // Continue to the next link
+                }
+
+                // Process the "evolves_to" list for the current Pokémon
+                for (evolution in currentChainLink.evolves_to) {
+                    val speciesName = evolution.species.name.capitalizeFirstLetter()
+                    val minLevel = evolution.evolution_details.firstOrNull()?.min_level
+
+                    if (minLevel != null) {
+                        evolvesToList.add("Evolves to $speciesName when at level $minLevel")
+                    } else {
+                        evolvesToList.add("Evolves to $speciesName (level unknown)")
+                    }
+                }
+
+                // Handle the case where the Pokémon has no further evolutions
+                if (evolvesToList.isEmpty()) {
+                    evolvesToList.add("Nothing, this is the max evolution step")
+                }
+
+                _evolvesTo.value = evolvesToList
+
+            } catch (e: Exception) {
+                _evolvesTo.value = listOf("Error fetching evolution data")
+                Log.e("fetchEvolutionChain", "Error fetching evolution chain: ${e.message}")
+            }
+        }
+    }
+
+
+
+
+
+    /*
+        private fun processEvolvesTo(chain: ChainLink): List<String> {
+            val evolvesTo = mutableListOf<String>()
+            var currentChain = chain
+
+            while (currentChain.evolves_to.isNotEmpty()) {
+                evolvesTo.add(currentChain.evolves_to.first().species.name.capitalize())
+                currentChain = currentChain.evolves_to.first()
+            }
+
+            return evolvesTo
+        }
+
+
+
+        private fun ChainLink.findPokemonInChain(pokemonName: String): ChainLink? {
+            if (species.name.equals(pokemonName, ignoreCase = true)) {
+                return this
+            }
+            for (evolvesTo in evolves_to) {
+                val result = evolvesTo.findPokemonInChain(pokemonName)
+                if (result != null) return result
+            }
+            return null
+        }
+    */
 
 
     fun getGrowthRateProgress(growthRate: String): Float {

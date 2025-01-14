@@ -64,12 +64,15 @@ fun PokemonPage(
     val pokemonLocations by viewModel.pokemonLocations.collectAsState()
     val abilities by viewModel.abilities.collectAsState()
     val growthRate by viewModel.growthRate.collectAsState()
+    val evolvesTo by viewModel.evolvesTo.collectAsState()
 
     // Fetch Pokémon details when the page is displayed
     LaunchedEffect(pokemonIdOrName) {
         viewModel.fetchPokemonDetail(pokemonIdOrName.lowercase())
         viewModel.fetchPokemonAbilities(pokemonIdOrName.lowercase())
         viewModel.fetchPokemonSpecies(pokemonIdOrName.lowercase())
+        viewModel.fetchEvolutionChain(pokemonIdOrName.lowercase())
+
     }
 
     // Fetch encounter locations
@@ -78,7 +81,6 @@ fun PokemonPage(
             viewModel.fetchPokemonEncounters(url)
         }
     }
-
 
 
     Column(
@@ -139,6 +141,9 @@ fun PokemonPage(
 
         PokemonGrowthRate(growthRate = growthRate, viewModel = viewModel)
 
+        Spacer(modifier = Modifier.height(20.dp))
+
+        PokemonEvolvesTo(evolvesTo = evolvesTo)
 
         Spacer(
             modifier = Modifier
@@ -372,6 +377,45 @@ fun PokemonGrowthRate(growthRate: String, viewModel: PokePageViewModel) {
         }
     }
 }
+
+@Composable
+fun PokemonEvolvesTo(evolvesTo: List<String>) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    ) {
+        Text(
+            text = "Evolves To",
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontWeight = FontWeight.Bold,
+                color = Color.DarkGray
+            ),
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        if (evolvesTo.isEmpty() || (evolvesTo.size == 1 && evolvesTo[0] == "Nothing, this is the max evolution step")) {
+            Text(
+                text = "Nothing, this is the max evolution step",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Gray
+            )
+        } else {
+            evolvesTo.forEach { evolution ->
+                Text(
+                    text = evolution,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
+        }
+    }
+}
+
+
+
+
+
 
 
 
