@@ -49,6 +49,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
 import com.example.pokedex2.utils.RotatingLoader
 import kotlinx.coroutines.flow.filter
 
@@ -302,7 +303,7 @@ fun PokemonTypeIcons(types: List<String>, modifier: Modifier = Modifier) {
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = type,
+                    text = type.capitalizeFirstLetter(),
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.White
                 )
