@@ -145,7 +145,7 @@ fun PokemonPage(
 
 
             pokemonDetail?.types?.map { it.type.name }?.let { types ->
-                PokemonTypeIcons(types = types, fontSize = 10.sp)
+                PokemonTypeIcons(types = types)
             }
 
 
