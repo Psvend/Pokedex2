@@ -48,7 +48,7 @@ fun Quiz(
     val pokemonNames = viewModel.pokemonNames.collectAsState()
     val randomPokemonId = remember { viewModel.getRandomPokemonId() }
     val points = remember { mutableIntStateOf(0) }
-    val selectedAnswer = remember { mutableStateOf<String?>(null) }
+
 
 
     LaunchedEffect(Unit) {
@@ -95,38 +95,25 @@ fun Quiz(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            answerOptions.forEach { option ->
-                Button(
-                    onClick = {
-                        selectedAnswer.value = option
-                        if (option == pokemonDetail.value?.name) {
-                            points.value += 1
-                        }
+                    answerOptions.forEach { option ->
+                        Button(
+                            onClick = {
+                                if (option == pokemonDetail.value?.name) {
+                                    points.value += 1
+                                    val newRandomPokemonId = viewModel.getRandomPokemonId()
+                                    viewModel.fetchPokemonDetail(newRandomPokemonId.toString())
 
-
-                            selectedAnswer.value = null
-                            viewModel.fetchPokemonDetail(viewModel.getRandomPokemonId().toString())
-
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = when {
-                            selectedAnswer.value == option && option == pokemonDetail.value?.name -> Color.Green
-                            selectedAnswer.value == option && option != pokemonDetail.value?.name -> Color.Red
-                            else -> Color(0xFFE55655)
-                        },
-                        contentColor = Color.White
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text(
-                        text = option,
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontWeight = FontWeight.Medium
-                        )
-                    )
+                                } else {
+                                    val newRandomPokemonId = viewModel.getRandomPokemonId()
+                                    viewModel.fetchPokemonDetail(newRandomPokemonId.toString())
+                                    /* Handle wrong answer */
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                        ) {
+                            Text(text = option)
 
             }
         }
