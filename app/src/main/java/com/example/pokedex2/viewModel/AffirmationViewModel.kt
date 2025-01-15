@@ -44,13 +44,20 @@ class AffirmationViewModel @Inject() constructor(
                 val affirmationsList = response.results.map { result ->
                     val detail = pokemonApiService.getPokemonDetail(result.name)
 
+                    //fetching encounter locations
+                    val encounters = pokemonApiService.getPokemonEncounters(detail.location_area_encounters)
+                    val locationNames = encounters.map { it.location_area.name.capitalizeFirstLetter()}
+
+
+
                     Affirmation(
                         id = detail.id,
                         name = detail.name.capitalizeFirstLetter(),   //changed first letter to upper case
                         imageResourceId = detail.sprites.front_default ?: "",
                         typeIcon = detail.types.map { it.type.name.capitalizeFirstLetter() },
                         isLiked = false,
-                        number = detail.id
+                        number = detail.id,
+                        encounterLocations = locationNames
                     )
                 }
 

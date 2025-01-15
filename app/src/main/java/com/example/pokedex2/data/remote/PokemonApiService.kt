@@ -4,6 +4,7 @@ import com.example.pokedex2.data.remote.json.testPokemon
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface PokemonApiService {
     @GET("pokemon")
@@ -16,6 +17,30 @@ interface PokemonApiService {
     suspend fun getPokemonDetail(
         @Path("name") name: String
     ): testPokemon
+
+
+    @GET
+    suspend fun getPokemonEncounters(
+        @Url encountersUrl: String
+    ): List<EncounterResponse>
+
+
+    @GET("ability/{idOrName}")
+    suspend fun getAbility(
+        @Path("idOrName") idOrName: String
+    ): AbilityResponse
+
+    @GET("pokemon-species/{idOrName}")
+    suspend fun getPokemonSpecies(
+        @Path("idOrName") idOrName: String
+    ): PokemonSpecies
+
+    @GET("evolution-chain/{id}/")
+    suspend fun getEvolutionChain(
+        @Path("id") id: Int
+    ): EvolutionChainResponse
+
+
 
     companion object {
             const val BASE_URL= "https://pokeapi.co/api/v2/"
