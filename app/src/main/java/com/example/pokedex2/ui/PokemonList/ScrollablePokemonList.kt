@@ -43,12 +43,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import com.example.pokedex2.R
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.example.pokedex2.ui.SearchAndFilters.FilterOverlay
+import com.example.pokedex2.ui.SearchAndFilters.TypeFilterUI
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
 import com.example.pokedex2.utils.RotatingLoader
 import kotlinx.coroutines.flow.filter
@@ -66,6 +69,9 @@ fun HomePokemonScroll(
     val listState = rememberLazyListState()
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var showFilterOverlay by remember {mutableStateOf(false)}
+
+    // States for applied filters
+    var sunExposure by rememberSaveable { mutableIntStateOf(0) }
 
     if (isLoading && affirmationList.isEmpty()) {
         // Show a loading spinner during initial load
@@ -154,11 +160,7 @@ fun HomePokemonScroll(
 
                     IconButton(
                         onClick = {
-                            if(showFilterOverlay){
-                                showFilterOverlay = false
-                            } else {
-                                showFilterOverlay = true
-                            }
+                            showFilterOverlay = !showFilterOverlay
                         },
                         modifier = Modifier.padding(8.dp)
                     ) {
@@ -207,6 +209,12 @@ fun HomePokemonScroll(
                         viewModel.loadNextPage() // Use the helper method
                     }
             }
+        if (showFilterOverlay) {
+            FilterOverlay(
+                showOverlay = true,
+                onClose = {showFilterOverlay = false}
+            )
+        }
         }
     }
 }

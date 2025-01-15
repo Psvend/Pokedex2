@@ -1,5 +1,6 @@
 package com.example.pokedex2
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -38,6 +39,7 @@ data class BottomNavItem(
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -62,7 +64,7 @@ class MainActivity : ComponentActivity() {
                           viewModel = menuBarViewModel
                         )
                     }
-                ) { innerPadding ->
+                ) {
                     when(selectedItemIndex){
                         0 ->  NavGraph(navController = navController,
                             startDestination = "mainPage" )
@@ -70,7 +72,6 @@ class MainActivity : ComponentActivity() {
                         //    pokeViewModel = pokeViewModel
                         //)
                        // 1 -> PokemonPage(pokemonPageViewModel = PokePageViewModel )
-                        2 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))
                         //3 -> PokemonDetailScreen(pokeViewModel = viewModel, modifier = Modifier.padding(innerPadding))
                         else -> RotatingLoader()
                     }
