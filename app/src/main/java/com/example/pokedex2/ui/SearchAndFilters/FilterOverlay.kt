@@ -1,6 +1,7 @@
 package com.example.pokedex2.ui.SearchAndFilters
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +36,7 @@ fun FilterOverlay(
 ) {
     val selectionMap = searchViewModel.selectionMap
     val allTypesSelected = selectionMap.values.all { it } // Check if all are selected
+    val pokeTypes = searchViewModel.pokeTypes.value
 
     if(showOverlay){
         Box(
@@ -96,6 +100,42 @@ fun FilterOverlay(
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Bold
                     )
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Button(
+                        onClick = {
+                            if (allTypesSelected) {
+                                // Deselect all types
+                                pokeTypes.forEach { selectionMap[it.id] = false }
+                            } else {
+                                // Select all types
+                                pokeTypes.forEach { selectionMap[it.id] = true }
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(Color(0xFFE55655))
+                    ) {
+                        Text(
+                            modifier = Modifier.background(Color(0xFFE55655)),
+                            text = if (allTypesSelected) "Deselect all" else "Show all types",
+                            color = Color(0xFFFFD88E)
+                        )
+                    }
+                    Button(
+                        onClick = {
+
+                            onClose()
+                        },
+                        colors = ButtonDefaults.buttonColors(Color(0xFFE55655))
+                    ) {
+                        Text(
+                            modifier = Modifier.background(Color(0xFFE55655)),
+                            text = "Confirm",
+                            color = Color(0xFFFFD88E)
+                        )
+                    }
                 }
             }
         }
