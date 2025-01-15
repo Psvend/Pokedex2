@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.pokedex2.utils.RotatingLoader
 import com.example.pokedex2.viewModel.SearchViewModel
 
 @Composable
@@ -34,6 +35,7 @@ fun FilterOverlay(
     onClose: () -> Unit,
     searchViewModel: SearchViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
+    val isLoading = searchViewModel.isLoading.value
     val selectionMap = searchViewModel.selectionMap
     val allTypesSelected = selectionMap.values.all { it } // Check if all are selected
     val pokeTypes = searchViewModel.pokeTypes.value
@@ -43,13 +45,13 @@ fun FilterOverlay(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black.copy(alpha = 0.5f))
-                .wrapContentSize(align = Alignment.Center)
+                .wrapContentSize(align = Alignment.TopCenter)
         ) {
             Column (
                 modifier = Modifier
                     .background(Color(0xFFFFF9E6))
                     .padding(16.dp)
-                    .padding(bottom = 30.dp)
+                    .padding(bottom = 30.dp, top = 0.dp)
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
@@ -101,6 +103,39 @@ fun FilterOverlay(
                         fontWeight = FontWeight.Bold
                     )
                 }
+
+                when {
+                    isLoading -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            RotatingLoader()
+                        }
+                    }
+
+                    pokeTypes.isEmpty() -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("No types available", color = Color.Red)
+                        }
+                    }
+
+                    else -> {
+                        TypeGrid(
+                            modifier = Modifier,
+                            pokeTypes = pokeTypes,
+                            selectionMap = selectionMap,
+                            onToggleSelection = { id -> searchViewModel.toggleSelection(id) },
+                            getTypeColor = { id, color -> searchViewModel.getTypeColor(id, color) }
+                        )
+                    }
+                }
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly

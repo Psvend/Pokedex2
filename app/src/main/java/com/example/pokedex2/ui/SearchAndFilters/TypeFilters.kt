@@ -213,7 +213,7 @@ fun TypeFilterUI(
     }
 }
 
-
+/*
 @Composable
 fun TypeGrid(
     modifier: Modifier = Modifier,
@@ -269,4 +269,4 @@ fun TypeGrid(
 fun String.capitalizeFirstLetter(): String {
     return this.lowercase().replaceFirstChar { it.uppercase() }
 }
-
+*/
