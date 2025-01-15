@@ -270,9 +270,3 @@ fun String.capitalizeFirstLetter(): String {
     return this.lowercase().replaceFirstChar { it.uppercase() }
 }
 
-
-@Preview
-@Composable
-fun Preview(){
-
-}
