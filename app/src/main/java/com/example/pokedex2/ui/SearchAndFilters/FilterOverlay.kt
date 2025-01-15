@@ -25,7 +25,6 @@ fun FilterOverlay(
     showOverlay: Boolean,
     onClose: () -> Unit
 ) {
-
     if(showOverlay){
         Box(
             modifier = Modifier
