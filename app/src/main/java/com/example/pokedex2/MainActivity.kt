@@ -16,16 +16,11 @@ import androidx.navigation.compose.rememberNavController
 import com.example.pokedex2.ui.SearchAndFilters.TypeFilterUI
 import com.example.pokedex2.ui.MenuBar.MenuBar
 import com.example.pokedex2.ui.Navigation.NavGraph
-import com.example.pokedex2.ui.PokemonList.FavouritePokemonList
 import com.example.pokedex2.ui.theme.Pokedex2Theme
 import com.example.pokedex2.ui.TopBar.TopBar
-//import com.example.pokedex2.ui.theme.PokemonDetailScreen
-//import com.example.pokedex2.ui.theme.PokemonPage2
 import com.example.pokedex2.utils.RotatingLoader
-import com.example.pokedex2.viewModel.FavouritesViewModel
 import com.example.pokedex2.viewModel.MenuBarViewModel
 import com.example.pokedex2.viewModel.TopBarViewModel
-//import com.example.pokedex2.viewModel.PokemonPageViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 data class BottomNavItem(
@@ -45,8 +40,6 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val topBarViewModel: TopBarViewModel = viewModel()
                 val menuBarViewModel: MenuBarViewModel = viewModel()
-                //val mainPageViewModel: MainPageViewModel = viewModel()
-                val favouritesViewModel: FavouritesViewModel = viewModel()
                 val selectedItemIndex by menuBarViewModel.selectedItemIndex.collectAsState()
 
                 Scaffold(
@@ -64,10 +57,14 @@ class MainActivity : ComponentActivity() {
                     }
                 ) { innerPadding ->
                     when(selectedItemIndex){
-                        0 ->  NavGraph(navController = navController,
-                            startDestination = "mainPage" )
-                        1 ->  NavGraph(navController = navController,
-                            startDestination = "favouritePokemon")
+                        0 ->  NavGraph(
+                            navController = navController,
+                            startDestination = "mainPage"
+                        )
+                        1 ->  NavGraph(
+                            navController = navController,
+                            startDestination = "favouritePokemon",
+                        )
 
                         2 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))
                         //3 -> PokemonDetailScreen(pokeViewModel = viewModel, modifier = Modifier.padding(innerPadding))
@@ -78,6 +75,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-
-

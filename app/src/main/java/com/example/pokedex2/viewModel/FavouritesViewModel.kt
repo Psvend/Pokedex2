@@ -3,13 +3,11 @@ package com.example.pokedex2.viewModel
 import android.content.Context
 import kotlinx.coroutines.flow.Flow
 import androidx.lifecycle.ViewModel
-import com.example.pokedex2.data.local.favouritesDataStore
 import com.example.pokedex2.data.local.getFavouriteAffirmations
 import com.example.pokedex2.data.local.removeFavouriteAffirmation
 import com.example.pokedex2.data.local.saveFavouritePokemon
 import com.example.pokedex2.model.Affirmation
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 

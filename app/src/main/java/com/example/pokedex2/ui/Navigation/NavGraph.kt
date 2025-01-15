@@ -12,13 +12,14 @@ import com.example.pokedex2.ui.PokePage.PokemonPage
 import com.example.pokedex2.ui.PokemonList.FavouritePokemonList
 import com.example.pokedex2.ui.PokemonList.ContentFrame
 import com.example.pokedex2.ui.PokemonList.HomePokemonScroll
+import com.example.pokedex2.ui.components.CatchPokemonScreen
 import com.example.pokedex2.viewModel.AllPokemonsViewModel
 import com.example.pokedex2.viewModel.MainPageViewModel
 
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    startDestination: String = "mainPage"
+    startDestination: String = "mainPage",
 ) {
     val mainPageViewModel: MainPageViewModel = hiltViewModel()
 
@@ -40,6 +41,9 @@ fun NavGraph(
                     navController = navController
                 )
             }
+        }
+        composable("catchPokemonScreen") {
+            CatchPokemonScreen()
         }
     }
 }
