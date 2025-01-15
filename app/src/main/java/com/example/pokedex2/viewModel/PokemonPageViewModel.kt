@@ -53,6 +53,11 @@ class PokePageViewModel @Inject constructor(
     private val _evolvesTo = MutableStateFlow<List<String>>(emptyList())
     val evolvesTo: StateFlow<List<String>> = _evolvesTo
 
+    private val _pokemonStats = MutableStateFlow<List<Pair<String, Int>>>(emptyList())
+    val pokemonStats: StateFlow<List<Pair<String, Int>>> = _pokemonStats
+
+
+
 
     //Then add it here and then at PokemonPage
     fun fetchPokemonDetail(nameOrId: String) {
@@ -167,6 +172,18 @@ class PokePageViewModel @Inject constructor(
     }
 
 
+    fun fetchPokemonStats(name: String) {
+        viewModelScope.launch {
+            try {
+                val pokemon = pokemonApiService.getPokemonStats(name)
+                val stats = pokemon.stats.map { it.stat.name.capitalizeFirstLetter() to it.base_stat }
+                _pokemonStats.value = stats
+            } catch (e: Exception) {
+                Log.e("fetchPokemonStats", "Error fetching stats: ${e.message}")
+                _pokemonStats.value = emptyList()
+            }
+        }
+    }
 
 
 
@@ -220,6 +237,22 @@ class PokePageViewModel @Inject constructor(
             else -> Color.Gray // Default for unknown rates
         }
     }
+
+
+
+
+    fun getStatColor(statName: String): androidx.compose.ui.graphics.Color {
+        return when (statName.lowercase()) {
+            "hp" -> Color(0xFFFF0000) // Red for HP
+            "attack" -> Color(0xFFFFA500) // Orange for Attack
+            "defense" -> Color(0xFF00FF00) // Green for Defense
+            "special-attack" -> Color(0xFF1E90FF) // Blue for Special Attack
+            "special-defense" -> Color(0xFF8A2BE2) // Purple for Special Defense
+            "speed" -> Color(0xFFFFD700) // Gold for Speed
+            else -> Color(0xFF808080) // Gray for unknown or unhandled stats
+        }
+    }
+
 
 
 }

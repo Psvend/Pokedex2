@@ -65,6 +65,7 @@ fun PokemonPage(
     val abilities by viewModel.abilities.collectAsState()
     val growthRate by viewModel.growthRate.collectAsState()
     val evolvesTo by viewModel.evolvesTo.collectAsState()
+    val stats by viewModel.pokemonStats.collectAsState()
 
     // Fetch Pokémon details when the page is displayed
     LaunchedEffect(pokemonIdOrName) {
@@ -72,7 +73,7 @@ fun PokemonPage(
         viewModel.fetchPokemonAbilities(pokemonIdOrName.lowercase())
         viewModel.fetchPokemonSpecies(pokemonIdOrName.lowercase())
         viewModel.fetchEvolutionChain(pokemonIdOrName.lowercase())
-
+        viewModel.fetchPokemonStats(pokemonIdOrName.lowercase())
     }
 
     // Fetch encounter locations
@@ -144,6 +145,11 @@ fun PokemonPage(
         Spacer(modifier = Modifier.height(20.dp))
 
         PokemonEvolvesTo(evolvesTo = evolvesTo)
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        PokemonStatsGraph(stats = stats, viewModel = viewModel)
+
 
         Spacer(
             modifier = Modifier
@@ -256,20 +262,14 @@ fun PokemonLocation(locations: List<String>) {
         if (locations.isEmpty()) {
             Text(
                 text = "No encounter data available",
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontFamily = FontFamily.Default
-                ),
+                style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Start
             )
         } else {
             locations.forEach { location ->
                 Text(
                     text = location,
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontFamily = FontFamily.Default
-                    ),
+                    style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Start,
                     modifier = Modifier.padding(vertical = 4.dp)
                 )
@@ -386,7 +386,7 @@ fun PokemonEvolvesTo(evolvesTo: List<String>) {
             .padding(horizontal = 16.dp)
     ) {
         Text(
-            text = "Evolves To",
+            text = "Evolution",
             style = MaterialTheme.typography.bodyLarge.copy(
                 fontWeight = FontWeight.Bold,
                 color = Color.DarkGray
@@ -394,7 +394,7 @@ fun PokemonEvolvesTo(evolvesTo: List<String>) {
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
-        if (evolvesTo.isEmpty() || (evolvesTo.size == 1 && evolvesTo[0] == "Nothing, this is the max evolution step")) {
+        if (evolvesTo.isEmpty() || (evolvesTo.size == 1 && evolvesTo[0] == "Nothing, this is the maximal evolution step")) {
             Text(
                 text = "Nothing, this is the max evolution step",
                 style = MaterialTheme.typography.bodyMedium,
@@ -414,10 +414,60 @@ fun PokemonEvolvesTo(evolvesTo: List<String>) {
 
 
 
+@Composable
+fun PokemonStatsGraph(stats: List<Pair<String, Int>>, viewModel: PokePageViewModel) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "Stats",
+            style = MaterialTheme.typography.headlineSmall.copy(
+                fontWeight = FontWeight.Bold,
+                color = Color.DarkGray
+            ),
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
 
+        stats.forEach { (name, value) ->
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp)
+            ) {
+                Text(
+                    text = name,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(bottom = 4.dp),
+                    color = Color.DarkGray
+                )
 
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(20.dp)
+                        .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
+                ) {
+                    val progress = value / 255f // Scale to [0, 1]
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(progress)
+                            .fillMaxHeight()
+                            .background(viewModel.getStatColor(name), shape = RoundedCornerShape(10.dp))
+                    )
+                }
 
-
+                Text(
+                    text = value.toString(),
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.align(Alignment.End),
+                    color = Color.DarkGray
+                )
+            }
+        }
+    }
+}
 
 
 
@@ -433,9 +483,6 @@ fun LikeButton(modifier: Modifier = Modifier) {
             .clickable { isSelect = !isSelect }
     )
 }
-
-
-
 
 
 

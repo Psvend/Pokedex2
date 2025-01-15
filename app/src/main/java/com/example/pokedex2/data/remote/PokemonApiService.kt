@@ -40,6 +40,12 @@ interface PokemonApiService {
         @Path("id") id: Int
     ): EvolutionChainResponse
 
+    @GET("pokemon/{name}")
+    suspend fun getPokemonStats(
+        @Path("name") name: String
+    ): testPokemon
+
+
 
 
     companion object {
