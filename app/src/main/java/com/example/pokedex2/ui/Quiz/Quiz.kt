@@ -5,7 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,7 +29,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,11 +46,27 @@ fun Quiz(
     val pokemonNames = viewModel.pokemonNames.collectAsState()
     val randomPokemonId = remember { viewModel.getRandomPokemonId() }
     val points = remember { mutableIntStateOf(0) }
+    val selectedAnswer = remember { mutableStateOf<String?>(null) }
+    val triggerNextQuistion = remember { mutableStateOf(false) }
+    val isClear = remember { mutableStateOf(false) }
+
 
 
 
     LaunchedEffect(Unit) {
         viewModel.fetchPokemonDetail(randomPokemonId.toString())
+    }
+
+    LaunchedEffect (triggerNextQuistion.value) {
+        if (triggerNextQuistion.value) {
+            isClear.value = true
+            kotlinx.coroutines.delay(1000)
+            isClear.value = false
+            selectedAnswer.value = null
+            triggerNextQuistion.value = false
+            val randomPokemonId = viewModel.getRandomPokemonId()
+            viewModel.fetchPokemonDetail(randomPokemonId.toString())
+        }
     }
     val answerOptions = remember(pokemonDetail.value, pokemonNames.value) {
         if (pokemonDetail.value != null) {
@@ -79,7 +93,7 @@ fun Quiz(
             textAlign = TextAlign.Center
         )
 
-        QuizImagae(model = pokemonDetail.value?.sprites?.front_default)
+        QuizImagae(model = pokemonDetail.value?.sprites?.front_default, isClear = isClear.value)
 
 
         Text(
@@ -98,23 +112,25 @@ fun Quiz(
                     answerOptions.forEach { option ->
                         Button(
                             onClick = {
-                                if (option == pokemonDetail.value?.name) {
-                                    points.value += 1
-                                    val newRandomPokemonId = viewModel.getRandomPokemonId()
-                                    viewModel.fetchPokemonDetail(newRandomPokemonId.toString())
+                                selectedAnswer.value = option
+                               if (option == pokemonDetail.value?.name) {
+                                   points.value += 1
+                               }
+                                triggerNextQuistion.value = true
 
-                                } else {
-                                    val newRandomPokemonId = viewModel.getRandomPokemonId()
-                                    viewModel.fetchPokemonDetail(newRandomPokemonId.toString())
-                                    /* Handle wrong answer */
-                                }
                             },
+                            colors = ButtonDefaults.buttonColors(
+                                contentColor = when {
+                                    selectedAnswer.value == option && option == pokemonDetail.value?.name -> Color.Green
+                                    selectedAnswer.value == option && option != pokemonDetail.value?.name -> Color.Red
+                                    else -> Color.White
+                                }
+                            ),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp)
                         ) {
                             Text(text = option)
-
             }
         }
     }
@@ -122,7 +138,7 @@ fun Quiz(
 }
 }
 @Composable
-fun QuizImagae(model : String?) {
+fun QuizImagae(model : String?, isClear: Boolean) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -142,7 +158,7 @@ fun QuizImagae(model : String?) {
                 AsyncImage(
                     model = model,
                     contentDescription = "{pokemonDetail?.name} sprite",
-                    colorFilter = ColorFilter.tint(Color.Black),
+                    colorFilter = if(isClear)null else ColorFilter.tint(Color.Black),
                     modifier = Modifier
                         .size(240.dp, 240.dp)
                         .clip(RoundedCornerShape(12.dp))
