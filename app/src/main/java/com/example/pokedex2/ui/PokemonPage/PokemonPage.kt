@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -39,8 +40,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -48,6 +51,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.example.pokedex2.R
+import com.example.pokedex2.data.remote.EvolutionDetailUI
 import com.example.pokedex2.ui.PokemonList.PokemonTypeIcons
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
 import com.example.pokedex2.viewModel.PokePageViewModel
@@ -65,6 +70,17 @@ fun PokemonPage(
     val abilities by viewModel.abilities.collectAsState()
     val growthRate by viewModel.growthRate.collectAsState()
     val evolvesTo by viewModel.evolvesTo.collectAsState()
+    val stats by viewModel.pokemonStats.collectAsState()
+
+    // Map the evolution data from your API into EvolutionDetailUI objects
+    val evolutionDetailsUI = evolvesTo.map { evolution ->
+        EvolutionDetailUI(
+            name = evolution.name.capitalizeFirstLetter(),
+            imageUrl = evolution.imageUrl, // URL to the Pokémon's sprite
+            requirement = evolution.requirement // "Level 22" or "High Friendship"
+        )
+    }
+
 
     // Fetch Pokémon details when the page is displayed
     LaunchedEffect(pokemonIdOrName) {
@@ -72,7 +88,7 @@ fun PokemonPage(
         viewModel.fetchPokemonAbilities(pokemonIdOrName.lowercase())
         viewModel.fetchPokemonSpecies(pokemonIdOrName.lowercase())
         viewModel.fetchEvolutionChain(pokemonIdOrName.lowercase())
-
+        viewModel.fetchPokemonStats(pokemonIdOrName.lowercase())
     }
 
     // Fetch encounter locations
@@ -82,83 +98,108 @@ fun PokemonPage(
         }
     }
 
-
-    Column(
-        modifier = modifier
+    Box(
+        modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 25.dp)
+            .background(Color(0xffeae6d5)) // Set the full background color here
     ) {
-
-        // Header Section
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(140.dp)
-        )
-
-
-        // Top Section - Name and Number
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 25.dp)
+            //.background(Color(0xffeae6d5)) //or remove if back to original blue color
         ) {
-            PokemonName(name = pokemonDetail?.name ?: "Unknown")
 
-            pokemonDetail?.id?.let { id ->
-                PokemonNr(id = id)
+            // Header Section
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(140.dp)
+            )
+
+
+            // Top Section - Name and Number
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                PokemonName(name = pokemonDetail?.name ?: "Unknown")
+
+                pokemonDetail?.id?.let { id ->
+                    PokemonNr(id = id)
+                }
             }
+
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth() // Ensure the spacer spans the width of the column
+                    .height(12.dp) // Adjust the height to control the space
+                    .background(Color.Transparent) //To test if its being added
+            )
+
+
+
+            PokemonImage(model = pokemonDetail?.sprites?.front_default)
+
+
+            pokemonDetail?.types?.map { it.type.name }?.let { types ->
+                PokemonTypeIcons(types = types, fontSize = 10.sp)
+            }
+
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+
+            PokemonLocation(locations = pokemonLocations)
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            PokemonAbilities(abilities = abilities)
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            PokemonGrowthRate(growthRate = growthRate, viewModel = viewModel)
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            PokemonEvolvesTo(evolvesTo = evolutionDetailsUI)
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            PokemonStatsGraph(stats = stats, viewModel = viewModel)
+
+
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth() // Ensure the spacer spans the width of the column
+                    .height(200.dp) // Adjust the height to control the space
+                    .background(Color.Transparent) //To test
+            )
+
         }
-
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth() // Ensure the spacer spans the width of the column
-                .height(12.dp) // Adjust the height to control the space
-                .background(Color.Transparent) //To test if its being added
-        )
-
-
-
-        PokemonImage(model = pokemonDetail?.sprites?.front_default)
-
-
-        pokemonDetail?.types?.map { it.type.name }?.let { types ->
-            PokemonTypeIcons(types = types)
-        }
-
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-
-        PokemonLocation(locations = pokemonLocations)
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        PokemonAbilities(abilities = abilities)
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        PokemonGrowthRate(growthRate = growthRate, viewModel = viewModel)
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        PokemonEvolvesTo(evolvesTo = evolvesTo)
-
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth() // Ensure the spacer spans the width of the column
-                .height(200.dp) // Adjust the height to control the space
-                .background(Color.Transparent) //To test
-        )
-
     }
 }
 
 
+@Composable
+fun PokemonName(name: String) {
+    Column {
+        Text(
+            text = name.capitalizeFirstLetter() ?: "Loading...",
+            style = TextStyle(
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), // Replace with your retro font file name
+                color = Color.DarkGray,
+                )
+        )
+    }
+}
 
 
-
+/*
 @Composable
 fun PokemonName(name: String) {
     Column {
@@ -175,6 +216,8 @@ fun PokemonName(name: String) {
 
 
 
+ */
+
 @Composable
 fun PokemonNr(id: Int){
     Column {
@@ -182,7 +225,7 @@ fun PokemonNr(id: Int){
             text = "#$id" ?: "Loading...",
             style = TextStyle(
                 fontSize = 24.sp,
-                fontFamily = FontFamily.Default
+                fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
             ),
             color = Color.DarkGray
         )
@@ -238,41 +281,44 @@ fun PokemonImage(model: String?) {
 
 @Composable
 fun PokemonLocation(locations: List<String>) {
-    Column(
+    Box(
         modifier = Modifier
-            .padding(horizontal = 16.dp)
+            .padding(5.dp)
             .fillMaxWidth()
+            .background(Color(0xFFf0ecdd), shape = RoundedCornerShape(12.dp)) // Add a rounded box
+            .padding(16.dp) // Inner padding within the rounded box
     ) {
-        Text(
-            text = "Encounters",
-            style = MaterialTheme.typography.bodyLarge.copy(
-                fontWeight = FontWeight.Bold,
-                color = Color.DarkGray
-            ),
-            textAlign = TextAlign.Start,
-            modifier = Modifier.padding(bottom = 4.dp)
-        )
-
-        if (locations.isEmpty()) {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth()
+        ) {
             Text(
-                text = "No encounter data available",
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontFamily = FontFamily.Default
+                text = "Encounters",
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color.DarkGray,
+                    fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
                 ),
-                textAlign = TextAlign.Start
+                textAlign = TextAlign.Start,
+                modifier = Modifier.padding(bottom = 4.dp)
             )
-        } else {
-            locations.forEach { location ->
+
+            if (locations.isEmpty()) {
                 Text(
-                    text = location,
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontFamily = FontFamily.Default
-                    ),
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier.padding(vertical = 4.dp)
+                    text = "No encounter data available",
+                    style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
+                    textAlign = TextAlign.Start
                 )
+            } else {
+                locations.forEach { location ->
+                    Text(
+                        text = location,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
+                }
             }
         }
     }
@@ -283,32 +329,41 @@ fun PokemonLocation(locations: List<String>) {
 
 @Composable
 fun PokemonAbilities(abilities: List<String>) {
-    Column(
+    Box(
         modifier = Modifier
-            .padding(horizontal = 16.dp)
+            .padding(5.dp)
             .fillMaxWidth()
+            .background(Color(0xFFf0ecdd), shape = RoundedCornerShape(12.dp)) // Add a rounded box
+            .padding(16.dp) // Inner padding within the rounded box
     ) {
-        Text(
-            text = "Abilities",
-            style = MaterialTheme.typography.bodyLarge.copy(
-                fontWeight = FontWeight.Bold,
-                color = Color.DarkGray
-            ),
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-
-        if (abilities.isEmpty()) {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth()
+        ) {
             Text(
-                text = "No abilities available",
-                style = MaterialTheme.typography.bodyMedium
+                text = "Abilities",
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color.DarkGray,
+                    fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                ),
+                modifier = Modifier.padding(bottom = 8.dp)
             )
-        } else {
-            abilities.forEach { ability ->
+
+            if (abilities.isEmpty()) {
                 Text(
-                    text = ability.capitalizeFirstLetter(),
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(vertical = 4.dp)
+                    text = "No abilities available",
+                    style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)))
                 )
+            } else {
+                abilities.forEach { ability ->
+                    Text(
+                        text = ability.capitalizeFirstLetter(),
+                        style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
+                }
             }
         }
     }
@@ -317,96 +372,147 @@ fun PokemonAbilities(abilities: List<String>) {
 
 @Composable
 fun PokemonGrowthRate(growthRate: String, viewModel: PokePageViewModel) {
-    Column(
+    Box(
         modifier = Modifier
-            .padding(horizontal = 16.dp)
+            .padding(5.dp)
             .fillMaxWidth()
+            .background(Color(0xFFf0ecdd), shape = RoundedCornerShape(12.dp)) // Add a rounded box
+            .padding(16.dp) // Inner padding within the rounded box
     ) {
-        // Title
-        Text(
-            text = "Growth Rate",
-            style = MaterialTheme.typography.bodyLarge.copy(
-                fontWeight = FontWeight.Bold,
-                color = Color.DarkGray
-            )
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Progress Bar with Label
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth()
         ) {
-            // Progress Bar
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(20.dp)
-                    .background(
-                        Color.LightGray,
-                        shape = RoundedCornerShape(10.dp)
-                    )
+            // Title
+            Text(
+                text = "Growth Rate",
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color.DarkGray,
+                    fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                )
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Progress Bar with Label
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // Fetch progress and color
-                val progress = viewModel.getGrowthRateProgress(growthRate)
-                val color = viewModel.getGrowthRateColor(growthRate)
-
-                // Log for debugging
-                Log.d("PokemonGrowthRate", "Progress: $progress, Color: $color")
-
+                // Progress Bar
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth(progress)
-                        .fillMaxHeight()
-                        .background(color, shape = RoundedCornerShape(10.dp))
+                        .weight(1f)
+                        .height(20.dp)
+                        .background(
+                            Color.LightGray,
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                ) {
+                    // Fetch progress and color
+                    val progress = viewModel.getGrowthRateProgress(growthRate)
+                    val color = viewModel.getGrowthRateColor(growthRate)
+
+                    // Log for debugging
+                    Log.d("PokemonGrowthRate", "Progress: $progress, Color: $color")
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(progress)
+                            .fillMaxHeight()
+                            .background(color, shape = RoundedCornerShape(10.dp))
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                // Growth Rate Label
+                Text(
+                    text = growthRate.capitalizeFirstLetter(),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = Color.DarkGray,
+                        fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                    )
                 )
             }
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            // Growth Rate Label
-            Text(
-                text = growthRate.capitalizeFirstLetter(),
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = Color.DarkGray
-                )
-            )
         }
     }
 }
+
 
 @Composable
-fun PokemonEvolvesTo(evolvesTo: List<String>) {
-    Column(
+fun PokemonEvolvesTo(evolvesTo: List<EvolutionDetailUI>, modifier: Modifier = Modifier) {
+    Box(
         modifier = Modifier
+            .padding(5.dp)
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+            .background(Color(0xFFf0ecdd), shape = RoundedCornerShape(12.dp)) // Add a rounded box
+            .padding(16.dp) // Inner padding within the rounded box
     ) {
-        Text(
-            text = "Evolves To",
-            style = MaterialTheme.typography.bodyLarge.copy(
-                fontWeight = FontWeight.Bold,
-                color = Color.DarkGray
-            ),
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-
-        if (evolvesTo.isEmpty() || (evolvesTo.size == 1 && evolvesTo[0] == "Nothing, this is the max evolution step")) {
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        ) {
             Text(
-                text = "Nothing, this is the max evolution step",
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray
+                text = "Evolution",
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color.DarkGray,
+                    fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                ),
+                modifier = Modifier.padding(bottom = 8.dp)
             )
-        } else {
-            evolvesTo.forEach { evolution ->
+
+            if (evolvesTo.isEmpty() || (evolvesTo.size == 1 && evolvesTo[0].name == "Max Evolution")) {
                 Text(
-                    text = evolution,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(vertical = 4.dp)
+                    text = "This is the final form",
+                    style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
+                    color = Color.Gray
                 )
+            } else {
+                evolvesTo.forEach { evolution ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Evolution Image
+                        AsyncImage(
+                            model = evolution.imageUrl,
+                            contentDescription = "${evolution.name} sprite",
+                            modifier = Modifier
+                                .size(80.dp)
+                                .clip(CircleShape)
+                                .background(Color.LightGray)
+                                .padding(8.dp)
+                        )
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        // Evolution Details
+                        Column {
+                            Text(
+                                text = evolution.name,
+                                style = MaterialTheme.typography.bodyLarge.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.DarkGray,
+                                    fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                                )
+                            )
+
+                            Text(
+                                text = evolution.requirement,
+                                style = MaterialTheme.typography.bodyMedium.copy(color = Color.Gray, fontFamily = FontFamily(Font(R.font.pressstart2p_regular)))
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -414,10 +520,72 @@ fun PokemonEvolvesTo(evolvesTo: List<String>) {
 
 
 
+@Composable
+fun PokemonStatsGraph(stats: List<Pair<String, Int>>, viewModel: PokePageViewModel) {
+    Box(
+        modifier = Modifier
+            .padding(5.dp)
+            .fillMaxWidth()
+            .background(Color(0xFFf0ecdd), shape = RoundedCornerShape(12.dp)) // Add a rounded box
+            .padding(16.dp) // Inner padding within the rounded box
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "Stats",
+                style = MaterialTheme.typography.headlineSmall.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color.DarkGray,
+                    fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                ),
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
 
+            stats.forEach { (name, value) ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                ) {
+                    Text(
+                        text = name,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
+                        modifier = Modifier.padding(bottom = 4.dp),
+                        color = Color.DarkGray
+                    )
 
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(20.dp)
+                            .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
+                    ) {
+                        val progress = value / 255f // Scale to [0, 1]
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth(progress)
+                                .fillMaxHeight()
+                                .background(
+                                    viewModel.getStatColor(name),
+                                    shape = RoundedCornerShape(10.dp)
+                                )
+                        )
+                    }
 
-
+                    Text(
+                        text = value.toString(),
+                        style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
+                        modifier = Modifier.align(Alignment.End),
+                        color = Color.DarkGray
+                    )
+                }
+            }
+        }
+    }
+}
 
 
 
@@ -427,15 +595,12 @@ fun LikeButton(modifier: Modifier = Modifier) {
     Icon(
         imageVector = if (isSelect) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
         contentDescription = if (isSelect) "Like" else "Unlike",
-        tint = if (isSelect) Color.Red else Color.Gray,
+        tint = if (isSelect) Color(0xffa21813) else Color.Gray,
         modifier = modifier
             .size(40.dp)
             .clickable { isSelect = !isSelect }
     )
 }
-
-
-
 
 
 
