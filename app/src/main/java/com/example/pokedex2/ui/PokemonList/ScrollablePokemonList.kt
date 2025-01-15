@@ -1,5 +1,4 @@
 package com.example.pokedex2.ui.PokemonList
-import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.viewModel.AllPokemonsViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -40,8 +39,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.example.pokedex2.model.Affirmation
+import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
 import com.example.pokedex2.utils.RotatingLoader
 import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.SyncViewModel
@@ -95,7 +100,7 @@ fun HomePokemonScroll(
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = errorMessage!!,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
                     color = Color.Black,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
@@ -264,3 +269,104 @@ fun getTypeColor(type: String): Color {
         else -> Color.Gray // Default Gray
     }
 }
+
+
+/*
+*   Column(
+            modifier = modifier
+                .fillMaxSize()
+                .background(Color(0xFFD9D9D9))
+        ) {
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ){
+                OutlinedTextField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    placeholder = { Text("Search...") },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(2.dp)
+                        .background(Color.White, shape = RoundedCornerShape(25.dp)),
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "Search Icon",
+                        )
+                    },
+                    trailingIcon = if (searchQuery.isNotEmpty()) {
+                        {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Close Icon",
+                                modifier = Modifier.clickable { searchQuery = "" }
+                            )
+                        }
+                    } else null,
+                    singleLine = true,
+                    shape = RoundedCornerShape(25.dp)
+                )
+
+                    IconButton(
+                        onClick = {
+                            if(showFilterOverlay){
+                                showFilterOverlay = false
+                            } else {
+                                showFilterOverlay = true
+                            }
+                        },
+                        modifier = Modifier.padding(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = "Open Filters"
+                        )
+                    }
+            }
+
+            // Show the Pokémon list
+            LazyColumn(
+                state = listState,
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(Color(0xFFD9D9D9))
+            ) {
+                items(affirmationList) { affirmation ->
+                    AffirmationCard(
+                        affirmation = affirmation,
+                        navController = navController,
+                        onLikeClicked = { viewModel.toggleLike(affirmation) },
+                        modifier = Modifier
+                            .padding(4.dp)
+                    )
+                }
+                if (isPaginating) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            RotatingLoader()
+                        }
+                    }
+                }
+            }
+
+            // Detect when the user scrolls to the bottom
+            LaunchedEffect(listState) {
+                snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+                    .filter { it == affirmationList.size - 1 && !isPaginating && !isLoading }
+                    .collect {
+                        viewModel.loadNextPage() // Use the helper method
+                    }
+            }
+        }
+    }
+}
+
+
+* */

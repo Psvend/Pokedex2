@@ -8,3 +8,5 @@ data class PokemonListDtoDto(
     val previous : String?,
     val results : List<testPokemon>
 )
+
+

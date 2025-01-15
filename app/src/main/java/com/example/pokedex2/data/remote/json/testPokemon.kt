@@ -24,3 +24,9 @@ data class testPokemon(
     val isLiked: Boolean= false,
 
 )
+
+
+data class NamedAPIResource(
+    val name: String,
+    val url: String
+)

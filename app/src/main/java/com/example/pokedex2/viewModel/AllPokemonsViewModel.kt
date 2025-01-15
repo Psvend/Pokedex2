@@ -3,16 +3,17 @@ package com.example.pokedex2.viewModel
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-
 import com.example.pokedex2.data.remote.PokemonApiService
 import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import com.example.pokedex2.viewModel.AffirmationViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 @HiltViewModel
 class AllPokemonsViewModel @Inject constructor(
@@ -36,13 +37,21 @@ class AllPokemonsViewModel @Inject constructor(
 
                 val affirmationsList = response.results.map { result ->
                     val detail = pokemonApiService.getPokemonDetail(result.name)
+
+                    //fetching encounter locations
+                    val encounters = pokemonApiService.getPokemonEncounters(detail.location_area_encounters)
+                    val locationNames = encounters.map { it.location_area.name.capitalizeFirstLetter()}
+
+
+
                     Affirmation(
                         id = detail.id,
                         name = detail.name.capitalizeFirstLetter(),
                         imageResourceId = detail.sprites.front_default ?: "",
                         typeIcon = detail.types.map { it.type.name.capitalizeFirstLetter() },
                         isLiked = false,
-                        number = detail.id
+                        number = detail.id,
+                        encounterLocations = locationNames
                     )
                 }
 
