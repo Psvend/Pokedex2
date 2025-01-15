@@ -23,12 +23,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.pokedex2.viewModel.SearchViewModel
 
 @Composable
 fun FilterOverlay(
     showOverlay: Boolean,
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    searchViewModel: SearchViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
+    val selectionMap = searchViewModel.selectionMap
+    val allTypesSelected = selectionMap.values.all { it } // Check if all are selected
+
     if(showOverlay){
         Box(
             modifier = Modifier
