@@ -47,6 +47,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
@@ -100,7 +104,7 @@ fun HomePokemonScroll(
                 // Error message
                 Text(
                     text = errorMessage,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
                     color = Color.Black,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
@@ -253,9 +257,9 @@ fun AffirmationCard(
             ) {
                 Text(
                     text = affirmation.name,
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), fontSize = 15.sp)
                 )
-                PokemonTypeIcons(types = affirmation.typeIcon)
+                PokemonTypeIcons(types = affirmation.typeIcon, fontSize = 6.sp)
             }
             // Like button and ID
             Column(
@@ -276,7 +280,7 @@ fun AffirmationCard(
                 }
                 Text(
                     text = "#" + affirmation.number.toString(),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), fontSize = 10.sp),
                     modifier = Modifier.padding(top = 4.dp)
                 )
             }
@@ -287,7 +291,7 @@ fun AffirmationCard(
 
 //Creates the boxes around each type
 @Composable
-fun PokemonTypeIcons(types: List<String>, modifier: Modifier = Modifier) {
+fun PokemonTypeIcons(types: List<String>, modifier: Modifier = Modifier, fontSize: TextUnit = 10.sp) {
     Row(
         modifier = modifier.padding(4.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -299,12 +303,12 @@ fun PokemonTypeIcons(types: List<String>, modifier: Modifier = Modifier) {
                         color = getTypeColor(type),
                         shape = RoundedCornerShape(8.dp)
                     )
-                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                    .padding(horizontal = 10.dp, vertical = 2.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = type.capitalizeFirstLetter(),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), fontSize = fontSize),
                     color = Color.White
                 )
             }
