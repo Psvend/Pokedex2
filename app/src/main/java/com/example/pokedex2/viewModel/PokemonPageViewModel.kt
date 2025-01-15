@@ -7,6 +7,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.pokedex2.data.remote.ChainLink
+import com.example.pokedex2.data.remote.EvolutionDetailUI
 import com.example.pokedex2.data.remote.PokemonApiService
 import com.example.pokedex2.data.remote.PokemonSpecies
 import com.example.pokedex2.data.remote.json.testPokemon
@@ -48,6 +50,14 @@ class PokePageViewModel @Inject constructor(
 
     private val _growthRate = MutableStateFlow<String>("Unknown")
     val growthRate: StateFlow<String> = _growthRate
+
+    private val _pokemonStats = MutableStateFlow<List<Pair<String, Int>>>(emptyList())
+    val pokemonStats: StateFlow<List<Pair<String, Int>>> = _pokemonStats
+
+    private val _evolvesTo = MutableStateFlow<List<EvolutionDetailUI>>(emptyList())
+    val evolvesTo: StateFlow<List<EvolutionDetailUI>> = _evolvesTo
+
+
 
 
     //Then add it here and then at PokemonPage
@@ -108,6 +118,191 @@ class PokePageViewModel @Inject constructor(
         }
     }
 
+    fun fetchEvolutionChain(pokemonIdOrName: String) {
+        viewModelScope.launch {
+            try {
+                // Fetch Pokémon species to get the evolution chain URL
+                val species = pokemonApiService.getPokemonSpecies(pokemonIdOrName)
+                val evolutionChainUrl = species.evolution_chain.url
+
+                // Extract evolution chain ID from the URL
+                val evolutionChainId = evolutionChainUrl.split("/").last { it.isNotEmpty() }.toInt()
+
+                // Fetch the evolution chain using the extracted ID
+                val evolutionChain = pokemonApiService.getEvolutionChain(evolutionChainId)
+
+                // Find the current Pokémon in the chain
+                val currentPokemon = species.name.lowercase()
+                val evolvesToList = mutableListOf<EvolutionDetailUI>()
+
+                var currentChainLink = evolutionChain.chain
+
+                // Traverse the evolution chain to find evolves_to for the current Pokémon
+                while (currentChainLink.species.name.lowercase() != currentPokemon) {
+                    if (currentChainLink.evolves_to.isEmpty()) {
+                        break // No further evolution links
+                    }
+                    currentChainLink = currentChainLink.evolves_to.first() // Continue to the next link
+                }
+
+                // Process the "evolves_to" list for the current Pokémon
+                for (evolution in currentChainLink.evolves_to) {
+                    val speciesName = evolution.species.name.capitalizeFirstLetter()
+
+                    // Extract Pokémon ID from the species URL
+                    val pokemonId = evolution.species.url.split("/").filter { it.isNotEmpty() }.last().toInt()
+
+                    val minLevel = evolution.evolution_details.firstOrNull()?.min_level
+                    val imageUrl =
+                        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$pokemonId.png" // Retro-style image URL
+
+                    val requirement = if (minLevel != null) {
+                        "Level $minLevel"
+                    } else {
+                        "Unknown requirement"
+                    }
+
+                    evolvesToList.add(
+                        EvolutionDetailUI(
+                            name = speciesName,
+                            imageUrl = imageUrl,
+                            requirement = requirement
+                        )
+                    )
+                }
+
+                // Handle the case where the Pokémon has no further evolutions
+                if (evolvesToList.isEmpty()) {
+                    evolvesToList.add(
+                        EvolutionDetailUI(
+                            name = "Max Evolution",
+                            imageUrl = "",
+                            requirement = "This is the final form"
+                        )
+                    )
+                }
+
+                _evolvesTo.value = evolvesToList
+
+            } catch (e: Exception) {
+                _evolvesTo.value = listOf(
+                    EvolutionDetailUI(
+                        name = "Error",
+                        imageUrl = "",
+                        requirement = "Error fetching evolution data"
+                    )
+                )
+                Log.e("fetchEvolutionChain", "Error fetching evolution chain: ${e.message}")
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+    /*
+        fun fetchEvolutionChain(pokemonIdOrName: String) {
+            viewModelScope.launch {
+                try {
+                    // Fetch Pokémon species to get the evolution chain URL
+                    val species = pokemonApiService.getPokemonSpecies(pokemonIdOrName)
+                    val evolutionChainUrl = species.evolution_chain.url
+
+                    // Extract evolution chain ID from the URL
+                    val evolutionChainId = evolutionChainUrl.split("/").last { it.isNotEmpty() }.toInt()
+
+                    // Fetch the evolution chain using the extracted ID
+                    val evolutionChain = pokemonApiService.getEvolutionChain(evolutionChainId)
+
+                    // Find the current Pokémon in the chain
+                    val currentPokemon = species.name.lowercase()
+                    val evolvesToList = mutableListOf<String>()
+
+                    var currentChainLink = evolutionChain.chain
+
+                    // Traverse the evolution chain to find evolves_to for the current Pokémon
+                    while (currentChainLink.species.name.lowercase() != currentPokemon) {
+                        if (currentChainLink.evolves_to.isEmpty()) {
+                            break // No further evolution links
+                        }
+                        currentChainLink = currentChainLink.evolves_to.first() // Continue to the next link
+                    }
+
+                    // Process the "evolves_to" list for the current Pokémon
+                    for (evolution in currentChainLink.evolves_to) {
+                        val speciesName = evolution.species.name.capitalizeFirstLetter()
+                        val minLevel = evolution.evolution_details.firstOrNull()?.min_level
+
+                        if (minLevel != null) {
+                            evolvesToList.add("Evolves to $speciesName when at level $minLevel")
+                        } else {
+                            evolvesToList.add("Evolves to $speciesName (level unknown)")
+                        }
+                    }
+
+                    // Handle the case where the Pokémon has no further evolutions
+                    if (evolvesToList.isEmpty()) {
+                        evolvesToList.add("Nothing, this is the max evolution step")
+                    }
+
+                    _evolvesTo.value = evolvesToList
+
+                } catch (e: Exception) {
+                    _evolvesTo.value = listOf("Error fetching evolution data")
+                    Log.e("fetchEvolutionChain", "Error fetching evolution chain: ${e.message}")
+                }
+            }
+        }
+
+        */
+
+    fun fetchPokemonStats(name: String) {
+        viewModelScope.launch {
+            try {
+                val pokemon = pokemonApiService.getPokemonStats(name)
+                val stats = pokemon.stats.map { it.stat.name.capitalizeFirstLetter() to it.base_stat }
+                _pokemonStats.value = stats
+            } catch (e: Exception) {
+                Log.e("fetchPokemonStats", "Error fetching stats: ${e.message}")
+                _pokemonStats.value = emptyList()
+            }
+        }
+    }
+
+
+
+    /*
+        private fun processEvolvesTo(chain: ChainLink): List<String> {
+            val evolvesTo = mutableListOf<String>()
+            var currentChain = chain
+
+            while (currentChain.evolves_to.isNotEmpty()) {
+                evolvesTo.add(currentChain.evolves_to.first().species.name.capitalize())
+                currentChain = currentChain.evolves_to.first()
+            }
+
+            return evolvesTo
+        }
+
+
+
+        private fun ChainLink.findPokemonInChain(pokemonName: String): ChainLink? {
+            if (species.name.equals(pokemonName, ignoreCase = true)) {
+                return this
+            }
+            for (evolvesTo in evolves_to) {
+                val result = evolvesTo.findPokemonInChain(pokemonName)
+                if (result != null) return result
+            }
+            return null
+        }
+    */
+
 
     fun getGrowthRateProgress(growthRate: String): Float {
         return when (growthRate.trim().lowercase()) {
@@ -131,6 +326,22 @@ class PokePageViewModel @Inject constructor(
             else -> Color.Gray // Default for unknown rates
         }
     }
+
+
+
+
+    fun getStatColor(statName: String): androidx.compose.ui.graphics.Color {
+        return when (statName.lowercase()) {
+            "hp" -> Color(0xFFFF0000) // Red for HP
+            "attack" -> Color(0xFFFFA500) // Orange for Attack
+            "defense" -> Color(0xFF00FF00) // Green for Defense
+            "special-attack" -> Color(0xFF1E90FF) // Blue for Special Attack
+            "special-defense" -> Color(0xFF8A2BE2) // Purple for Special Defense
+            "speed" -> Color(0xFFFFD700) // Gold for Speed
+            else -> Color(0xFF808080) // Gray for unknown or unhandled stats
+        }
+    }
+
 
 
 }

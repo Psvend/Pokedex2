@@ -35,6 +35,16 @@ interface PokemonApiService {
         @Path("idOrName") idOrName: String
     ): PokemonSpecies
 
+    @GET("evolution-chain/{id}/")
+    suspend fun getEvolutionChain(
+        @Path("id") id: Int
+    ): EvolutionChainResponse
+
+    @GET("pokemon/{name}")
+    suspend fun getPokemonStats(
+        @Path("name") name: String
+    ): testPokemon
+
 
 
 

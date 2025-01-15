@@ -41,6 +41,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.pokedex2.R
 import com.example.pokedex2.ui.SearchAndFilters.FilterOverlay
@@ -61,9 +66,6 @@ fun HomePokemonScroll(
     val listState = rememberLazyListState()
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var showFilterOverlay by remember {mutableStateOf(false)}
-
-    // States for applied filters
-    var sunExposure by rememberSaveable { mutableIntStateOf(0) }
 
     if (isLoading && affirmationList.isEmpty()) {
         // Show a loading spinner during initial load
