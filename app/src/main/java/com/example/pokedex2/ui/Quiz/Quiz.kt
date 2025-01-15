@@ -15,12 +15,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,6 +48,7 @@ fun Quiz(
     val pokemonNames = viewModel.pokemonNames.collectAsState()
     val randomPokemonId = remember { viewModel.getRandomPokemonId() }
     val points = remember { mutableIntStateOf(0) }
+    val selectedAnswer = remember { mutableStateOf<String?>(null) }
 
 
     LaunchedEffect(Unit) {
@@ -64,13 +68,6 @@ fun Quiz(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Spacer(modifier = Modifier.height(80.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                QuizImagae(model = pokemonDetail.value?.sprites?.front_default)
-            }
 
         Text(
             text = "Who´s that pokemon?",
@@ -81,8 +78,12 @@ fun Quiz(
                 .padding(top = 16.dp),
             textAlign = TextAlign.Center
         )
+
+        QuizImagae(model = pokemonDetail.value?.sprites?.front_default)
+
+
         Text(
-            text =  points.value.toString(),
+            text =  "Score: ${points.value}",
             style = MaterialTheme.typography.bodyLarge,
             color = Color.Black,
             modifier = Modifier
@@ -97,32 +98,44 @@ fun Quiz(
             answerOptions.forEach { option ->
                 Button(
                     onClick = {
+                        selectedAnswer.value = option
                         if (option == pokemonDetail.value?.name) {
                             points.value += 1
-                            val newRandomPokemonId = viewModel.getRandomPokemonId()
-                            viewModel.fetchPokemonDetail(newRandomPokemonId.toString())
-
-                        } else {
-                            val newRandomPokemonId = viewModel.getRandomPokemonId()
-                            viewModel.fetchPokemonDetail(newRandomPokemonId.toString())
-                            /* Handle wrong answer */
                         }
-                     },
+
+
+                            selectedAnswer.value = null
+                            viewModel.fetchPokemonDetail(viewModel.getRandomPokemonId().toString())
+
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = when {
+                            selectedAnswer.value == option && option == pokemonDetail.value?.name -> Color.Green
+                            selectedAnswer.value == option && option != pokemonDetail.value?.name -> Color.Red
+                            else -> Color(0xFFE55655)
+                        },
+                        contentColor = Color.White
+                    ),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 4.dp)
+                        .padding(vertical = 4.dp),
+                    shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text(text = option)
-                }
+                    Text(
+                        text = option,
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontWeight = FontWeight.Medium
+                        )
+                    )
+
             }
         }
     }
 
 }
+}
 @Composable
-fun QuizImagae(
-    model : String?
-) {
+fun QuizImagae(model : String?) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally

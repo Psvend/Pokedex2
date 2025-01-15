@@ -61,7 +61,7 @@ fun TopBar(
             }
             Button(
                 onClick = {
-                    if(navController.currentDestination?.route == "mainPage") {
+                    if(navController.currentDestination?.route == "pokemonPage/{pokemonName}") {
                         navController.navigate("mainPage")
                     }else {
                         navController.navigate("startingScreenForQuiz")
