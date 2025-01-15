@@ -69,9 +69,10 @@ class MainActivity : ComponentActivity() {
                             startDestination = "mainPage" )
 
                        // 1 -> PokemonPage(pokemonPageViewModel = PokePageViewModel )
-                        2 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))
-                        3 -> NavGraph2(navController = navController,
+
+                        2 -> NavGraph2(navController = navController,
                             startDestination = "startingScreenForQuiz")
+                        3 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))
                         else -> RotatingLoader()
                     }
                 }
