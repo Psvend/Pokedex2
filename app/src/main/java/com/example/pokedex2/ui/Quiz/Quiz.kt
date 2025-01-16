@@ -52,17 +52,28 @@ fun Quiz(
     val selectedAnswer = remember { mutableStateOf<String?>(null) }
     val triggerNextQuistion = remember { mutableStateOf(false) }
     val isClear = remember { mutableStateOf(false) }
-    val maxQuestions=30
+    val answerCounts = remember { mutableIntStateOf(0) }
+    val maxQuestions=10
+    val time = remember { mutableIntStateOf(0) }
+    val isTimeOut = remember { mutableStateOf(true) }
 
 
+    LaunchedEffect(isTimeOut.value) {
+        if (isTimeOut.value) {
+         while (isTimeOut.value) {
+             kotlinx.coroutines.delay(1000)
+             time.value += 1
 
+         }
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.fetchPokemonDetail(randomPokemonId.toString())
     }
 
     LaunchedEffect (triggerNextQuistion.value) {
-        if (triggerNextQuistion.value && points.value < maxQuestions) {
+        if (triggerNextQuistion.value && answerCounts.value < maxQuestions) {
             isClear.value = true
             kotlinx.coroutines.delay(1000)
             isClear.value = false
@@ -70,6 +81,10 @@ fun Quiz(
             triggerNextQuistion.value = false
             val randomPokemonId = viewModel.getRandomPokemonId()
             viewModel.fetchPokemonDetail(randomPokemonId.toString())
+            answerCounts.value += 1
+            if (answerCounts.value == maxQuestions) {
+                isTimeOut.value = false
+            }
         }
     }
     val answerOptions = remember(pokemonDetail.value, pokemonNames.value) {
@@ -97,7 +112,7 @@ fun Quiz(
                 .padding(top = 8.dp),
             textAlign = TextAlign.Center
         )
-        if (points.value < maxQuestions) {
+        if (answerCounts.value < maxQuestions) {
 
             QuizImagae(model = pokemonDetail.value?.sprites?.front_default, isClear = isClear.value)
 
@@ -147,6 +162,52 @@ fun Quiz(
         }else {
             Text(
                 text = "Game Over",
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.Black,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = "Your score is: ${points.value}",
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.Black,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                textAlign = TextAlign.Center
+            )
+            if (time.value<30){
+                AsyncImage(
+                    model = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYm1sc2ZoMmxmdDQ5cDZkejhtb3VmM2RncGk4ZTk4eTFnNG1vcXBuZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xx0JzzsBXzcMK542tx/giphy.gif",
+                    contentDescription = "You are a pokemon master",
+                    modifier = Modifier
+                        .size(240.dp, 240.dp)
+                        .padding(top = 8.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                )
+            }else if(time.value>31 && time.value<59){
+                AsyncImage(
+                    model = "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdWhsZXE1eGxuMW1uM2lyMjFjZ2NiYml0MGxlbmtmN3BreW13eGp2ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/qoHf1p7uXvna0/giphy.gif",
+                    contentDescription = "You are a pokemon master",
+                    modifier = Modifier
+                        .size(240.dp, 240.dp)
+                        .padding(top = 8.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                )
+            }else {
+                AsyncImage(
+                    model = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWl3eG5tZmhoZ3VlM2p2Ymp5a3RjMDEwYzFjZTJjaHVtbGdlZ2UwZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gZPdvc60v9eygLTsnf/giphy.gif",
+                    contentDescription = "You are a pokemon master",
+                    modifier = Modifier
+                        .size(240.dp, 240.dp)
+                        .padding(top = 8.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                )
+            }
+                Text(
+                text = "Time: ${time.value} seconds",
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.Black,
                 modifier = Modifier
