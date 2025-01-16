@@ -37,6 +37,7 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.pokedex2.R
 import com.example.pokedex2.model.Affirmation
+import com.example.pokedex2.ui.PokePage.LikeButton
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
 
 
@@ -166,7 +167,7 @@ fun AffirmationCard(
             ) {
                 Text(
                     text = affirmation.name,
-                    style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), fontSize = 15.sp)
+                    style = MaterialTheme.typography.headlineSmall //.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), fontSize = 15.sp)
                 )
                 PokemonTypeIcons(types = affirmation.typeIcon, fontSize = 6.sp)
             }
@@ -175,21 +176,15 @@ fun AffirmationCard(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(start = 8.dp)
             ) {
-                IconButton(onClick = {
-                    isLiked = !isLiked
-                    onLikeClicked()
-                }) {
-                    Icon(
-                        painter = painterResource(
-                            if (isLiked) R.drawable.heart_filled else R.drawable.heart_empty
-                        ),
-                        contentDescription = if (isLiked) "Unlike" else "Like",
-                        tint = if (isLiked) Color(0xFFB11014) else Color(0xFFB11014)
-                    )
-                }
+
+                LikeButton(
+                    isLiked = isLiked,
+                    onLikeClicked = {isLiked = !isLiked},
+                    modifier = Modifier)
+
                 Text(
                     text = "#" + affirmation.number.toString(),
-                    style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), fontSize = 10.sp),
+                    style = MaterialTheme.typography.bodySmall, //.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), fontSize = 10.sp),
                     modifier = Modifier.padding(top = 4.dp)
                 )
             }

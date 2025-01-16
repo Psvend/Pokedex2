@@ -105,7 +105,7 @@ fun HomePokemonScroll(
                 // Error message
                 Text(
                     text = errorMessage,
-                    style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
+                    style = MaterialTheme.typography.bodyMedium, //.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
                     color = Color.Black,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
