@@ -67,7 +67,6 @@ fun Quiz(
          }
         }
     }
-
     LaunchedEffect(Unit) {
         viewModel.fetchPokemonDetail(randomPokemonId.toString())
     }
@@ -178,31 +177,55 @@ fun Quiz(
                     .padding(top = 8.dp),
                 textAlign = TextAlign.Center
             )
-            if (time.value<30){
-                AsyncImage(
-                    model = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYm1sc2ZoMmxmdDQ5cDZkejhtb3VmM2RncGk4ZTk4eTFnNG1vcXBuZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xx0JzzsBXzcMK542tx/giphy.gif",
-                    contentDescription = "You are a pokemon master",
+            if(points.intValue==0){
+                Box(
                     modifier = Modifier
-                        .size(240.dp, 240.dp)
-                        .padding(top = 8.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                )
-            }else if(time.value>31 && time.value<59){
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    AsyncImage(
+                        model = "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdm1wdDhvN3drZjA2Mm5oZzI1OWwyYmVoNnFwY3ZkOGVqMGd3b2JyZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/k8PVqVep8geAy9Tafu/giphy.gif",
+                        contentDescription = "You are a pokemon master",
+                        modifier = Modifier
+                            .size(240.dp, 240.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                    )
+                }
+            }
+            else if (time.intValue<30){
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    AsyncImage(
+                        model = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYm1sc2ZoMmxmdDQ5cDZkejhtb3VmM2RncGk4ZTk4eTFnNG1vcXBuZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xx0JzzsBXzcMK542tx/giphy.gif",
+                        contentDescription = "You are a pokemon master",
+                        modifier = Modifier
+                            .size(240.dp, 240.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                    )
+                }
+            }else if(time.intValue in 31..59){
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
                 AsyncImage(
                     model = "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdWhsZXE1eGxuMW1uM2lyMjFjZ2NiYml0MGxlbmtmN3BreW13eGp2ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/qoHf1p7uXvna0/giphy.gif",
                     contentDescription = "You are a pokemon master",
                     modifier = Modifier
                         .size(240.dp, 240.dp)
-                        .padding(top = 8.dp)
                         .clip(RoundedCornerShape(12.dp))
                 )
+                }
             }else {
                 AsyncImage(
                     model = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWl3eG5tZmhoZ3VlM2p2Ymp5a3RjMDEwYzFjZTJjaHVtbGdlZ2UwZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gZPdvc60v9eygLTsnf/giphy.gif",
                     contentDescription = "You are a pokemon master",
                     modifier = Modifier
                         .size(240.dp, 240.dp)
-                        .padding(top = 8.dp)
                         .clip(RoundedCornerShape(12.dp))
                 )
             }
@@ -256,12 +279,3 @@ fun QuizImagae(model : String?, isClear: Boolean) {
         }
     }
 }
-
-
-    @Preview
-    @Composable
-    fun QuizPreview() {
-val viewModel: QuizViewModel = hiltViewModel()
-
-        Quiz(viewModel)
-    }
