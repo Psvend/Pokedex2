@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -582,23 +583,39 @@ fun PokemonStatsGraph(stats: List<Pair<String, Int>>, viewModel: PokePageViewMod
 }
 
 
-
 @Composable
 fun LikeButton(modifier: Modifier = Modifier) {
     var isSelect by remember { mutableStateOf(false) }
-    Icon(
-        imageVector = if (isSelect) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-        contentDescription = if (isSelect) "Like" else "Unlike",
-        tint = if (isSelect) Color(0xffa21813) else Color.Gray,
-        modifier = modifier
-            .size(40.dp)
-            .clickable { isSelect = !isSelect }
-    )
+    val interactionSource = remember { MutableInteractionSource() }
+
+    Box(modifier = modifier) {
+        if (isSelect) {
+            Icon(
+                imageVector = Icons.Filled.Favorite,
+                contentDescription = "Like",
+                tint = Color.Red,
+                modifier = Modifier
+                    .size(40.dp)
+                    .clickable(
+                        interactionSource = interactionSource,
+                        indication = null // Disable the ripple effect
+                    ) { isSelect = !isSelect }
+            )
+        } else {
+            Icon(
+                imageVector = Icons.Outlined.FavoriteBorder,
+                contentDescription = "Unlike",
+                tint = Color.Gray,
+                modifier = Modifier
+                    .size(40.dp)
+                    .clickable(
+                        interactionSource = interactionSource,
+                        indication = null // Disable the ripple effect
+                    ) { isSelect = !isSelect }
+            )
+        }
+    }
 }
-
-
-
-
 
 
 
