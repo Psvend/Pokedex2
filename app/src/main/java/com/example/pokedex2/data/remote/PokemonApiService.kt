@@ -45,6 +45,11 @@ interface PokemonApiService {
         @Path("name") name: String
     ): testPokemon
 
+    @GET("characteristic/{id}/")
+    suspend fun getCharacteristic(
+        @Path("id") id: Int
+    ): CharacteristicResponse
+
 
 
 

@@ -37,8 +37,11 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.pokedex2.R
 import com.example.pokedex2.model.Affirmation
+import com.example.pokedex2.ui.PokePage.LikeButton
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
 
+
+/*
 @Composable
 fun AffirmationCard(
     affirmation: Affirmation,
@@ -116,6 +119,79 @@ fun AffirmationCard(
     }
 }
 
+ */
+
+
+
+
+@Composable
+fun AffirmationCard(
+    affirmation: Affirmation,
+    onLikeClicked: () -> Unit,
+    navController: NavHostController,
+    modifier: Modifier = Modifier
+) {
+    var isLiked by remember { mutableStateOf(affirmation.isLiked) }
+
+    Card(
+        modifier = modifier
+            .padding(4.dp)
+            .clickable {
+                // Navigate to pokemonPage with the Pokémon name
+                navController.navigate("pokemonPage/${affirmation.name.lowercase()}")
+            },
+        colors = CardDefaults.cardColors(Color(0xFFFFF9E6)),
+        shape = RectangleShape
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+        ) {
+            // Pokémon image
+            Image(
+                painter = rememberAsyncImagePainter(affirmation.imageResourceId),
+                contentDescription = affirmation.name,
+                modifier = Modifier
+                    .size(90.dp)
+                    .padding(8.dp),
+                contentScale = ContentScale.Crop
+            )
+            // Pokémon name and type
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 16.dp)
+            ) {
+                Text(
+                    text = affirmation.name,
+                    style = MaterialTheme.typography.headlineSmall //.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), fontSize = 15.sp)
+                )
+                PokemonTypeIcons(types = affirmation.typeIcon, fontSize = 6.sp)
+            }
+            // Like button and ID
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(start = 8.dp)
+            ) {
+
+                LikeButton(
+                    isLiked = isLiked,
+                    onLikeClicked = {isLiked = !isLiked},
+                    modifier = Modifier)
+
+                Text(
+                    text = "#" + affirmation.number.toString(),
+                    style = MaterialTheme.typography.bodySmall, //.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), fontSize = 10.sp),
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
+        }
+    }
+}
+
 
 //Creates the boxes around each type
 @Composable
@@ -131,7 +207,7 @@ fun PokemonTypeIcons(types: List<String>, modifier: Modifier = Modifier, fontSiz
                         color = getTypeColor(type),
                         shape = RoundedCornerShape(8.dp)
                     )
-                    .padding(horizontal = 10.dp, vertical = 2.dp),
+                    .padding(horizontal = 10.dp, vertical = 3.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
