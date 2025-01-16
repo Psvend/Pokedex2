@@ -47,14 +47,14 @@ class QuizViewModel @Inject constructor(
     }
     private fun fetchPokemonNames() {
         viewModelScope.launch {
-            val response = pokemonApiService.getPokemonList(0, 100) // Fetch first 100 Pokémon names
+            val response = pokemonApiService.getPokemonList(0, 1025) // Fetch first 100 Pokémon names
             val names = response.results.map { it.name }
             _pokemonNames.value = names
         }
     }
 
     fun getRandomPokemonId(): Int {
-        return Random.nextInt(1, 898) // Assuming there are 898 Pokémon
+        return Random.nextInt(1, 1025) // Assuming there are 898 Pokémon
     }
 
 
