@@ -24,11 +24,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,11 +38,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -111,7 +105,6 @@ fun PokemonPage(
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
             .background(Color(0xffeae6d5)) // Set the full background color here
     ) {
         Column(
@@ -119,15 +112,16 @@ fun PokemonPage(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 25.dp)
-            //.background(Color(0xffeae6d5)) //or remove if back to original blue color
         ) {
 
             // Header Section
-            Box(
+           Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(140.dp)
-            )
+           )
+
+
 
 
             // Top Section - Name and Number
@@ -151,12 +145,11 @@ fun PokemonPage(
             )
 
 
-
             PokemonImage(model = pokemonDetail?.sprites?.front_default)
 
 
             pokemonDetail?.types?.map { it.type.name }?.let { types ->
-                PokemonTypeIcons(types = types, fontSize = 10.sp)
+                PokemonTypeIcons(types = types, fontSize = 10)
             }
 
 

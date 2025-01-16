@@ -36,7 +36,7 @@ fun MainPageBackGround(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFE55655))
+            .background(Color(0xFFD9D9D9))
     ) {
         Column(
             modifier = Modifier

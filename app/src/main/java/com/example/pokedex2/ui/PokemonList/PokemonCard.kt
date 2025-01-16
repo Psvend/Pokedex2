@@ -24,8 +24,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -167,9 +171,9 @@ fun AffirmationCard(
             ) {
                 Text(
                     text = affirmation.name,
-                    style = MaterialTheme.typography.headlineSmall //.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), fontSize = 15.sp)
+                    style = MaterialTheme.typography.headlineSmall, //.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), fontSize = 15.sp)
                 )
-                PokemonTypeIcons(types = affirmation.typeIcon, fontSize = 6.sp)
+                PokemonTypeIcons(types = affirmation.typeIcon, fontSize = 9)
             }
             // Like button and ID
             Column(
@@ -184,7 +188,7 @@ fun AffirmationCard(
 
                 Text(
                     text = "#" + affirmation.number.toString(),
-                    style = MaterialTheme.typography.bodySmall, //.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), fontSize = 10.sp),
+                    style = MaterialTheme.typography.bodyMedium, //.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), fontSize = 10.sp),
                     modifier = Modifier.padding(top = 4.dp)
                 )
             }
@@ -195,7 +199,7 @@ fun AffirmationCard(
 
 //Creates the boxes around each type
 @Composable
-fun PokemonTypeIcons(types: List<String>, modifier: Modifier = Modifier, fontSize: TextUnit = 10.sp) {
+fun PokemonTypeIcons(types: List<String>, modifier: Modifier = Modifier, fontSize: Int) {
     Row(
         modifier = modifier.padding(4.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -203,6 +207,7 @@ fun PokemonTypeIcons(types: List<String>, modifier: Modifier = Modifier, fontSiz
         types.forEach { type ->
             Box(
                 modifier = Modifier
+                    .shadow(2.dp, shape = RoundedCornerShape(8.dp))
                     .background(
                         color = getTypeColor(type),
                         shape = RoundedCornerShape(8.dp)
@@ -212,7 +217,12 @@ fun PokemonTypeIcons(types: List<String>, modifier: Modifier = Modifier, fontSiz
             ) {
                 Text(
                     text = type.capitalizeFirstLetter(),
-                    style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), fontSize = fontSize),
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        fontFamily = FontFamily(Font(R.font.pressstart2p_regular)),
+                        shadow = Shadow(
+                            color = Color.Black, offset = Offset(0.0f, 0.0f), blurRadius = 10f
+                        ),
+                        fontSize = fontSize.sp),
                     color = Color.White
                 )
             }
@@ -224,23 +234,24 @@ fun PokemonTypeIcons(types: List<String>, modifier: Modifier = Modifier, fontSiz
 //color boxes for the pokemon types
 fun getTypeColor(type: String): Color {
     return when (type.lowercase()) {
-        "fire" -> Color(0xFFd61717) // Red
-        "grass" -> Color(0xFF89de65) // Green
-        "water" -> Color(0xFF0000FF) // Blue
-        "electric" -> Color(0xFFdddc11) // Yellow
-        "bug" -> Color(0xFFa4c81a) // Light Green
-        "poison" -> Color(0xFF8E44AD) // Purple
-        "ice" -> Color(0xFF00FFFF) // Cyan
-        "normal" -> Color(0xfff68d53) // White
-        "ground" -> Color(0xFF8B4513) // Brown
-        "flying" -> Color(0xFFADD8E6) // Light Blue
-        "fairy" -> Color(0xFFEE99AC) // Pink
-        "fighting" -> Color(0xFFa41353) // Reddish Brown
-        "psychic" -> Color(0xFFFF69B4) // Hot Pink
-        "dragon" -> Color(0xff11ddd6)
-        "dark" -> Color(0xff3f4948)
-        "ghost" -> Color(0xff6a8180)
-        "rock" -> Color(0xff908065)
+        "fire" -> Color(0xFFEE8130) // Red
+        "grass" -> Color(0xFF7AC74C) // Green
+        "water" -> Color(0xFF6390F0) // Blue
+        "electric" -> Color(0xFFF7D02C) // Yellow
+        "bug" -> Color(0xFFA6B91A) // Light Green
+        "poison" -> Color(0xFFA33EA1) // Purple
+        "ice" -> Color(0xFF96D9D6) // Cyan
+        "normal" -> Color(0xFFA8A77A) // White
+        "ground" -> Color(0xFFE2BF65) // Brown
+        "flying" -> Color(0xFFA98FF3) // Light Blue
+        "fairy" -> Color(0xFFD685AD) // Pink
+        "fighting" -> Color(0xFFC22E28) // Reddish Brown
+        "psychic" -> Color(0xFFF95587) // Hot Pink
+        "dragon" -> Color(0xFF6F35FC)
+        "dark" -> Color(0xFF705746)
+        "ghost" -> Color(0xFF735797)
+        "rock" -> Color(0xFFB6A136)
+        "steel" -> Color(0xFFB7B7CE)
         else -> Color.Gray // Default Gray
     }
 }
