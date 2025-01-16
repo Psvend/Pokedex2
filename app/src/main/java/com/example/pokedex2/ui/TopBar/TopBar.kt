@@ -34,11 +34,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.pokedex2.NewTopBar
 import com.example.pokedex2.R
+import com.example.pokedex2.ui.theme.Pokedex2Theme
 import com.example.pokedex2.viewModel.TopBarViewModel
 
 /*
@@ -108,7 +112,6 @@ fun TopBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
-    viewModel: TopBarViewModel = viewModel(),
     navController: NavHostController
 ){
     Column {
@@ -119,6 +122,7 @@ fun TopBar(
                 .background(Color(0xFFE55655))
                 .padding(top = 20.dp)
                 .padding(horizontal = 5.dp)
+
         ) {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -193,13 +197,16 @@ fun TopBar(
                             modifier = Modifier
                                 .matchParentSize()
                         ) { }
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                            contentDescription = "Go Back",
-                            tint = Color.White, // Ensure the arrow is visible
-                            modifier = Modifier
-                                .size(40.dp) // Icon size
-                        )
+
+                        if (navController.currentDestination?.route != "mainPage") {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                                contentDescription = "Go Back",
+                                tint = Color.White, // Ensure the arrow is visible
+                                modifier = Modifier
+                                    .size(40.dp) // Icon size
+                            )
+                        }
 
                         // Overlay for shiny effect
                         Canvas(
@@ -284,4 +291,13 @@ fun CircleDot(sizeOfDot: Int, dotColorInner: Color) {
 
     }
 }
+
+@Preview
+@Composable
+fun TopBarPreview() {
+        TopBar(
+            navController = rememberNavController()
+        )
+}
+
 
