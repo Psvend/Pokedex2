@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -50,6 +52,7 @@ fun Quiz(
     val selectedAnswer = remember { mutableStateOf<String?>(null) }
     val triggerNextQuistion = remember { mutableStateOf(false) }
     val isClear = remember { mutableStateOf(false) }
+    val maxQuestions=30
 
 
 
@@ -59,7 +62,7 @@ fun Quiz(
     }
 
     LaunchedEffect (triggerNextQuistion.value) {
-        if (triggerNextQuistion.value) {
+        if (triggerNextQuistion.value && points.value < maxQuestions) {
             isClear.value = true
             kotlinx.coroutines.delay(1000)
             isClear.value = false
@@ -79,7 +82,8 @@ fun Quiz(
     }
     Column (modifier = modifier.fillMaxSize()
         .background(Color(0xFFFFF9E6))
-        .padding(16.dp),
+        .padding(8.dp),
+
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Spacer(modifier = Modifier.height(80.dp))
@@ -90,55 +94,69 @@ fun Quiz(
             color = Color.Black,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp),
+                .padding(top = 8.dp),
             textAlign = TextAlign.Center
         )
+        if (points.value < maxQuestions) {
 
-        QuizImagae(model = pokemonDetail.value?.sprites?.front_default, isClear = isClear.value)
+            QuizImagae(model = pokemonDetail.value?.sprites?.front_default, isClear = isClear.value)
 
 
-        Text(
-            text =  "Score: ${points.value}",
-            style = MaterialTheme.typography.bodyLarge,
-            color = Color.Black,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            textAlign = TextAlign.Center
-        )
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-                    answerOptions.forEach { option ->
-                        Button(
-                            onClick = {
-                                selectedAnswer.value = option
-                               if (option == pokemonDetail.value?.name) {
-                                   points.value += 1
-                               }
-                                triggerNextQuistion.value = true
+            Text(
+                text = "Score: ${points.value}",
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.Black,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                textAlign = TextAlign.Center
+            )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                answerOptions.forEach { option ->
+                    Button(
+                        onClick = {
+                            selectedAnswer.value = option
+                            if (option == pokemonDetail.value?.name) {
+                                points.value += 1
+                            }
+                            triggerNextQuistion.value = true
 
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = when {
+                                selectedAnswer.value == option && option == pokemonDetail.value?.name -> Color.Green
+                                selectedAnswer.value == option -> Color.Red
+                                else -> Color.Blue
                             },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = when {
-                                    selectedAnswer.value == option && option == pokemonDetail.value?.name -> Color.Green
-                                    selectedAnswer.value == option -> Color.Red
-                                    else -> Color.Blue
-                                },
-                                contentColor = Color.White
-                            ),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Text(text = option
-                                )
+                            contentColor = Color.White
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 2.dp)
+                    ) {
+                        Text(
+                            text = option
+                        )
+                    }
+                }
             }
+
+        }else {
+            Text(
+                text = "Game Over",
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.Black,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                textAlign = TextAlign.Center
+            )
         }
     }
 
-}
 }
 @Composable
 fun QuizImagae(model : String?, isClear: Boolean) {
@@ -146,7 +164,7 @@ fun QuizImagae(model : String?, isClear: Boolean) {
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
+
 
         Box(
             modifier = Modifier
