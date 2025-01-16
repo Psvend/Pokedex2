@@ -28,6 +28,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,6 +44,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -272,8 +274,11 @@ fun PokemonImage(model: String?) {
             }
         }
 
+        var isLiked by remember { mutableStateOf(false) }
         // LikeButton added directly inside the Box
         LikeButton(
+            isLiked = isLiked,
+            onLikeClicked = {isLiked = !isLiked},
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .offset(x = (-25).dp, y = 25.dp) //edit the position of the likebutton inside the box of the pokemon image
@@ -670,6 +675,60 @@ fun PokemonStatsGraph(stats: List<Pair<String, Int>>, viewModel: PokePageViewMod
     }
 }
 
+@Composable
+fun LikeButton(
+    isLiked: Boolean,
+    onLikeClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val interactionSource = remember { MutableInteractionSource() } // To disable ripple effect
+
+    Icon(
+        painter = painterResource(
+            id = if (isLiked) R.drawable.heart_filled else R.drawable.heart_empty
+        ),
+        contentDescription = if (isLiked) "Unlike" else "Like",
+        tint = Color(0xFFB11014), // Set the desired tint color
+        modifier = modifier
+            .size(40.dp) // Adjust size as needed
+            .clickable(
+                onClick = onLikeClicked,
+                interactionSource = interactionSource,
+                indication = null // Disable the ripple effect
+            )
+    )
+}
+
+
+
+
+/*
+@Composable
+fun LikeButton(
+    isLiked: Boolean,
+    onLikeClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+
+    IconButton(
+        onClick = onLikeClicked,
+        modifier = modifier
+            .size(40.dp) // Adjust size as needed
+
+    ) {
+        Icon(
+            painter = painterResource(
+                id = if (isLiked) R.drawable.heart_filled else R.drawable.heart_empty
+            ),
+            contentDescription = if (isLiked) "Unlike" else "Like",
+            tint = Color(0xFFB11014) // Set the desired tint color
+        )
+    }
+}
+
+
+ */
+/*
 
 @Composable
 fun LikeButton(modifier: Modifier = Modifier) {
@@ -681,7 +740,7 @@ fun LikeButton(modifier: Modifier = Modifier) {
             Icon(
                 imageVector = Icons.Filled.Favorite,
                 contentDescription = "Like",
-                tint = Color.Red,
+                tint = Color(0xFFB11014),
                 modifier = Modifier
                     .size(40.dp)
                     .clickable(
@@ -693,7 +752,7 @@ fun LikeButton(modifier: Modifier = Modifier) {
             Icon(
                 imageVector = Icons.Outlined.FavoriteBorder,
                 contentDescription = "Unlike",
-                tint = Color.Gray,
+                tint = Color(0xFFB11014),  //Color.Gray
                 modifier = Modifier
                     .size(40.dp)
                     .clickable(
@@ -706,5 +765,7 @@ fun LikeButton(modifier: Modifier = Modifier) {
 }
 
 
+
+ */
 
 

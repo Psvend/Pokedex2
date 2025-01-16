@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.example.pokedex2.ui.PokePage.LikeButton
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
 import com.example.pokedex2.utils.RotatingLoader
 import kotlinx.coroutines.flow.filter
@@ -266,18 +267,12 @@ fun AffirmationCard(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(start = 8.dp)
             ) {
-                IconButton(onClick = {
-                    isLiked = !isLiked
-                    onLikeClicked()
-                }) {
-                    Icon(
-                        painter = painterResource(
-                            if (isLiked) R.drawable.heart_filled else R.drawable.heart_empty
-                        ),
-                        contentDescription = if (isLiked) "Unlike" else "Like",
-                        tint = if (isLiked) Color(0xFFB11014) else Color(0xFFB11014)
-                    )
-                }
+
+                LikeButton( isLiked = isLiked,
+                    onLikeClicked = {isLiked = !isLiked},
+                    modifier = Modifier
+                )
+
                 Text(
                     text = "#" + affirmation.number.toString(),
                     style = MaterialTheme.typography.bodySmall, //.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), fontSize = 10.sp),
