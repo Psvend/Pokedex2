@@ -152,6 +152,7 @@ fun HomePokemonScroll(
     }
 }
 
+/*
 @Composable
 fun AffirmationCard(
     affirmation: Affirmation,
@@ -269,6 +270,8 @@ fun getTypeColor(type: String): Color {
         else -> Color.Gray // Default Gray
     }
 }
+
+ */
 
 
 /*

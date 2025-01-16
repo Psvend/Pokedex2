@@ -39,6 +39,7 @@ import com.example.pokedex2.R
 import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
 
+
 @Composable
 fun AffirmationCard(
     affirmation: Affirmation,
@@ -46,7 +47,7 @@ fun AffirmationCard(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    var isLiked by remember { mutableStateOf(affirmation.isLiked) }
+    //var isLiked by remember { mutableStateOf(affirmation.isLiked) }
 
     Card(
         modifier = modifier
@@ -94,16 +95,13 @@ fun AffirmationCard(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(start = 8.dp)
             ) {
-                IconButton(onClick = {
-                    isLiked = !isLiked
-                    onLikeClicked()
-                }) {
+                IconButton(onClick = onLikeClicked) {
                     Icon(
                         painter = painterResource(
-                            if (isLiked) R.drawable.heart_filled else R.drawable.heart_empty
+                            if (affirmation.isLiked) R.drawable.heart_filled else R.drawable.heart_empty
                         ),
-                        contentDescription = if (isLiked) "Unlike" else "Like",
-                        tint = if (isLiked) Color(0xFFB11014) else Color(0xFFB11014)
+                        contentDescription = if (affirmation.isLiked) "Unlike" else "Like",
+                        tint = if (affirmation.isLiked) Color(0xFFB11014) else Color(0xFFB11014)
                     )
                 }
                 Text(
@@ -161,10 +159,11 @@ fun getTypeColor(type: String): Color {
         "fairy" -> Color(0xFFEE99AC) // Pink
         "fighting" -> Color(0xFFa41353) // Reddish Brown
         "psychic" -> Color(0xFFFF69B4) // Hot Pink
-        "dragon" -> Color(0xff11ddd6)
-        "dark" -> Color(0xff3f4948)
-        "ghost" -> Color(0xff6a8180)
-        "rock" -> Color(0xff908065)
+        "dragon" -> Color(0xff11ddd6) // Light Blue
+        "dark" -> Color(0xff3f4948) // Dark Gray
+        "ghost" -> Color(0xff6a8180) // Muddy green
+        "rock" -> Color(0xff908065) // Sand brown
         else -> Color.Gray // Default Gray
     }
 }
+

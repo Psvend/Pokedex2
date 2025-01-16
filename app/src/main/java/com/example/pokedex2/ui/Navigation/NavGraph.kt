@@ -45,5 +45,12 @@ fun NavGraph(
         composable("catchPokemonScreen") {
             CatchPokemonScreen()
         }
+        composable(
+            route = "pokemonPage/{pokemonName}",
+            arguments = listOf(navArgument("pokemonName") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val pokemonName = backStackEntry.arguments?.getString("pokemonName") ?: ""
+            PokemonPage(pokemonIdOrName = pokemonName)
+        }
     }
 }

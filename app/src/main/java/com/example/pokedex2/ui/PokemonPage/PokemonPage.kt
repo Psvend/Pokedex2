@@ -1,6 +1,5 @@
 package com.example.pokedex2.ui.PokePage
 
-
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -145,7 +144,7 @@ fun PokemonPage(
 
 
             pokemonDetail?.types?.map { it.type.name }?.let { types ->
-                PokemonTypeIcons(types = types, fontSize = 10.sp)
+                PokemonTypeIcons(types = types)
             }
 
 
