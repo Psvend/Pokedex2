@@ -257,7 +257,7 @@ fun AffirmationCard(
             ) {
                 Text(
                     text = affirmation.name,
-                    style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), fontSize = 15.sp)
+                    style = MaterialTheme.typography.headlineSmall //.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), fontSize = 15.sp)
                 )
                 PokemonTypeIcons(types = affirmation.typeIcon, fontSize = 6.sp)
             }
@@ -280,7 +280,7 @@ fun AffirmationCard(
                 }
                 Text(
                     text = "#" + affirmation.number.toString(),
-                    style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), fontSize = 10.sp),
+                    style = MaterialTheme.typography.bodySmall, //.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), fontSize = 10.sp),
                     modifier = Modifier.padding(top = 4.dp)
                 )
             }

@@ -190,24 +190,8 @@ fun PokemonName(name: String) {
             text = name.capitalizeFirstLetter() ?: "Loading...",
             style = TextStyle(
                 fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), // Replace with your retro font file name
-                color = Color.DarkGray,
-                )
-        )
-    }
-}
-
-
-/*
-@Composable
-fun PokemonName(name: String) {
-    Column {
-        Text(
-            text = name.capitalizeFirstLetter() ?: "Loading...",
-            style = TextStyle(
-                fontSize = 24.sp,
-                fontFamily = FontFamily.Default
+                fontFamily = FontFamily.Default,
+                color = Color.DarkGray
             ),
             color = Color.DarkGray
         )
@@ -216,8 +200,6 @@ fun PokemonName(name: String) {
 
 
 
- */
-
 @Composable
 fun PokemonNr(id: Int){
     Column {
@@ -225,7 +207,7 @@ fun PokemonNr(id: Int){
             text = "#$id" ?: "Loading...",
             style = TextStyle(
                 fontSize = 24.sp,
-                fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
             ),
             color = Color.DarkGray
         )
@@ -298,7 +280,7 @@ fun PokemonLocation(locations: List<String>) {
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.Bold,
                     color = Color.DarkGray,
-                    fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                    //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
                 ),
                 textAlign = TextAlign.Start,
                 modifier = Modifier.padding(bottom = 4.dp)
@@ -307,14 +289,20 @@ fun PokemonLocation(locations: List<String>) {
             if (locations.isEmpty()) {
                 Text(
                     text = "No encounter data available",
-                    style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = Color.DarkGray
+                        //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                    ),
                     textAlign = TextAlign.Start
                 )
             } else {
                 locations.forEach { location ->
                     Text(
                         text = location,
-                        style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = Color.DarkGray
+                            //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                        ),
                         textAlign = TextAlign.Start,
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
@@ -346,7 +334,7 @@ fun PokemonAbilities(abilities: List<String>) {
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.Bold,
                     color = Color.DarkGray,
-                    fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                    //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
                 ),
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -354,13 +342,19 @@ fun PokemonAbilities(abilities: List<String>) {
             if (abilities.isEmpty()) {
                 Text(
                     text = "No abilities available",
-                    style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)))
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                            color = Color.DarkGray
+                    //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                    ),
                 )
             } else {
                 abilities.forEach { ability ->
                     Text(
                         text = ability.capitalizeFirstLetter(),
-                        style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = Color.DarkGray
+                            //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                        ),
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
                 }
@@ -390,7 +384,7 @@ fun PokemonGrowthRate(growthRate: String, viewModel: PokePageViewModel) {
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.Bold,
                     color = Color.DarkGray,
-                    fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                    //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
                 )
             )
 
@@ -433,9 +427,9 @@ fun PokemonGrowthRate(growthRate: String, viewModel: PokePageViewModel) {
                 Text(
                     text = growthRate.capitalizeFirstLetter(),
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = Color.DarkGray,
-                        fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                        //fontWeight = FontWeight.Bold,
+                        color = Color.Gray,
+                        //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
                     )
                 )
             }
@@ -463,7 +457,7 @@ fun PokemonEvolvesTo(evolvesTo: List<EvolutionDetailUI>, modifier: Modifier = Mo
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.Bold,
                     color = Color.DarkGray,
-                    fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                    //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
                 ),
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -502,13 +496,13 @@ fun PokemonEvolvesTo(evolvesTo: List<EvolutionDetailUI>, modifier: Modifier = Mo
                                 style = MaterialTheme.typography.bodyLarge.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = Color.DarkGray,
-                                    fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                                    //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
                                 )
                             )
 
                             Text(
                                 text = evolution.requirement,
-                                style = MaterialTheme.typography.bodyMedium.copy(color = Color.Gray, fontFamily = FontFamily(Font(R.font.pressstart2p_regular)))
+                                style = MaterialTheme.typography.bodyMedium.copy(color = Color.Gray) //fontFamily = FontFamily(Font(R.font.pressstart2p_regular)))
                             )
                         }
                     }
@@ -539,7 +533,7 @@ fun PokemonStatsGraph(stats: List<Pair<String, Int>>, viewModel: PokePageViewMod
                 style = MaterialTheme.typography.headlineSmall.copy(
                     fontWeight = FontWeight.Bold,
                     color = Color.DarkGray,
-                    fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                    //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
                 ),
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -552,7 +546,7 @@ fun PokemonStatsGraph(stats: List<Pair<String, Int>>, viewModel: PokePageViewMod
                 ) {
                     Text(
                         text = name,
-                        style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
+                        style = MaterialTheme.typography.bodyMedium, //.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
                         modifier = Modifier.padding(bottom = 4.dp),
                         color = Color.DarkGray
                     )
@@ -577,7 +571,7 @@ fun PokemonStatsGraph(stats: List<Pair<String, Int>>, viewModel: PokePageViewMod
 
                     Text(
                         text = value.toString(),
-                        style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
+                        style = MaterialTheme.typography.bodySmall, //.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
                         modifier = Modifier.align(Alignment.End),
                         color = Color.DarkGray
                     )
