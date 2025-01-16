@@ -12,8 +12,11 @@ import androidx.navigation.navArgument
 import com.example.pokedex2.ui.PokePage.PokemonPage
 import com.example.pokedex2.ui.PokemonList.HomePokemonScroll
 import com.example.pokedex2.ui.PokemonList.MainPageBackGround
+import com.example.pokedex2.ui.Quiz.Quiz
+import com.example.pokedex2.ui.Quiz.StartingScreenForQuiz
 import com.example.pokedex2.viewModel.AffirmationViewModel
 import com.example.pokedex2.viewModel.PokePageViewModel
+import com.example.pokedex2.viewModel.QuizViewModel
 
 //import com.example.pokedex2.viewModel.PokemonPageViewModel
 
@@ -38,6 +41,25 @@ fun NavGraph(
         ) { backStackEntry ->
             val pokemonName = backStackEntry.arguments?.getString("pokemonName") ?: ""
             PokemonPage(pokemonIdOrName = pokemonName)
+        }
+
+
+
+    }
+}
+//navcontroller from startingscreenforquiz to quiz
+@Composable
+fun NavGraph2(
+    navController: NavHostController,
+    startDestination: String = "startingScreenForQuiz",
+) {
+    NavHost(navController = navController, startDestination = startDestination) {
+        composable("startingScreenForQuiz") {
+            StartingScreenForQuiz(navController = navController)
+        }
+        composable("Quiz") {
+            val quizViewModel: QuizViewModel = hiltViewModel()
+            Quiz(viewModel = quizViewModel)
         }
     }
 }
