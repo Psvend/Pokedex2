@@ -72,6 +72,7 @@ fun PokemonPage(
     val growthRate by viewModel.growthRate.collectAsState()
     val evolvesTo by viewModel.evolvesTo.collectAsState()
     val stats by viewModel.pokemonStats.collectAsState()
+    val characteristicDescription by viewModel.characteristicDescription.collectAsState()
 
     // Map the evolution data from your API into EvolutionDetailUI objects
     val evolutionDetailsUI = evolvesTo.map { evolution ->
@@ -90,6 +91,13 @@ fun PokemonPage(
         viewModel.fetchPokemonSpecies(pokemonIdOrName.lowercase())
         viewModel.fetchEvolutionChain(pokemonIdOrName.lowercase())
         viewModel.fetchPokemonStats(pokemonIdOrName.lowercase())
+    }
+
+    //Fetch pokemon description
+    LaunchedEffect(pokemonDetail?.id) {
+        pokemonDetail?.id?.let { id ->
+            viewModel.fetchCharacteristic(id)
+        }
     }
 
     // Fetch encounter locations
@@ -149,6 +157,10 @@ fun PokemonPage(
                 PokemonTypeIcons(types = types, fontSize = 10.sp)
             }
 
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            PokemonDescription(description = characteristicDescription)
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -270,6 +282,45 @@ fun PokemonImage(model: String?) {
 }
 
 
+@Composable
+fun PokemonDescription(
+    title: String = "Characteristic",
+    description: String,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = Modifier
+            .padding(5.dp)
+            .fillMaxWidth()
+            .background(Color(0xFFf0ecdd), shape = RoundedCornerShape(12.dp)) // Add a rounded box
+            .padding(16.dp) // Inner padding within the rounded box
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        ) {
+            Text(
+                text = "Characteristic",
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color.DarkGray
+                ),
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+
+            Text(
+                text = description,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = Color.DarkGray
+                )
+            )
+        }
+    }
+}
+
+
+
 
 @Composable
 fun PokemonLocation(locations: List<String>) {
@@ -298,7 +349,7 @@ fun PokemonLocation(locations: List<String>) {
 
             if (locations.isEmpty()) {
                 Text(
-                    text = "No encounter data available",
+                    text = "This pokemon don't have specific encounter locations",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = Color.DarkGray
                         //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))

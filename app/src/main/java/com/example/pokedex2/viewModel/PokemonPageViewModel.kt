@@ -57,6 +57,8 @@ class PokePageViewModel @Inject constructor(
     private val _evolvesTo = MutableStateFlow<List<EvolutionDetailUI>>(emptyList())
     val evolvesTo: StateFlow<List<EvolutionDetailUI>> = _evolvesTo
 
+    private val _characteristicDescription = MutableStateFlow<String>("")
+    val characteristicDescription: StateFlow<String> = _characteristicDescription
 
 
 
@@ -205,6 +207,30 @@ class PokePageViewModel @Inject constructor(
             }
         }
     }
+
+    fun fetchCharacteristic(id: Int) {
+        viewModelScope.launch {
+            try {
+                val characteristic = pokemonApiService.getCharacteristic(id)
+
+                // Filter the descriptions to find the one in English
+                val englishDescription = characteristic.descriptions
+                    .find { it.language.name == "en" }
+                    ?.description
+
+                _characteristicDescription.value = englishDescription ?: "Description not available"
+            } catch (e: Exception) {
+                _characteristicDescription.value = "Error fetching description"
+                Log.e("fetchCharacteristic", "Error: ${e.message}")
+            }
+        }
+    }
+
+
+
+
+
+
 
 
     fun getGrowthRateProgress(growthRate: String): Float {
