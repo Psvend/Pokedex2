@@ -22,13 +22,12 @@ import androidx.compose.ui.unit.dp
 import com.example.pokedex2.model.LocalPokeTypes
 import com.example.pokedex2.utils.RotatingLoader
 
+/*
 @Composable
-fun TypeGrid(
+fun GenerationGrid(
     modifier: Modifier = Modifier,
-    pokeTypes: List<LocalPokeTypes>,
     selectionMap: Map<Int, Boolean>,
     onToggleSelection: (Int) -> Unit,
-    getTypeColor: (Int, String) -> Color
 ) {
     LazyVerticalStaggeredGrid(
         modifier = modifier
@@ -38,21 +37,13 @@ fun TypeGrid(
         horizontalArrangement = Arrangement.spacedBy(20.dp),
         verticalItemSpacing = 16.dp
     ) {
-        if (pokeTypes.isEmpty()) {
-            item {
-                RotatingLoader() // Show a loader while the data is empty
-            }
-        }
-        items(pokeTypes) { localPokeType ->
-            val isSelected = selectionMap[localPokeType.id] ?: false
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(3.0f)
                     .border(1.dp, Color.White, RoundedCornerShape(25.dp))
                     .background(
-                        color = getTypeColor(localPokeType.id, localPokeType.color),
+                        color = Color(0xFFE55655),
                         shape = RoundedCornerShape(25.dp)
                     )
                     .clickable {
@@ -67,10 +58,6 @@ fun TypeGrid(
                     color = if (isSelected) Color.Black else Color.White
                 )
             }
-        }
-    }
-}
 
-fun String.capitalizeFirstLetter(): String {
-    return this.lowercase().replaceFirstChar { it.uppercase() }
-}
+    }
+}*/

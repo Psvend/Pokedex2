@@ -6,13 +6,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.pokedex2.data.DataPokeTypes
 import androidx.compose.ui.graphics.Color
+import com.example.pokedex2.data.DataPokeGenerations
+import com.example.pokedex2.model.LocalGenerations
 import com.example.pokedex2.model.LocalPokeTypes
 
 
 class SearchViewModel : ViewModel() {
     val pokeTypes = mutableStateOf<List<LocalPokeTypes>>(emptyList())
+    val pokeGenerations = mutableStateOf<List<LocalGenerations>>(emptyList())
     val isLoading = mutableStateOf(true)
     val selectionMap = mutableStateMapOf<Int, Boolean>()
+    val selectionGenerationMap = mutableStateMapOf<String, Boolean>()
     var searchQuery = mutableStateOf("Name, number or description")
     var active = mutableStateOf(false)
     var showDialog = mutableStateOf(false)
@@ -37,6 +41,21 @@ class SearchViewModel : ViewModel() {
 
         // Log selectionMap. Printing in logcat
         Log.d("SearchViewModel", "SelectionMap initialized: $selectionMap")
+
+        isLoading.value = false
+    }
+
+    private fun loadGenerations() {
+        Log.d("SearchViewModel", "Loading generations...")
+        val generations = DataPokeGenerations().loadGeneration()
+        pokeGenerations.value = generations
+
+        //Log generations
+        Log.d("SearchViewModel", "Generations loaded: $generations")
+
+        generations.forEach {generations->
+            selectionGenerationMap[generations.generation] = false
+        }
 
         isLoading.value = false
     }
