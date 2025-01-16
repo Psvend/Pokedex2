@@ -165,7 +165,16 @@ fun PokemonPage(
 
             Spacer(modifier = Modifier.height(15.dp))
 
-            PokemonEvolvesTo(evolvesTo = evolutionDetailsUI)
+            //PokemonEvolvesTo(evolvesTo = evolutionDetailsUI)
+            PokemonEvolvesTo(
+                evolvesTo = evolutionDetailsUI,
+                currentPokemon = EvolutionDetailUI(
+                    name = pokemonDetail?.name?.capitalizeFirstLetter() ?: "Unknown",
+                    imageUrl = pokemonDetail?.sprites?.front_default ?: "",
+                    requirement = "This is the final form"
+                )
+            )
+
 
             Spacer(modifier = Modifier.height(15.dp))
 
@@ -438,9 +447,8 @@ fun PokemonGrowthRate(growthRate: String, viewModel: PokePageViewModel) {
     }
 }
 
-
 @Composable
-fun PokemonEvolvesTo(evolvesTo: List<EvolutionDetailUI>, modifier: Modifier = Modifier) {
+fun PokemonEvolvesTo(evolvesTo: List<EvolutionDetailUI>, currentPokemon: EvolutionDetailUI, modifier: Modifier = Modifier) {
     Box(
         modifier = Modifier
             .padding(5.dp)
@@ -457,18 +465,47 @@ fun PokemonEvolvesTo(evolvesTo: List<EvolutionDetailUI>, modifier: Modifier = Mo
                 text = "Evolution",
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    color = Color.DarkGray,
-                    //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                    color = Color.DarkGray
                 ),
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
             if (evolvesTo.isEmpty() || (evolvesTo.size == 1 && evolvesTo[0].name == "Max Evolution")) {
-                Text(
-                    text = "This is the final form",
-                    style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
-                    color = Color.Gray
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Image of the max evolution
+                    AsyncImage(
+                        model = currentPokemon.imageUrl, // Use the current Pokémon's image
+                        contentDescription = "Max evolution sprite",
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(CircleShape)
+                            .background(Color.LightGray)
+                            .padding(8.dp)
+                    )
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    // Max Evolution Details
+                    Column {
+                        Text(
+                            text = currentPokemon.name, // Use the current Pokémon's name
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = Color.DarkGray
+                            )
+                        )
+
+                        Text(
+                            text = "This is the final form",
+                            style = MaterialTheme.typography.bodyMedium.copy(color = Color.Gray)
+                        )
+                    }
+                }
             } else {
                 evolvesTo.forEach { evolution ->
                     Row(
@@ -496,14 +533,13 @@ fun PokemonEvolvesTo(evolvesTo: List<EvolutionDetailUI>, modifier: Modifier = Mo
                                 text = evolution.name,
                                 style = MaterialTheme.typography.bodyLarge.copy(
                                     fontWeight = FontWeight.Bold,
-                                    color = Color.DarkGray,
-                                    //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                                    color = Color.DarkGray
                                 )
                             )
 
                             Text(
                                 text = evolution.requirement,
-                                style = MaterialTheme.typography.bodyMedium.copy(color = Color.Gray) //fontFamily = FontFamily(Font(R.font.pressstart2p_regular)))
+                                style = MaterialTheme.typography.bodyMedium.copy(color = Color.Gray)
                             )
                         }
                     }
@@ -512,6 +548,7 @@ fun PokemonEvolvesTo(evolvesTo: List<EvolutionDetailUI>, modifier: Modifier = Mo
         }
     }
 }
+
 
 
 
