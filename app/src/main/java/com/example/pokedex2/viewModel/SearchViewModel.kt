@@ -6,13 +6,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.pokedex2.data.DataPokeTypes
 import androidx.compose.ui.graphics.Color
+import com.example.pokedex2.data.DataPokeGenerations
+import com.example.pokedex2.model.LocalGenerations
 import com.example.pokedex2.model.LocalPokeTypes
 
 
 class SearchViewModel : ViewModel() {
     val pokeTypes = mutableStateOf<List<LocalPokeTypes>>(emptyList())
+    val pokeGenerations = mutableStateOf<List<LocalGenerations>>(emptyList())
     val isLoading = mutableStateOf(true)
     val selectionMap = mutableStateMapOf<Int, Boolean>()
+    val selectionGenerationMap = mutableStateMapOf<Int, Boolean>()
     var searchQuery = mutableStateOf("Name, number or description")
     var active = mutableStateOf(false)
     var showDialog = mutableStateOf(false)
@@ -21,6 +25,7 @@ class SearchViewModel : ViewModel() {
     init {
         Log.d("SearchViewModel", "Initializing ViewModel...")
         loadTypes()
+        loadGenerations()
     }
 
     private fun loadTypes() {
@@ -41,11 +46,34 @@ class SearchViewModel : ViewModel() {
         isLoading.value = false
     }
 
+    private fun loadGenerations() {
+        Log.d("SearchViewModel", "Loading generations...")
+        val generations = DataPokeGenerations().loadGeneration()
+        pokeGenerations.value = generations
+
+        //Log generations
+        Log.d("SearchViewModel", "Generations loaded: $generations")
+
+        generations.forEach {generation->
+            selectionGenerationMap[generation.id] = false
+        }
+
+        isLoading.value = false
+    }
+
     fun getTypeColor(typeId: Int, defaultColor: String): Color {
         return if (selectionMap[typeId] == true) {
             Color(android.graphics.Color.parseColor(defaultColor)) // Selected color
         } else {
             Color.DarkGray // Unselected type color
+        }
+    }
+
+    fun getGenColor(genId: Int): Color {
+        return if (selectionGenerationMap[genId] == true) {
+            Color(0xFFE55655)
+        } else {
+            Color.DarkGray
         }
     }
 
@@ -57,8 +85,14 @@ class SearchViewModel : ViewModel() {
     }
 
     fun toggleSelection(id: Int) {
-        selectionMap[id] = !(selectionMap[id] ?: false)
+        if (id <= 18) {
+            selectionMap[id] = !(selectionMap[id] ?: false)
+        } else if (id in 19..26){
+            selectionGenerationMap[id] = !(selectionGenerationMap[id] ?: false)
+        }
     }
+
+
 
     fun selectAll() {
         pokeTypes.value.forEach { selectionMap[it.id] = true }

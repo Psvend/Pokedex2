@@ -12,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.pokedex2.ui.MenuBar.MenuBar
@@ -20,13 +21,13 @@ import com.example.pokedex2.ui.Navigation.NavGraph2
 import com.example.pokedex2.ui.theme.Pokedex2Theme
 import com.example.pokedex2.ui.TopBar.TopBar
 import com.example.pokedex2.viewModel.MenuBarViewModel
+import com.example.pokedex2.viewModel.PokeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 data class BottomNavItem(
     val title: String,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector
-
 )
 
 @AndroidEntryPoint
@@ -38,6 +39,7 @@ class MainActivity : ComponentActivity() {
             Pokedex2Theme {
                 val navController = rememberNavController()
                 val menuBarViewModel: MenuBarViewModel = viewModel()
+                val pokeViewModel: PokeViewModel = hiltViewModel() // Injecting PokeViewModel
                 val selectedItemIndex by menuBarViewModel.selectedItemIndex.collectAsState()
 
                 Scaffold(

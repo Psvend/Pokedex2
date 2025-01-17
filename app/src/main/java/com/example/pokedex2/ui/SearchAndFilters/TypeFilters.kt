@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.pokedex2.model.LocalPokeTypes
 import com.example.pokedex2.utils.RotatingLoader
@@ -42,6 +43,8 @@ import com.example.pokedex2.viewModel.SearchViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TypeFilterUI(
+    showOverlay: Boolean,
+    onClose: () -> Unit,
     modifier: Modifier = Modifier,
     searchViewModel: SearchViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
@@ -52,162 +55,165 @@ fun TypeFilterUI(
     val allTypesSelected = selectionMap.values.all { it } // Check if all are selected
     val showDialog = searchViewModel.showDialog
     val acceptSearchCriteria = searchViewModel.acceptSearchCriteria
-
-    Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 80.dp)
-    ) { paddingValues ->
-        Column(
+    if (showOverlay) {
+        Scaffold(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .background(Color.Black)
-        ) {
-            // Search Bar
-            SearchBar(
+                .padding(bottom = 80.dp)
+        ) { paddingValues ->
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .onFocusChanged { focusState ->
-                        if (focusState.isFocused && searchQuery.value == "Name, number or description") {
-                            searchViewModel.searchQuery.value = ""
-                        } else {
-                            searchViewModel.searchQuery.value = "Name, number or description"
-                        }
-                    },
-                query = searchQuery.value,
-                onQueryChange = { searchViewModel.searchQuery.value = it },
-                onSearch = {},
-                active = acceptSearchCriteria.value,
-                onActiveChange = { searchViewModel.active.value = it },
-                trailingIcon = {
-                    IconButton(
-                        onClick = { searchViewModel.clearSearch() }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Clear,
-                            contentDescription = "Clear Search",
-                            tint = Color.Gray
-                        )
-                    }
-                }
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .background(Color.Black)
             ) {
-                Column(modifier = Modifier.padding(8.dp)) {
-                    if (searchQuery.value.isNotBlank()) {
-                        Text(
-                            text = "Search Query: ${searchQuery.value}",
-                            color = Color.Black,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                    val selectedTypes = pokeTypes.filter { selectionMap[it.id] == true }
-                    if (selectedTypes.isNotEmpty()) {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Selected Types:",
-                            color = Color.Black,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        selectedTypes.forEach { type ->
-                            Text(
-                                text = type.name,
-                                color = Color.Gray,
-                                style = MaterialTheme.typography.bodySmall
+                // Search Bar
+                SearchBar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .onFocusChanged { focusState ->
+                            if (focusState.isFocused && searchQuery.value == "Name, number or description") {
+                                searchViewModel.searchQuery.value = ""
+                            } else {
+                                searchViewModel.searchQuery.value = "Name, number or description"
+                            }
+                        },
+                    query = searchQuery.value,
+                    onQueryChange = { searchViewModel.searchQuery.value = it },
+                    onSearch = {},
+                    active = acceptSearchCriteria.value,
+                    onActiveChange = { searchViewModel.active.value = it },
+                    trailingIcon = {
+                        IconButton(
+                            onClick = { searchViewModel.clearSearch() }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Clear,
+                                contentDescription = "Clear Search",
+                                tint = Color.Gray
                             )
                         }
                     }
-                }
-            }
-
-            Text(
-                text = "Choose type filter",
-                style = MaterialTheme.typography.headlineSmall,
-                color = Color.White,
-                modifier = Modifier.padding(16.dp)
-            )
-
-            // Conditional TypeGrid
-            when {
-                isLoading -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        RotatingLoader()
-                    }
-                }
-                pokeTypes.isEmpty() -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("No types available", color = Color.Red)
-                    }
-                }
-                else -> {
-                    TypeGrid(
-                        modifier = Modifier,
-                        pokeTypes = pokeTypes,
-                        selectionMap = selectionMap,
-                        onToggleSelection = { id -> searchViewModel.toggleSelection(id) },
-                        getTypeColor = { id, color -> searchViewModel.getTypeColor(id, color) }
-                    )
-                }
-            }
-
-            // Buttons
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 22.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Button(
-                        onClick = {
-                            if (allTypesSelected) {
-                                // Deselect all types
-                                pokeTypes.forEach { selectionMap[it.id] = false }
-                            } else {
-                                // Select all types
-                                pokeTypes.forEach { selectionMap[it.id] = true }
+                    Column(modifier = Modifier.padding(8.dp)) {
+                        if (searchQuery.value.isNotBlank()) {
+                            Text(
+                                text = "Search Query: ${searchQuery.value}",
+                                color = Color.Black,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                        val selectedTypes = pokeTypes.filter { selectionMap[it.id] == true }
+                        if (selectedTypes.isNotEmpty()) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Selected Types:",
+                                color = Color.Black,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            selectedTypes.forEach { type ->
+                                Text(
+                                    text = type.name,
+                                    color = Color.Gray,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
                             }
                         }
-                    ) {
-                        Text(text = if (allTypesSelected) "Deselect all" else "Show all types")
                     }
-                    Button(
-                        onClick = { searchViewModel.validateCriteria() }
+                }
+
+                Text(
+                    text = "Choose type filter",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = Color.White,
+                    modifier = Modifier.padding(16.dp)
+                )
+
+                // Conditional TypeGrid
+                when {
+                    isLoading -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            RotatingLoader()
+                        }
+                    }
+
+                    pokeTypes.isEmpty() -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("No types available", color = Color.Red)
+                        }
+                    }
+
+                    else -> {
+                        TypeGrid(
+                            modifier = Modifier,
+                            pokeTypes = pokeTypes,
+                            selectionMap = selectionMap,
+                            onToggleSelection = { id -> searchViewModel.toggleSelection(id) },
+                            getTypeColor = { id, color -> searchViewModel.getTypeColor(id, color) }
+                        )
+                    }
+                }
+
+                // Buttons
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 22.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        Text(text = "Confirm")
+                        Button(
+                            onClick = {
+                                if (allTypesSelected) {
+                                    // Deselect all types
+                                    pokeTypes.forEach { selectionMap[it.id] = false }
+                                } else {
+                                    // Select all types
+                                    pokeTypes.forEach { selectionMap[it.id] = true }
+                                }
+                            }
+                        ) {
+                            Text(text = if (allTypesSelected) "Deselect all" else "Show all types")
+                        }
+                        Button(
+                            onClick = { searchViewModel.validateCriteria() }
+                        ) {
+                            Text(text = "Confirm")
+                        }
                     }
                 }
             }
         }
-    }
 
-    // Dialog
-    if (showDialog.value) {
-        AlertDialog(
-            onDismissRequest = { searchViewModel.showDialog.value = false },
-            confirmButton = {
-                Button(onClick = { searchViewModel.showDialog.value = false }) {
-                    Text("OK")
-                }
-            },
-            title = { Text(text = "No Search Criteria") },
-            text = { Text(text = "Nothing has been chosen") }
-        )
+        // Dialog
+        if (showDialog.value) {
+            AlertDialog(
+                onDismissRequest = { searchViewModel.showDialog.value = false },
+                confirmButton = {
+                    Button(onClick = { searchViewModel.showDialog.value = false }) {
+                        Text("OK")
+                    }
+                },
+                title = { Text(text = "No Search Criteria") },
+                text = { Text(text = "Nothing has been chosen") }
+            )
+        }
     }
 }
 
-
+/*
 @Composable
 fun TypeGrid(
     modifier: Modifier = Modifier,
@@ -263,6 +269,4 @@ fun TypeGrid(
 fun String.capitalizeFirstLetter(): String {
     return this.lowercase().replaceFirstChar { it.uppercase() }
 }
-
-
-
+*/

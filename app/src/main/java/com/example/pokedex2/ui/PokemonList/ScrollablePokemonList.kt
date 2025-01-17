@@ -14,32 +14,33 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
-import com.example.pokedex2.R
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.text.font.Font
@@ -50,22 +51,32 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.pokedex2.ui.PokePage.LikeButton
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
+import com.example.pokedex2.R
+import com.example.pokedex2.ui.SearchAndFilters.FilterOverlay
 import com.example.pokedex2.utils.RotatingLoader
 import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.SyncViewModel
+import com.example.pokedex2.viewModel.AffirmationViewModel
 import kotlinx.coroutines.flow.filter
 
 @Composable
 fun HomePokemonScroll(
+    viewModel: AffirmationViewModel,
     navController: NavHostController,
     modifier: Modifier = Modifier,
     syncViewModel: SyncViewModel = hiltViewModel(),
     fetchAPIViewModel: MainPageViewModel = hiltViewModel()
 ) {
+    val affirmationList by viewModel.affirmations.collectAsState(initial = emptyList())
+    val isLoading = viewModel.isLoading.value
+    val isPaginating = viewModel.isPaginating.value
+    val errorMessage = viewModel.errorMessage.value
     val isLoading by fetchAPIViewModel.isLoading.collectAsState()
     val isPaginating by fetchAPIViewModel.isPaginating.collectAsState()
     val errorMessage by fetchAPIViewModel.errorMessage.collectAsState()
     val listState = rememberLazyListState()
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    var showFilterOverlay by remember {mutableStateOf(false)}
     val apiPokemons by fetchAPIViewModel.apiPokemons.collectAsState(initial = emptyList())
     val syncedPokemons by syncViewModel.pokemonList.collectAsState(initial = emptyList())
 
@@ -73,8 +84,8 @@ fun HomePokemonScroll(
         syncViewModel.syncPokemons(apiPokemons)
     }
 
-    if (isLoading && syncedPokemons.isEmpty()) {
-        // Show loading spinner
+    if (isLoading && affirmationList.isEmpty()) {
+        // Show a loading spinner during initial load
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -103,7 +114,7 @@ fun HomePokemonScroll(
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = errorMessage!!,
-                    style = MaterialTheme.typography.bodyMedium, //.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
+                    style = MaterialTheme.typography.bodyMedium,
                     color = Color.Black,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
@@ -114,171 +125,7 @@ fun HomePokemonScroll(
             }
         }
     } else {
-        // Show Pokémon list
-        LazyColumn(
-            state = listState,
-            modifier = modifier
-                .fillMaxSize()
-                .background(Color(0xFFD9D9D9))
-        ) {
-            items(syncedPokemons) { affirmation ->
-                AffirmationCard(
-                    affirmation = affirmation,
-                    navController = navController,
-                    onLikeClicked = { syncViewModel.toggleLike(affirmation) },
-                    modifier = Modifier.padding(4.dp)
-                )
-            }
-            if (isPaginating) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        /*Create another overlay loader*/
-                        RotatingLoader()
-                    }
-                }
-            }
-        }
-
-        // Detect scroll to bottom
-        LaunchedEffect(listState) {
-            snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
-                .filter { it == syncedPokemons.size - 1 && !isPaginating && !isLoading }
-                .collect {
-                    fetchAPIViewModel.loadNextPage()
-                }
-        }
-    }
-}
-
-/*
-@Composable
-fun AffirmationCard(
-    affirmation: Affirmation,
-    onLikeClicked: () -> Unit,
-    navController: NavHostController,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier
-            .padding(4.dp)
-            .clickable { navController.navigate("pokemonPage") },
-        colors = CardDefaults.cardColors(Color(0xFFFFF9E6)),
-        shape = RectangleShape
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-        ) {
-            // Pokémon image
-            Image(
-                painter = rememberAsyncImagePainter(affirmation.imageResourceId),
-                contentDescription = affirmation.name,
-                modifier = Modifier
-                    .size(90.dp)
-                    .padding(8.dp),
-                contentScale = ContentScale.Crop
-            )
-            // Text and type icons
-            Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 16.dp)
-            ) {
-                Text(
-                    text = affirmation.name,
-                    style = MaterialTheme.typography.headlineSmall
-                )
-                PokemonTypeIcons(types = affirmation.typeIcon)
-            }
-
-            // Like button
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(start = 8.dp)
-            ) {
-                IconButton(onClick = onLikeClicked) {
-                    Icon(
-                        painter = painterResource(
-                            if (affirmation.isLiked) R.drawable.heart_filled else R.drawable.heart_empty
-                        ),
-                        contentDescription = if (affirmation.isLiked) "Unlike" else "Like",
-                        tint = if (affirmation.isLiked) Color(0xFFB11014) else Color(0xFFB11014)
-                    )
-                }
-                Text(
-                    text = "#" + affirmation.number.toString(),
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-            }
-        }
-    }
-}
-
-//Creates the boxes around each type
-@Composable
-fun PokemonTypeIcons(types: List<String>, modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier.padding(4.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        types.forEach { type ->
-            Box(
-                modifier = Modifier
-                    .background(
-                        color = getTypeColor(type),
-                        shape = RoundedCornerShape(8.dp)
-                    )
-                    .padding(horizontal = 12.dp, vertical = 4.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = type,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.White
-                )
-            }
-        }
-    }
-}
-
-//color boxes for the pokemon types
-fun getTypeColor(type: String): Color {
-    return when (type.lowercase()) {
-        "fire" -> Color(0xFFd61717) // Red
-        "grass" -> Color(0xFF89de65) // Green
-        "water" -> Color(0xFF0000FF) // Blue
-        "electric" -> Color(0xFFdddc11) // Yellow
-        "bug" -> Color(0xFFa4c81a) // Light Green
-        "poison" -> Color(0xFF8E44AD) // Purple
-        "ice" -> Color(0xFF00FFFF) // Cyan
-        "normal" -> Color(0xfff68d53) // White
-        "ground" -> Color(0xFF8B4513) // Brown
-        "flying" -> Color(0xFFADD8E6) // Light Blue
-        "fairy" -> Color(0xFFEE99AC) // Pink
-        "fighting" -> Color(0xFFa41353) // Reddish Brown
-        "psychic" -> Color(0xFFFF69B4) // Hot Pink
-        "dragon" -> Color(0xff11ddd6) // Light Blue
-        "dark" -> Color(0xff3f4948) // Dark Gray
-        "ghost" -> Color(0xff6a8180) // Muddy green
-        "rock" -> Color(0xff908065) // Sand brown
-        else -> Color.Gray // Default Gray
-    }
-}
-
- */
-
-
-/*
-*   Column(
+        Column(
             modifier = modifier
                 .fillMaxSize()
                 .background(Color(0xFFD9D9D9))
@@ -317,11 +164,7 @@ fun getTypeColor(type: String): Color {
 
                     IconButton(
                         onClick = {
-                            if(showFilterOverlay){
-                                showFilterOverlay = false
-                            } else {
-                                showFilterOverlay = true
-                            }
+                            showFilterOverlay = !showFilterOverlay
                         },
                         modifier = Modifier.padding(8.dp)
                     ) {
@@ -330,6 +173,12 @@ fun getTypeColor(type: String): Color {
                             contentDescription = "Open Filters"
                         )
                     }
+            }
+            if (showFilterOverlay) {
+                FilterOverlay(
+                    showOverlay = true,
+                    onClose = {showFilterOverlay = false}
+                )
             }
 
             // Show the Pokémon list
@@ -362,17 +211,13 @@ fun getTypeColor(type: String): Color {
                 }
             }
 
-            // Detect when the user scrolls to the bottom
-            LaunchedEffect(listState) {
-                snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
-                    .filter { it == affirmationList.size - 1 && !isPaginating && !isLoading }
-                    .collect {
-                        viewModel.loadNextPage() // Use the helper method
-                    }
-            }
+        // Detect scroll to bottom
+        LaunchedEffect(listState) {
+            snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+                .filter { it == syncedPokemons.size - 1 && !isPaginating && !isLoading }
+                .collect {
+                    fetchAPIViewModel.loadNextPage()
+                }
         }
     }
 }
-
-
-* */
