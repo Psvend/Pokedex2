@@ -31,10 +31,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import com.example.pokedex2.R
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.graphics.RectangleShape
@@ -45,7 +48,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import com.example.pokedex2.model.Affirmation
+import com.example.pokedex2.ui.PokePage.LikeButton
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
 import com.example.pokedex2.utils.RotatingLoader
 import com.example.pokedex2.viewModel.MainPageViewModel
@@ -100,7 +103,7 @@ fun HomePokemonScroll(
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = errorMessage!!,
-                    style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
+                    style = MaterialTheme.typography.bodyMedium, //.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
                     color = Color.Black,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
