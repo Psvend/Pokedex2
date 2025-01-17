@@ -51,9 +51,6 @@ fun Quiz(
     val triggerNextQuistion = remember { mutableStateOf(false) }
     val isClear = remember { mutableStateOf(false) }
 
-
-
-
     LaunchedEffect(Unit) {
         viewModel.fetchPokemonDetail(randomPokemonId.toString())
     }
