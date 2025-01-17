@@ -9,5 +9,3 @@ interface FavouritesRepository {
     suspend fun addFavourite(affirmation: Affirmation)
     suspend fun removeFavourite(affirmationId: Int)
 }
-
-

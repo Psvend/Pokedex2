@@ -23,7 +23,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,16 +53,21 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.pokedex2.R
 import com.example.pokedex2.data.remote.EvolutionDetailUI
+import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.ui.PokemonList.PokemonTypeIcons
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
+import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.PokePageViewModel
+import com.example.pokedex2.viewModel.SyncViewModel
 
 
 @Composable
 fun PokemonPage(
     pokemonIdOrName: String,
     modifier: Modifier = Modifier,
-    viewModel: PokePageViewModel = hiltViewModel()
+    viewModel: PokePageViewModel = hiltViewModel(),
+    syncViewModel: SyncViewModel = hiltViewModel(),
+    fetchAPIViewModel: MainPageViewModel = hiltViewModel()
 ) {
     val pokemonDetail by viewModel.pokemonDetail.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
@@ -68,7 +77,10 @@ fun PokemonPage(
     val evolvesTo by viewModel.evolvesTo.collectAsState()
     val stats by viewModel.pokemonStats.collectAsState()
     val characteristicDescription by viewModel.characteristicDescription.collectAsState()
-
+    val likedPokemons by syncViewModel.pokemonList.collectAsState()  // Observe the liked Pokémon list
+    val isLiked = likedPokemons.any { it.id == pokemonDetail?.id }
+    val apiPokemons by fetchAPIViewModel.apiPokemons.collectAsState(initial = emptyList())
+    val syncedPokemons by syncViewModel.pokemonList.collectAsState(initial = emptyList())
     // Map the evolution data from your API into EvolutionDetailUI objects
     val evolutionDetailsUI = evolvesTo.map { evolution ->
         EvolutionDetailUI(
@@ -78,7 +90,11 @@ fun PokemonPage(
         )
     }
 
+    val affirmation = pokemonDetail?.let { syncViewModel.getAffirmationById(it.id) }
 
+    LaunchedEffect(apiPokemons) {
+        syncViewModel.syncPokemons(apiPokemons)
+    }
     // Fetch Pokémon details when the page is displayed
     LaunchedEffect(pokemonIdOrName) {
         viewModel.fetchPokemonDetail(pokemonIdOrName.lowercase())
@@ -132,6 +148,8 @@ fun PokemonPage(
                 pokemonDetail?.id?.let { id ->
                     PokemonNr(id = id)
                 }
+
+
             }
 
             Spacer(
@@ -142,7 +160,15 @@ fun PokemonPage(
             )
 
 
-            PokemonImage(model = pokemonDetail?.sprites?.front_default)
+            pokemonDetail?.id?.let {
+                if (affirmation != null) {
+                    PokemonImage(
+                        model = pokemonDetail?.sprites?.front_default,
+                        syncViewModel = syncViewModel,
+                        affirmation = affirmation
+                    )
+                }
+            }
 
 
             pokemonDetail?.types?.map { it.type.name }?.let { types ->
@@ -153,11 +179,6 @@ fun PokemonPage(
             Spacer(modifier = Modifier.height(20.dp))
 
             PokemonDescription(description = characteristicDescription)
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-
-            PokemonLocation(locations = pokemonLocations)
 
             Spacer(modifier = Modifier.height(15.dp))
 
@@ -183,6 +204,11 @@ fun PokemonPage(
             Spacer(modifier = Modifier.height(15.dp))
 
             PokemonStatsGraph(stats = stats, viewModel = viewModel)
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+
+            PokemonLocation(locations = pokemonLocations)
 
 
             Spacer(
@@ -228,7 +254,7 @@ fun PokemonNr(id: Int){
 }
 
 @Composable
-fun PokemonImage(model: String?) {
+fun PokemonImage(model: String?, syncViewModel: SyncViewModel, affirmation: Affirmation) {
     Box(
         modifier = Modifier
             .fillMaxWidth() // Ensures the image stays centered horizontally
@@ -265,13 +291,15 @@ fun PokemonImage(model: String?) {
 
         var isLiked by remember { mutableStateOf(false) }
         // LikeButton added directly inside the Box
+
         LikeButton(
-            isLiked = isLiked,
-            onLikeClicked = {isLiked = !isLiked},
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .offset(x = (-25).dp, y = 25.dp) //edit the position of the likebutton inside the box of the pokemon image
-        )
+                .padding(end = 50.dp, top = 20.dp),
+            affirmation = affirmation,
+            onLikeClicked = { syncViewModel.toggleLike(affirmation) },
+
+            )
     }
 }
 
@@ -655,6 +683,7 @@ fun PokemonStatsGraph(stats: List<Pair<String, Int>>, viewModel: PokePageViewMod
     }
 }
 
+/*
 @Composable
 fun LikeButton(
     isLiked: Boolean,
@@ -680,7 +709,63 @@ fun LikeButton(
 }
 
 
+ */
 
+/*
+IconButton(onClick = onLikeClicked) {
+    Icon(
+        painter = painterResource(
+            if (affirmation.isLiked) R.drawable.heart_filled else R.drawable.heart_empty
+        ),
+        contentDescription = if (affirmation.isLiked) "Unlike" else "Like",
+        tint = if (affirmation.isLiked) Color(0xFFB11014) else Color(0xFFB11014)
+    )
+}
+
+onLikeClicked = { syncViewModel.toggleLike(affirmation) },
+
+
+ */
+
+@Composable
+fun LikeButton(
+    modifier: Modifier = Modifier,
+    affirmation: Affirmation,
+    onLikeClicked: () -> Unit,
+    ) {
+    IconButton(onClick = onLikeClicked,
+        modifier = modifier) {
+        Icon(
+            painter = painterResource(
+                if (affirmation.isLiked) R.drawable.heart_filled else R.drawable.heart_empty
+            ),
+            contentDescription = if (affirmation.isLiked) "Unlike" else "Like",
+            tint = if (affirmation.isLiked) Color(0xFFB11014) else Color(0xFFB11014)
+        )
+    }
+}
+
+/*
+@Composable
+fun LikeButton(
+    pokemonId: Int, // Only pass the pokemonId
+    syncViewModel: SyncViewModel
+) {
+    // Get the current isLiked status for the pokemonId
+    val isLiked = syncViewModel.getIsLikedById(pokemonId)
+
+    // Button to toggle the like state
+    IconButton(onClick = {
+        syncViewModel.toggleLikeById(pokemonId)  // Toggle like based on the pokemonId
+    }) {
+        Icon(
+            imageVector = if (isLiked) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+            contentDescription = if (isLiked) "Liked" else "Not Liked"
+        )
+    }
+}
+
+ */
 
 /*
 @Composable
