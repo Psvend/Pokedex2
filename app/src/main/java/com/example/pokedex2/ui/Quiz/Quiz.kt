@@ -177,7 +177,7 @@ fun Quiz(
                     contentAlignment = Alignment.Center
                 ) {
                     AsyncImage(
-                        model = "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdm1wdDhvN3drZjA2Mm5oZzI1OWwyYmVoNnFwY3ZkOGVqMGd3b2JyZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/k8PVqVep8geAy9Tafu/giphy.gif",
+                        model = "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/122.png",
                         contentDescription = "You are a pokemon master",
                         modifier = Modifier
                             .size(240.dp, 240.dp)
@@ -192,7 +192,7 @@ fun Quiz(
                     contentAlignment = Alignment.Center
                 ) {
                     AsyncImage(
-                        model = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYm1sc2ZoMmxmdDQ5cDZkejhtb3VmM2RncGk4ZTk4eTFnNG1vcXBuZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xx0JzzsBXzcMK542tx/giphy.gif",
+                        model = "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/025.png",
                         contentDescription = "You are a pokemon master",
                         modifier = Modifier
                             .size(240.dp, 240.dp)
@@ -206,7 +206,7 @@ fun Quiz(
                     contentAlignment = Alignment.Center
                 ) {
                 AsyncImage(
-                    model = "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdWhsZXE1eGxuMW1uM2lyMjFjZ2NiYml0MGxlbmtmN3BreW13eGp2ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/qoHf1p7uXvna0/giphy.gif",
+                    model = "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/054.png",
                     contentDescription = "You are a pokemon master",
                     modifier = Modifier
                         .size(240.dp, 240.dp)
@@ -215,7 +215,7 @@ fun Quiz(
                 }
             }else {
                 AsyncImage(
-                    model = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWl3eG5tZmhoZ3VlM2p2Ymp5a3RjMDEwYzFjZTJjaHVtbGdlZ2UwZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gZPdvc60v9eygLTsnf/giphy.gif",
+                    model = "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/143.png",
                     contentDescription = "You are a pokemon master",
                     modifier = Modifier
                         .size(240.dp, 240.dp)
