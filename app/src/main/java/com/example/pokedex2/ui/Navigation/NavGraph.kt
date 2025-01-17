@@ -13,11 +13,12 @@ import com.example.pokedex2.ui.PokePage.PokemonPage
 import com.example.pokedex2.ui.PokemonList.FavouritePokemonList
 import com.example.pokedex2.ui.PokemonList.ContentFrame
 import com.example.pokedex2.ui.PokemonList.HomePokemonScroll
-import com.example.pokedex2.ui.PokemonList.MainPageBackGround
-import com.example.pokedex2.viewModel.AffirmationViewModel
+import com.example.pokedex2.ui.Quiz.Quiz
+import com.example.pokedex2.ui.Quiz.StartingScreenForQuiz
+import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.PokePageViewModel
-
-//import com.example.pokedex2.viewModel.PokemonPageViewModel
+import com.example.pokedex2.ui.components.CatchPokemonScreen
+import com.example.pokedex2.viewModel.QuizViewModel
 
 @Composable
 fun NavGraph(
@@ -58,7 +59,7 @@ fun NavGraph(
         }
     }
 }
-//navcontroller from startingscreenforquiz to quiz
+//navController from startingScreenForQuiz to quiz
 @Composable
 fun NavGraph2(
     navController: NavHostController,

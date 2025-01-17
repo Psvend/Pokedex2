@@ -1,10 +1,6 @@
 package com.example.pokedex2.data.mappers
 
 import com.example.pokedex2.data.local.PokemonEntity
-import com.example.pokedex2.data.remote.PokemonDto
-import com.example.pokedex2.data.remote.PokemonType
-import com.example.pokedex2.data.remote.TypeDetail
-import com.example.pokedex2.data.remote.json.Ability
 import com.example.pokedex2.data.remote.json.Animated
 import com.example.pokedex2.data.remote.json.BlackWhite
 import com.example.pokedex2.data.remote.json.Cries
@@ -41,11 +37,10 @@ import com.example.pokedex2.data.remote.json.UltraSunUltraMoon
 import com.example.pokedex2.data.remote.json.Versions
 import com.example.pokedex2.data.remote.json.XY
 import com.example.pokedex2.data.remote.json.Yellow
-import com.example.pokedex2.data.remote.json.testPokemon
-import com.example.pokedex2.model.Pokemon
+import com.example.pokedex2.data.remote.json.PokemonResult
 
-fun PokemonEntity.toTestPokemon(): testPokemon {
-    return testPokemon(
+fun PokemonEntity.toTestPokemon(): PokemonResult {
+    return PokemonResult(
         id = id,
         name = name,
         height = height,
@@ -246,7 +241,7 @@ fun PokemonEntity.toTestPokemon(): testPokemon {
     )
 }
 
-fun testPokemon.toPokemonEntity(): PokemonEntity {
+fun PokemonResult.toPokemonEntity(): PokemonEntity {
     return PokemonEntity(
         id = id,
         name = name,

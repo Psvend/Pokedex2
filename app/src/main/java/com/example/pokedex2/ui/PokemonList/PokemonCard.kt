@@ -93,7 +93,7 @@ fun AffirmationCard(
                             R.font.pressstart2p_regular)
                     ), fontSize = 15.sp)
                 )
-                PokemonTypeIcons(types = affirmation.typeIcon, fontSize = 6.sp)
+                PokemonTypeIcons(types = affirmation.typeIcon, fontSize = 6)
             }
             // Like button and ID
             Column(

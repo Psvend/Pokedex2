@@ -1,6 +1,6 @@
 package com.example.pokedex2.data.remote
 
-import com.example.pokedex2.data.remote.json.testPokemon
+import com.example.pokedex2.data.remote.json.PokemonResult
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -16,7 +16,7 @@ interface PokemonApiService {
     @GET("pokemon/{name}")
     suspend fun getPokemonDetail(
         @Path("name") name: String
-    ): testPokemon
+    ): PokemonResult
 
 
     @GET
@@ -43,7 +43,7 @@ interface PokemonApiService {
     @GET("pokemon/{name}")
     suspend fun getPokemonStats(
         @Path("name") name: String
-    ): testPokemon
+    ): PokemonResult
 
     @GET("characteristic/{id}/")
     suspend fun getCharacteristic(
