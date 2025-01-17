@@ -20,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -141,27 +140,27 @@ fun TopBar(
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                                 contentDescription = "Go Back",
-                                tint = Color.White, // Ensure the arrow is visible
+                                tint = Color.White,
                                 modifier = Modifier
-                                    .size(40.dp) // Icon size
+                                    .size(40.dp)
                             )
                         }
 
                         // Overlay for shiny effect
                         Canvas(
                             modifier = Modifier.matchParentSize()
-                                .border(3.dp, Color(0xFF610003), CircleShape) // Add a red border
+                                .border(3.dp, Color(0xFF610003), CircleShape)
 
                         ) {
                             drawCircle(
                                 brush = Brush.linearGradient(
                                     colors = listOf(
-                                        Color.White.copy(alpha = 0.8f), // Inner shiny effect
+                                        Color.White.copy(alpha = 0.8f),
                                         Color.White.copy(alpha = 0.0f),
-                                        Color.Black.copy(alpha = 0.6f) // Fade outward
+                                        Color.Black.copy(alpha = 0.6f)
                                     ),
-                                    start = Offset(0f, 0f), // Top-left for shine
-                                    end = Offset(size.width, size.height) // Bottom-right for shadow
+                                    start = Offset(0f, 0f),
+                                    end = Offset(size.width, size.height)
                                 ),
                                 radius = size.minDimension / 2
                             )
@@ -197,7 +196,7 @@ fun TopBar(
 fun CircleDot(sizeOfDot: Int, dotColorInner: Color) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.size(sizeOfDot.dp).padding(1.dp)// Button size
+        modifier = Modifier.size(sizeOfDot.dp).padding(1.dp)
     ) {
         // Button with border and base color
         Button(
@@ -211,18 +210,18 @@ fun CircleDot(sizeOfDot: Int, dotColorInner: Color) {
         // Overlay for shiny effect
         Canvas(
             modifier = Modifier.matchParentSize()
-                .border(2.dp, Color(0xFF610003), CircleShape) // Add a red border
+                .border(2.dp, Color(0xFF610003), CircleShape)
 
         ) {
             drawCircle(
                 brush = Brush.linearGradient(
                     colors = listOf(
-                        Color.White.copy(alpha = 0.8f), // Inner shiny effect
+                        Color.White.copy(alpha = 0.8f),
                         Color.White.copy(alpha = 0.0f),
-                        Color.Black.copy(alpha = 0.6f) // Fade outward
+                        Color.Black.copy(alpha = 0.6f)
                     ),
-                    start = Offset(0f, 0f), // Top-left for shine
-                    end = Offset(size.width, size.height) // Bottom-right for shadow
+                    start = Offset(0f, 0f),
+                    end = Offset(size.width, size.height)
                 ),
                 radius = size.minDimension / 2
             )
