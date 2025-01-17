@@ -52,7 +52,6 @@ fun AffirmationCard(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    //var isLiked by remember { mutableStateOf(affirmation.isLiked) }
 
     Card(
         modifier = modifier
@@ -88,12 +87,9 @@ fun AffirmationCard(
             ) {
                 Text(
                     text = affirmation.name,
-                    style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily(
-                        Font(
-                            R.font.pressstart2p_regular)
-                    ), fontSize = 15.sp)
+                    fontSize = 25.sp
                 )
-                PokemonTypeIcons(types = affirmation.typeIcon, fontSize = 6)
+                PokemonTypeIcons(types = affirmation.typeIcon, fontSize = 10)
             }
             // Like button and ID
             Column(
