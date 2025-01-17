@@ -1,5 +1,4 @@
 package com.example.pokedex2.ui.Quiz
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -29,9 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
@@ -50,13 +47,27 @@ fun Quiz(
     val selectedAnswer = remember { mutableStateOf<String?>(null) }
     val triggerNextQuistion = remember { mutableStateOf(false) }
     val isClear = remember { mutableStateOf(false) }
+    val answerCounts = remember { mutableIntStateOf(0) }
+    val maxQuestions=10
+    val time = remember { mutableIntStateOf(0) }
+    val isTimeOut = remember { mutableStateOf(true) }
+
+    LaunchedEffect(isTimeOut.value) {
+        if (isTimeOut.value) {
+         while (isTimeOut.value) {
+             kotlinx.coroutines.delay(1000)
+             time.value += 1
+
+         }
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.fetchPokemonDetail(randomPokemonId.toString())
     }
 
     LaunchedEffect (triggerNextQuistion.value) {
-        if (triggerNextQuistion.value) {
+        if (triggerNextQuistion.value && answerCounts.value < maxQuestions) {
             isClear.value = true
             kotlinx.coroutines.delay(1000)
             isClear.value = false
@@ -64,6 +75,10 @@ fun Quiz(
             triggerNextQuistion.value = false
             val randomPokemonId = viewModel.getRandomPokemonId()
             viewModel.fetchPokemonDetail(randomPokemonId.toString())
+            answerCounts.value += 1
+            if (answerCounts.value == maxQuestions) {
+                isTimeOut.value = false
+            }
         }
     }
     val answerOptions = remember(pokemonDetail.value, pokemonNames.value) {
@@ -76,7 +91,8 @@ fun Quiz(
     }
     Column (modifier = modifier.fillMaxSize()
         .background(Color(0xFFFFF9E6))
-        .padding(16.dp),
+        .padding(8.dp),
+
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Spacer(modifier = Modifier.height(80.dp))
@@ -87,55 +103,137 @@ fun Quiz(
             color = Color.Black,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp),
+                .padding(top = 8.dp),
             textAlign = TextAlign.Center
         )
+        if (answerCounts.value < maxQuestions) {
 
-        QuizImagae(model = pokemonDetail.value?.sprites?.front_default, isClear = isClear.value)
+            QuizImagae(model = pokemonDetail.value?.sprites?.front_default, isClear = isClear.value)
 
+            Text(
+                text = "Score: ${points.value}",
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.Black,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                textAlign = TextAlign.Center
+            )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                answerOptions.forEach { option ->
+                    Button(
+                        onClick = {
+                            selectedAnswer.value = option
+                            if (option == pokemonDetail.value?.name) {
+                                points.value += 1
+                            }
+                            triggerNextQuistion.value = true
 
-        Text(
-            text =  "Score: ${points.value}",
-            style = MaterialTheme.typography.bodyLarge,
-            color = Color.Black,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            textAlign = TextAlign.Center
-        )
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-                    answerOptions.forEach { option ->
-                        Button(
-                            onClick = {
-                                selectedAnswer.value = option
-                               if (option == pokemonDetail.value?.name) {
-                                   points.value += 1
-                               }
-                                triggerNextQuistion.value = true
-
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = when {
+                                selectedAnswer.value == option && option == pokemonDetail.value?.name -> Color.Green
+                                selectedAnswer.value == option -> Color.Red
+                                else -> Color.Blue
                             },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = when {
-                                    selectedAnswer.value == option && option == pokemonDetail.value?.name -> Color.Green
-                                    selectedAnswer.value == option -> Color.Red
-                                    else -> Color.Blue
-                                },
-                                contentColor = Color.White
-                            ),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Text(text = option
-                                )
+                            contentColor = Color.White
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 2.dp)
+                    ) {
+                        Text(
+                            text = option
+                        )
+                    }
+                }
             }
+
+        }else {
+            Text(
+                text = "Game Over",
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.Black,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = "Your score is: ${points.value}",
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.Black,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                textAlign = TextAlign.Center
+            )
+            if(points.intValue==0){
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    AsyncImage(
+                        model = "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/122.png",
+                        contentDescription = "You are a pokemon master",
+                        modifier = Modifier
+                            .size(240.dp, 240.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                    )
+                }
+            }
+            else if (time.intValue<30){
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    AsyncImage(
+                        model = "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/025.png",
+                        contentDescription = "You are a pokemon master",
+                        modifier = Modifier
+                            .size(240.dp, 240.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                    )
+                }
+            }else if(time.intValue in 31..59){
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                AsyncImage(
+                    model = "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/054.png",
+                    contentDescription = "You are a pokemon master",
+                    modifier = Modifier
+                        .size(240.dp, 240.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                )
+                }
+            }else {
+                AsyncImage(
+                    model = "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/143.png",
+                    contentDescription = "You are a pokemon master",
+                    modifier = Modifier
+                        .size(240.dp, 240.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                )
+            }
+                Text(
+                text = "Time: ${time.value} seconds",
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.Black,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                textAlign = TextAlign.Center
+            )
         }
     }
-
-}
 }
 @Composable
 fun QuizImagae(model : String?, isClear: Boolean) {
@@ -143,7 +241,6 @@ fun QuizImagae(model : String?, isClear: Boolean) {
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
 
         Box(
             modifier = Modifier
@@ -174,12 +271,3 @@ fun QuizImagae(model : String?, isClear: Boolean) {
         }
     }
 }
-
-
-    @Preview
-    @Composable
-    fun QuizPreview() {
-val viewModel: QuizViewModel = hiltViewModel()
-
-        Quiz(viewModel)
-    }

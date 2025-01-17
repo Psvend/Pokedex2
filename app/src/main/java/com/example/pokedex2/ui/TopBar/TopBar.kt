@@ -19,6 +19,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -40,6 +46,13 @@ import com.example.pokedex2.R
 fun TopBar(
     navController: NavHostController
 ){
+    var currentRoute by remember { mutableStateOf(navController.currentDestination?.route) }
+
+    LaunchedEffect(navController) {
+        navController.currentBackStackEntryFlow.collect { backStackEntry ->
+            currentRoute = backStackEntry.destination.route
+        }
+    }
     Column {
         Box(
             contentAlignment = Alignment.Center,
@@ -124,7 +137,7 @@ fun TopBar(
                                 .matchParentSize()
                         ) { }
 
-                        if (navController.currentDestination?.route != "mainPage") {
+                        if (currentRoute != "mainPage" && currentRoute != "startingScreenForQuiz") {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                                 contentDescription = "Go Back",
