@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,9 +24,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -40,10 +38,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -71,6 +68,7 @@ fun PokemonPage(
     val growthRate by viewModel.growthRate.collectAsState()
     val evolvesTo by viewModel.evolvesTo.collectAsState()
     val stats by viewModel.pokemonStats.collectAsState()
+    val characteristicDescription by viewModel.characteristicDescription.collectAsState()
 
     // Map the evolution data from your API into EvolutionDetailUI objects
     val evolutionDetailsUI = evolvesTo.map { evolution ->
@@ -91,6 +89,13 @@ fun PokemonPage(
         viewModel.fetchPokemonStats(pokemonIdOrName.lowercase())
     }
 
+    //Fetch pokemon description
+    LaunchedEffect(pokemonDetail?.id) {
+        pokemonDetail?.id?.let { id ->
+            viewModel.fetchCharacteristic(id)
+        }
+    }
+
     // Fetch encounter locations
     LaunchedEffect(pokemonDetail?.location_area_encounters) {
         pokemonDetail?.location_area_encounters?.let { url ->
@@ -100,7 +105,6 @@ fun PokemonPage(
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
             .background(Color(0xffeae6d5)) // Set the full background color here
     ) {
         Column(
@@ -108,15 +112,16 @@ fun PokemonPage(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 25.dp)
-            //.background(Color(0xffeae6d5)) //or remove if back to original blue color
         ) {
 
             // Header Section
-            Box(
+           Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(140.dp)
-            )
+           )
+
+
 
 
             // Top Section - Name and Number
@@ -140,14 +145,17 @@ fun PokemonPage(
             )
 
 
-
             PokemonImage(model = pokemonDetail?.sprites?.front_default)
 
 
             pokemonDetail?.types?.map { it.type.name }?.let { types ->
-                PokemonTypeIcons(types = types, fontSize = 10.sp)
+                PokemonTypeIcons(types = types, fontSize = 10)
             }
 
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            PokemonDescription(description = characteristicDescription)
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -164,7 +172,16 @@ fun PokemonPage(
 
             Spacer(modifier = Modifier.height(15.dp))
 
-            PokemonEvolvesTo(evolvesTo = evolutionDetailsUI)
+            //PokemonEvolvesTo(evolvesTo = evolutionDetailsUI)
+            PokemonEvolvesTo(
+                evolvesTo = evolutionDetailsUI,
+                currentPokemon = EvolutionDetailUI(
+                    name = pokemonDetail?.name?.capitalizeFirstLetter() ?: "Unknown",
+                    imageUrl = pokemonDetail?.sprites?.front_default ?: "",
+                    requirement = "This is the final form"
+                )
+            )
+
 
             Spacer(modifier = Modifier.height(15.dp))
 
@@ -190,24 +207,8 @@ fun PokemonName(name: String) {
             text = name.capitalizeFirstLetter() ?: "Loading...",
             style = TextStyle(
                 fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), // Replace with your retro font file name
-                color = Color.DarkGray,
-                )
-        )
-    }
-}
-
-
-/*
-@Composable
-fun PokemonName(name: String) {
-    Column {
-        Text(
-            text = name.capitalizeFirstLetter() ?: "Loading...",
-            style = TextStyle(
-                fontSize = 24.sp,
-                fontFamily = FontFamily.Default
+                fontFamily = FontFamily.Default,
+                color = Color.DarkGray
             ),
             color = Color.DarkGray
         )
@@ -216,8 +217,6 @@ fun PokemonName(name: String) {
 
 
 
- */
-
 @Composable
 fun PokemonNr(id: Int){
     Column {
@@ -225,7 +224,7 @@ fun PokemonNr(id: Int){
             text = "#$id" ?: "Loading...",
             style = TextStyle(
                 fontSize = 24.sp,
-                fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
             ),
             color = Color.DarkGray
         )
@@ -268,14 +267,56 @@ fun PokemonImage(model: String?) {
             }
         }
 
+        var isLiked by remember { mutableStateOf(false) }
         // LikeButton added directly inside the Box
         LikeButton(
+            isLiked = isLiked,
+            onLikeClicked = {isLiked = !isLiked},
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .offset(x = (-25).dp, y = 25.dp) //edit the position of the likebutton inside the box of the pokemon image
         )
     }
 }
+
+
+@Composable
+fun PokemonDescription(
+    title: String = "Characteristic",
+    description: String,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = Modifier
+            .padding(5.dp)
+            .fillMaxWidth()
+            .background(Color(0xFFf0ecdd), shape = RoundedCornerShape(12.dp)) // Add a rounded box
+            .padding(16.dp) // Inner padding within the rounded box
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        ) {
+            Text(
+                text = "Characteristic",
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color.DarkGray
+                ),
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+
+            Text(
+                text = description,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = Color.DarkGray
+                )
+            )
+        }
+    }
+}
+
 
 
 
@@ -298,7 +339,7 @@ fun PokemonLocation(locations: List<String>) {
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.Bold,
                     color = Color.DarkGray,
-                    fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                    //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
                 ),
                 textAlign = TextAlign.Start,
                 modifier = Modifier.padding(bottom = 4.dp)
@@ -306,15 +347,21 @@ fun PokemonLocation(locations: List<String>) {
 
             if (locations.isEmpty()) {
                 Text(
-                    text = "No encounter data available",
-                    style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
+                    text = "This pokemon don't have specific encounter locations",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = Color.DarkGray
+                        //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                    ),
                     textAlign = TextAlign.Start
                 )
             } else {
                 locations.forEach { location ->
                     Text(
                         text = location,
-                        style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = Color.DarkGray
+                            //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                        ),
                         textAlign = TextAlign.Start,
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
@@ -346,7 +393,7 @@ fun PokemonAbilities(abilities: List<String>) {
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.Bold,
                     color = Color.DarkGray,
-                    fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                    //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
                 ),
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -354,13 +401,19 @@ fun PokemonAbilities(abilities: List<String>) {
             if (abilities.isEmpty()) {
                 Text(
                     text = "No abilities available",
-                    style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)))
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                            color = Color.DarkGray
+                    //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                    ),
                 )
             } else {
                 abilities.forEach { ability ->
                     Text(
                         text = ability.capitalizeFirstLetter(),
-                        style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = Color.DarkGray
+                            //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                        ),
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
                 }
@@ -390,7 +443,7 @@ fun PokemonGrowthRate(growthRate: String, viewModel: PokePageViewModel) {
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.Bold,
                     color = Color.DarkGray,
-                    fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                    //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
                 )
             )
 
@@ -433,9 +486,9 @@ fun PokemonGrowthRate(growthRate: String, viewModel: PokePageViewModel) {
                 Text(
                     text = growthRate.capitalizeFirstLetter(),
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = Color.DarkGray,
-                        fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                        //fontWeight = FontWeight.Bold,
+                        color = Color.Gray,
+                        //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
                     )
                 )
             }
@@ -443,9 +496,8 @@ fun PokemonGrowthRate(growthRate: String, viewModel: PokePageViewModel) {
     }
 }
 
-
 @Composable
-fun PokemonEvolvesTo(evolvesTo: List<EvolutionDetailUI>, modifier: Modifier = Modifier) {
+fun PokemonEvolvesTo(evolvesTo: List<EvolutionDetailUI>, currentPokemon: EvolutionDetailUI, modifier: Modifier = Modifier) {
     Box(
         modifier = Modifier
             .padding(5.dp)
@@ -462,18 +514,47 @@ fun PokemonEvolvesTo(evolvesTo: List<EvolutionDetailUI>, modifier: Modifier = Mo
                 text = "Evolution",
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    color = Color.DarkGray,
-                    fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                    color = Color.DarkGray
                 ),
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
             if (evolvesTo.isEmpty() || (evolvesTo.size == 1 && evolvesTo[0].name == "Max Evolution")) {
-                Text(
-                    text = "This is the final form",
-                    style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
-                    color = Color.Gray
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Image of the max evolution
+                    AsyncImage(
+                        model = currentPokemon.imageUrl, // Use the current Pokémon's image
+                        contentDescription = "Max evolution sprite",
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(CircleShape)
+                            .background(Color.LightGray)
+                            .padding(8.dp)
+                    )
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    // Max Evolution Details
+                    Column {
+                        Text(
+                            text = currentPokemon.name, // Use the current Pokémon's name
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = Color.DarkGray
+                            )
+                        )
+
+                        Text(
+                            text = "This is the final form",
+                            style = MaterialTheme.typography.bodyMedium.copy(color = Color.Gray)
+                        )
+                    }
+                }
             } else {
                 evolvesTo.forEach { evolution ->
                     Row(
@@ -501,14 +582,13 @@ fun PokemonEvolvesTo(evolvesTo: List<EvolutionDetailUI>, modifier: Modifier = Mo
                                 text = evolution.name,
                                 style = MaterialTheme.typography.bodyLarge.copy(
                                     fontWeight = FontWeight.Bold,
-                                    color = Color.DarkGray,
-                                    fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                                    color = Color.DarkGray
                                 )
                             )
 
                             Text(
                                 text = evolution.requirement,
-                                style = MaterialTheme.typography.bodyMedium.copy(color = Color.Gray, fontFamily = FontFamily(Font(R.font.pressstart2p_regular)))
+                                style = MaterialTheme.typography.bodyMedium.copy(color = Color.Gray)
                             )
                         }
                     }
@@ -517,6 +597,7 @@ fun PokemonEvolvesTo(evolvesTo: List<EvolutionDetailUI>, modifier: Modifier = Mo
         }
     }
 }
+
 
 
 
@@ -539,7 +620,7 @@ fun PokemonStatsGraph(stats: List<Pair<String, Int>>, viewModel: PokePageViewMod
                 style = MaterialTheme.typography.headlineSmall.copy(
                     fontWeight = FontWeight.Bold,
                     color = Color.DarkGray,
-                    fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
+                    //fontFamily = FontFamily(Font(R.font.pressstart2p_regular))
                 ),
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -552,7 +633,7 @@ fun PokemonStatsGraph(stats: List<Pair<String, Int>>, viewModel: PokePageViewMod
                 ) {
                     Text(
                         text = name,
-                        style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
+                        style = MaterialTheme.typography.bodyMedium, //.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
                         modifier = Modifier.padding(bottom = 4.dp),
                         color = Color.DarkGray
                     )
@@ -577,7 +658,7 @@ fun PokemonStatsGraph(stats: List<Pair<String, Int>>, viewModel: PokePageViewMod
 
                     Text(
                         text = value.toString(),
-                        style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
+                        style = MaterialTheme.typography.bodySmall, //.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
                         modifier = Modifier.align(Alignment.End),
                         color = Color.DarkGray
                     )
@@ -587,25 +668,97 @@ fun PokemonStatsGraph(stats: List<Pair<String, Int>>, viewModel: PokePageViewMod
     }
 }
 
-
-
 @Composable
-fun LikeButton(modifier: Modifier = Modifier) {
-    var isSelect by remember { mutableStateOf(false) }
+fun LikeButton(
+    isLiked: Boolean,
+    onLikeClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val interactionSource = remember { MutableInteractionSource() } // To disable ripple effect
+
     Icon(
-        imageVector = if (isSelect) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-        contentDescription = if (isSelect) "Like" else "Unlike",
-        tint = if (isSelect) Color(0xffa21813) else Color.Gray,
+        painter = painterResource(
+            id = if (isLiked) R.drawable.heart_filled else R.drawable.heart_empty
+        ),
+        contentDescription = if (isLiked) "Unlike" else "Like",
+        tint = Color(0xFFB11014), // Set the desired tint color
         modifier = modifier
-            .size(40.dp)
-            .clickable { isSelect = !isSelect }
+            .size(40.dp) // Adjust size as needed
+            .clickable(
+                onClick = onLikeClicked,
+                interactionSource = interactionSource,
+                indication = null // Disable the ripple effect
+            )
     )
 }
 
 
 
 
+/*
+@Composable
+fun LikeButton(
+    isLiked: Boolean,
+    onLikeClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+
+    IconButton(
+        onClick = onLikeClicked,
+        modifier = modifier
+            .size(40.dp) // Adjust size as needed
+
+    ) {
+        Icon(
+            painter = painterResource(
+                id = if (isLiked) R.drawable.heart_filled else R.drawable.heart_empty
+            ),
+            contentDescription = if (isLiked) "Unlike" else "Like",
+            tint = Color(0xFFB11014) // Set the desired tint color
+        )
+    }
+}
 
 
+ */
+/*
+
+@Composable
+fun LikeButton(modifier: Modifier = Modifier) {
+    var isSelect by remember { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
+
+    Box(modifier = modifier) {
+        if (isSelect) {
+            Icon(
+                imageVector = Icons.Filled.Favorite,
+                contentDescription = "Like",
+                tint = Color(0xFFB11014),
+                modifier = Modifier
+                    .size(40.dp)
+                    .clickable(
+                        interactionSource = interactionSource,
+                        indication = null // Disable the ripple effect
+                    ) { isSelect = !isSelect }
+            )
+        } else {
+            Icon(
+                imageVector = Icons.Outlined.FavoriteBorder,
+                contentDescription = "Unlike",
+                tint = Color(0xFFB11014),  //Color.Gray
+                modifier = Modifier
+                    .size(40.dp)
+                    .clickable(
+                        interactionSource = interactionSource,
+                        indication = null // Disable the ripple effect
+                    ) { isSelect = !isSelect }
+            )
+        }
+    }
+}
+
+
+
+ */
 
 

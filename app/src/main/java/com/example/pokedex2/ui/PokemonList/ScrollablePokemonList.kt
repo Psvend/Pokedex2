@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.example.pokedex2.ui.PokePage.LikeButton
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
 import com.example.pokedex2.utils.RotatingLoader
 import kotlinx.coroutines.flow.filter
@@ -104,7 +105,7 @@ fun HomePokemonScroll(
                 // Error message
                 Text(
                     text = errorMessage,
-                    style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
+                    style = MaterialTheme.typography.bodyMedium, //.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular))),
                     color = Color.Black,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )

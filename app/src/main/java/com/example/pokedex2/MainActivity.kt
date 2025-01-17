@@ -26,7 +26,6 @@ import com.example.pokedex2.ui.theme.Pokedex2Theme
 import com.example.pokedex2.utils.RotatingLoader
 import com.example.pokedex2.viewModel.MenuBarViewModel
 import com.example.pokedex2.viewModel.PokeViewModel
-import com.example.pokedex2.viewModel.QuizViewModel
 import com.example.pokedex2.viewModel.TopBarViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -54,7 +53,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     topBar = {
                         TopBar(
-                            viewModel = topBarViewModel,
                             navController = navController
                         )
                     },
@@ -80,6 +78,4 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-
 
