@@ -19,15 +19,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.pokedex2.model.LocalPokeTypes
+import com.example.pokedex2.model.LocalGenerations
 import com.example.pokedex2.utils.RotatingLoader
 
-/*
+
 @Composable
 fun GenerationGrid(
     modifier: Modifier = Modifier,
-    selectionMap: Map<Int, Boolean>,
+    generations: List<LocalGenerations>,
+    selectionGenerationMap: Map<Int, Boolean>,
     onToggleSelection: (Int) -> Unit,
+    getGenColor: (Int) -> Color
 ) {
     LazyVerticalStaggeredGrid(
         modifier = modifier
@@ -37,27 +39,36 @@ fun GenerationGrid(
         horizontalArrangement = Arrangement.spacedBy(20.dp),
         verticalItemSpacing = 16.dp
     ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(3.0f)
-                    .border(1.dp, Color.White, RoundedCornerShape(25.dp))
-                    .background(
-                        color = Color(0xFFE55655),
-                        shape = RoundedCornerShape(25.dp)
-                    )
-                    .clickable {
-                        onToggleSelection(localPokeType.id)
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-
-                Text(
-                    text = localPokeType.name,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = if (isSelected) Color.Black else Color.White
-                )
+        if (generations.isEmpty()) {
+            item {
+                RotatingLoader() // Show a loader while the data is empty
             }
+        }
+        items(generations) { localGeneration ->
+            val isSelected = selectionGenerationMap[localGeneration.id] ?: false
 
-    }
-}*/
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(3.0f)
+                        .border(1.dp, Color.White, RoundedCornerShape(25.dp))
+                        .background(
+                            color = getGenColor(localGeneration.id),
+                            shape = RoundedCornerShape(25.dp)
+                        )
+                        .clickable {
+                            onToggleSelection(localGeneration.id)
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+
+                    Text(
+                        text = localGeneration.generation,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = if (isSelected) Color(0xFFFFD88E) else Color.White
+                    )
+                }
+            }
+        }
+
+}

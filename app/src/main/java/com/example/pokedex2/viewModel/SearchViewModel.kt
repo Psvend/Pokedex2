@@ -16,7 +16,7 @@ class SearchViewModel : ViewModel() {
     val pokeGenerations = mutableStateOf<List<LocalGenerations>>(emptyList())
     val isLoading = mutableStateOf(true)
     val selectionMap = mutableStateMapOf<Int, Boolean>()
-    val selectionGenerationMap = mutableStateMapOf<String, Boolean>()
+    val selectionGenerationMap = mutableStateMapOf<Int, Boolean>()
     var searchQuery = mutableStateOf("Name, number or description")
     var active = mutableStateOf(false)
     var showDialog = mutableStateOf(false)
@@ -25,6 +25,7 @@ class SearchViewModel : ViewModel() {
     init {
         Log.d("SearchViewModel", "Initializing ViewModel...")
         loadTypes()
+        loadGenerations()
     }
 
     private fun loadTypes() {
@@ -53,8 +54,8 @@ class SearchViewModel : ViewModel() {
         //Log generations
         Log.d("SearchViewModel", "Generations loaded: $generations")
 
-        generations.forEach {generations->
-            selectionGenerationMap[generations.generation] = false
+        generations.forEach {generation->
+            selectionGenerationMap[generation.id] = false
         }
 
         isLoading.value = false
@@ -68,6 +69,14 @@ class SearchViewModel : ViewModel() {
         }
     }
 
+    fun getGenColor(genId: Int): Color {
+        return if (selectionGenerationMap[genId] == true) {
+            Color(0xFFE55655)
+        } else {
+            Color.DarkGray
+        }
+    }
+
     fun clearSearch() {
         searchQuery.value = ""
         active.value = false
@@ -76,8 +85,14 @@ class SearchViewModel : ViewModel() {
     }
 
     fun toggleSelection(id: Int) {
-        selectionMap[id] = !(selectionMap[id] ?: false)
+        if (id <= 18) {
+            selectionMap[id] = !(selectionMap[id] ?: false)
+        } else if (id in 19..26){
+            selectionGenerationMap[id] = !(selectionGenerationMap[id] ?: false)
+        }
     }
+
+
 
     fun selectAll() {
         pokeTypes.value.forEach { selectionMap[it.id] = true }

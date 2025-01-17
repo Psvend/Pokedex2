@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -39,6 +38,8 @@ fun FilterOverlay(
     val selectionMap = searchViewModel.selectionMap
     val allTypesSelected = selectionMap.values.all { it } // Check if all are selected
     val pokeTypes = searchViewModel.pokeTypes.value
+    val pokeGen = searchViewModel.pokeGenerations.value
+    val selectionGenMap = searchViewModel.selectionGenerationMap
 
     if(showOverlay){
         Box(
@@ -72,37 +73,7 @@ fun FilterOverlay(
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-                Box(
-                    modifier = Modifier
-                        //.background(Color(0xFFE55655))
-                        .align(Alignment.Start)
-                ){
-                    Text(
-                        modifier = Modifier.padding(6.dp),
-                        text = "Selected Types:",
-                        color = Color.Black,
-                        //color = Color(0xFFFFD88E),
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                Spacer(modifier = Modifier.height(8.dp))
 
-                Box(
-                    modifier = Modifier
-                        //.background(Color(0xFFE55655))
-                        .align(Alignment.Start)
-                ){
-                    Text(
-                        modifier = Modifier.padding(6.dp),
-                        text = "Types:",
-                        color = Color.Black,
-                        //color = Color(0xFFFFD88E),
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
 
                 when {
                     isLoading -> {
@@ -126,12 +97,47 @@ fun FilterOverlay(
                     }
 
                     else -> {
+                        Box(
+                            modifier = Modifier
+                                //.background(Color(0xFFE55655))
+                                .align(Alignment.Start)
+                        ){
+                            Text(
+                                modifier = Modifier.padding(6.dp),
+                                text = "Types:",
+                                color = Color.Black,
+                                //color = Color(0xFFFFD88E),
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                         TypeGrid(
                             modifier = Modifier,
                             pokeTypes = pokeTypes,
                             selectionMap = selectionMap,
                             onToggleSelection = { id -> searchViewModel.toggleSelection(id) },
                             getTypeColor = { id, color -> searchViewModel.getTypeColor(id, color) }
+                        )
+                        Box(
+                            modifier = Modifier
+                                //.background(Color(0xFFE55655))
+                                .align(Alignment.Start)
+                        ){
+                            Text(
+                                modifier = Modifier.padding(6.dp),
+                                text = "Generations:",
+                                color = Color.Black,
+                                //color = Color(0xFFFFD88E),
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        GenerationGrid(
+                            modifier = Modifier,
+                            generations = pokeGen,
+                            selectionGenerationMap = selectionGenMap,
+                            onToggleSelection = {id -> searchViewModel.toggleSelection(id)},
+                            getGenColor = {id -> searchViewModel.getGenColor(id)}
                         )
                     }
                 }
