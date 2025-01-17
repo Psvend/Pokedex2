@@ -35,8 +35,8 @@ fun GenerationGrid(
         modifier = modifier
             //.weight(1f)
             .padding(horizontal = 18.dp, vertical = 5.dp),
-        columns = StaggeredGridCells.Fixed(3),
-        horizontalArrangement = Arrangement.spacedBy(20.dp),
+        columns = StaggeredGridCells.Fixed(5),
+        horizontalArrangement = Arrangement.spacedBy(15.dp),
         verticalItemSpacing = 16.dp
     ) {
         if (generations.isEmpty()) {
@@ -50,7 +50,7 @@ fun GenerationGrid(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .aspectRatio(3.0f)
+                        .aspectRatio(2.0f)
                         .border(1.dp, Color.White, RoundedCornerShape(25.dp))
                         .background(
                             color = getGenColor(localGeneration.id),
