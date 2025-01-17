@@ -6,7 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.pokedex2.data.DataPokeTypes
 import androidx.compose.ui.graphics.Color
+import com.example.pokedex2.data.DataPokeEvolutions
 import com.example.pokedex2.data.DataPokeGenerations
+import com.example.pokedex2.model.LocalEvolution
 import com.example.pokedex2.model.LocalGenerations
 import com.example.pokedex2.model.LocalPokeTypes
 
@@ -14,9 +16,11 @@ import com.example.pokedex2.model.LocalPokeTypes
 class SearchViewModel : ViewModel() {
     val pokeTypes = mutableStateOf<List<LocalPokeTypes>>(emptyList())
     val pokeGenerations = mutableStateOf<List<LocalGenerations>>(emptyList())
+    val pokeEvolutions = mutableStateOf<List<LocalEvolution>>(emptyList())
     val isLoading = mutableStateOf(true)
     val selectionMap = mutableStateMapOf<Int, Boolean>()
-    val selectionGenerationMap = mutableStateMapOf<Int, Boolean>()
+    val selectionGenMap = mutableStateMapOf<Int, Boolean>()
+    val selectionEvoMap = mutableStateMapOf<Int, Boolean>()
     var searchQuery = mutableStateOf("Name, number or description")
     var active = mutableStateOf(false)
     var showDialog = mutableStateOf(false)
@@ -26,6 +30,7 @@ class SearchViewModel : ViewModel() {
         Log.d("SearchViewModel", "Initializing ViewModel...")
         loadTypes()
         loadGenerations()
+        loadEvolutions()
     }
 
     private fun loadTypes() {
@@ -55,7 +60,22 @@ class SearchViewModel : ViewModel() {
         Log.d("SearchViewModel", "Generations loaded: $generations")
 
         generations.forEach {generation->
-            selectionGenerationMap[generation.id] = false
+            selectionGenMap[generation.id] = false
+        }
+
+        isLoading.value = false
+    }
+
+    private fun loadEvolutions() {
+        Log.d("SearchViewModel", "Loading evolutions...")
+        val evolutions = DataPokeEvolutions().loadEvolutions()
+        pokeEvolutions.value = evolutions
+
+        //Log generations
+        Log.d("SearchViewModel", "Evolutions loaded: $evolutions")
+
+        evolutions.forEach {evolution->
+            selectionEvoMap[evolution.id] = false
         }
 
         isLoading.value = false
@@ -69,8 +89,8 @@ class SearchViewModel : ViewModel() {
         }
     }
 
-    fun getGenColor(genId: Int): Color {
-        return if (selectionGenerationMap[genId] == true) {
+    fun getButtonColor(id: Int): Color {
+        return if (selectionGenMap[id] == true ||selectionEvoMap[id] == true) {
             Color(0xFFE55655)
         } else {
             Color.DarkGray
@@ -88,7 +108,9 @@ class SearchViewModel : ViewModel() {
         if (id <= 18) {
             selectionMap[id] = !(selectionMap[id] ?: false)
         } else if (id in 19..26){
-            selectionGenerationMap[id] = !(selectionGenerationMap[id] ?: false)
+            selectionGenMap[id] = !(selectionGenMap[id] ?: false)
+        } else if (id in 27..29){
+            selectionEvoMap[id] = !(selectionEvoMap[id] ?: false)
         }
     }
 

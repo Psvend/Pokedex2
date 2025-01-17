@@ -36,10 +36,15 @@ fun FilterOverlay(
 ) {
     val isLoading = searchViewModel.isLoading.value
     val selectionMap = searchViewModel.selectionMap
+    val selectionGenMap = searchViewModel.selectionGenMap
+    val selectionEvoMap = searchViewModel.selectionEvoMap
     val allTypesSelected = selectionMap.values.all { it } // Check if all are selected
+    val allGensSelected = selectionGenMap.values.all {it}
+    val allEvosSelected = selectionEvoMap.values.all {it}
     val pokeTypes = searchViewModel.pokeTypes.value
-    val pokeGen = searchViewModel.pokeGenerations.value
-    val selectionGenMap = searchViewModel.selectionGenerationMap
+    val pokeGens = searchViewModel.pokeGenerations.value
+    val pokeEvos = searchViewModel.pokeEvolutions.value
+
 
     if(showOverlay){
         Box(
@@ -140,10 +145,31 @@ fun FilterOverlay(
                         }
                         GenerationGrid(
                             modifier = Modifier,
-                            generations = pokeGen,
+                            generations = pokeGens,
                             selectionGenerationMap = selectionGenMap,
                             onToggleSelection = {id -> searchViewModel.toggleSelection(id)},
-                            getGenColor = {id -> searchViewModel.getGenColor(id)}
+                            getColor = {id -> searchViewModel.getButtonColor(id)}
+                        )
+                        Box(
+                            modifier = Modifier
+                                //.background(Color(0xFFE55655))
+                                .align(Alignment.Start)
+                        ){
+                            Text(
+                                modifier = Modifier.padding(6.dp),
+                                text = "Evolution Stages:",
+                                color = Color.Black,
+                                //color = Color(0xFFFFD88E),
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        EvolutionGrid(
+                            modifier = Modifier,
+                            evolutions = pokeEvos,
+                            selectionEvoMap = selectionEvoMap,
+                            onToggleSelection = {id -> searchViewModel.toggleSelection(id)},
+                            getColor = {id -> searchViewModel.getButtonColor(id)}
                         )
                     }
                 }
@@ -157,18 +183,20 @@ fun FilterOverlay(
                             if (allTypesSelected) {
                                 // Deselect all types
                                 pokeTypes.forEach { selectionMap[it.id] = false }
-                                pokeGen.forEach{selectionGenMap[it.id] = false}
+                                pokeGens.forEach{selectionGenMap[it.id] = false}
+                                pokeEvos.forEach{selectionEvoMap[it.id] = false}
                             } else {
                                 // Select all types
                                 pokeTypes.forEach { selectionMap[it.id] = true }
-                                pokeGen.forEach{selectionGenMap[it.id] = true}
+                                pokeGens.forEach{selectionGenMap[it.id] = true}
+                                pokeEvos.forEach{selectionEvoMap[it.id] = true}
                             }
                         },
                         colors = ButtonDefaults.buttonColors(Color(0xFFE55655))
                     ) {
                         Text(
                             modifier = Modifier.background(Color(0xFFE55655)),
-                            text = if (allTypesSelected) "Deselect all" else "Show all",
+                            text = if (allTypesSelected && allEvosSelected && allGensSelected) "Deselect all" else "Show all",
                             color = Color(0xFFFFD88E)
                         )
                     }

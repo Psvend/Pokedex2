@@ -29,7 +29,7 @@ fun GenerationGrid(
     generations: List<LocalGenerations>,
     selectionGenerationMap: Map<Int, Boolean>,
     onToggleSelection: (Int) -> Unit,
-    getGenColor: (Int) -> Color
+    getColor: (Int) -> Color
 ) {
     LazyVerticalStaggeredGrid(
         modifier = modifier
@@ -53,7 +53,7 @@ fun GenerationGrid(
                         .aspectRatio(2.0f)
                         .border(1.dp, Color.White, RoundedCornerShape(25.dp))
                         .background(
-                            color = getGenColor(localGeneration.id),
+                            color = getColor(localGeneration.id),
                             shape = RoundedCornerShape(25.dp)
                         )
                         .clickable {
