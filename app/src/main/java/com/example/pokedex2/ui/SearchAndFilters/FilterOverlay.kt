@@ -60,6 +60,12 @@ fun FilterOverlay(
                     modifier = Modifier
                         .fillMaxWidth()
                 ){
+                    Text(
+                        text = "Filters",
+                        color = Color.Black,
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold
+                    )
                     Spacer(Modifier.weight(1f))
                     IconButton(
                         onClick = {onClose()},
@@ -69,7 +75,7 @@ fun FilterOverlay(
                             imageVector = Icons.Default.Clear,
                             tint = Color.DarkGray,
                             contentDescription = "Close FilterOverlay",
-                            modifier = Modifier.size(100.dp)
+                            modifier = Modifier.size(75.dp)
                         )
                     }
                 }
@@ -151,16 +157,18 @@ fun FilterOverlay(
                             if (allTypesSelected) {
                                 // Deselect all types
                                 pokeTypes.forEach { selectionMap[it.id] = false }
+                                pokeGen.forEach{selectionGenMap[it.id] = false}
                             } else {
                                 // Select all types
                                 pokeTypes.forEach { selectionMap[it.id] = true }
+                                pokeGen.forEach{selectionGenMap[it.id] = true}
                             }
                         },
                         colors = ButtonDefaults.buttonColors(Color(0xFFE55655))
                     ) {
                         Text(
                             modifier = Modifier.background(Color(0xFFE55655)),
-                            text = if (allTypesSelected) "Deselect all" else "Show all types",
+                            text = if (allTypesSelected) "Deselect all" else "Show all",
                             color = Color(0xFFFFD88E)
                         )
                     }
