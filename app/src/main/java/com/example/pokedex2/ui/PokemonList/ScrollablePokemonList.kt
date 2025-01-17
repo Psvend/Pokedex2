@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -56,21 +57,25 @@ import com.example.pokedex2.ui.SearchAndFilters.FilterOverlay
 import com.example.pokedex2.utils.RotatingLoader
 import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.SyncViewModel
-import com.example.pokedex2.viewModel.AffirmationViewModel
+//import com.example.pokedex2.viewModel.AffirmationViewModel
 import kotlinx.coroutines.flow.filter
 
 @Composable
 fun HomePokemonScroll(
-    viewModel: AffirmationViewModel,
+   // viewModel: AffirmationViewModel,
     navController: NavHostController,
     modifier: Modifier = Modifier,
     syncViewModel: SyncViewModel = hiltViewModel(),
     fetchAPIViewModel: MainPageViewModel = hiltViewModel()
 ) {
+    /*
+}
     val affirmationList by viewModel.affirmations.collectAsState(initial = emptyList())
     val isLoading = viewModel.isLoading.value
     val isPaginating = viewModel.isPaginating.value
     val errorMessage = viewModel.errorMessage.value
+
+     */
     val isLoading by fetchAPIViewModel.isLoading.collectAsState()
     val isPaginating by fetchAPIViewModel.isPaginating.collectAsState()
     val errorMessage by fetchAPIViewModel.errorMessage.collectAsState()
@@ -84,7 +89,7 @@ fun HomePokemonScroll(
         syncViewModel.syncPokemons(apiPokemons)
     }
 
-    if (isLoading && affirmationList.isEmpty()) {
+    if (isLoading && syncedPokemons.isEmpty()) {
         // Show a loading spinner during initial load
         Box(
             modifier = Modifier
@@ -188,13 +193,12 @@ fun HomePokemonScroll(
                     .fillMaxSize()
                     .background(Color(0xFFD9D9D9))
             ) {
-                items(affirmationList) { affirmation ->
+                items(syncedPokemons) { affirmation ->
                     AffirmationCard(
                         affirmation = affirmation,
                         navController = navController,
-                        onLikeClicked = { viewModel.toggleLike(affirmation) },
-                        modifier = Modifier
-                            .padding(4.dp)
+                        onLikeClicked = { syncViewModel.toggleLike(affirmation) },
+                        modifier = Modifier.padding(4.dp)
                     )
                 }
                 if (isPaginating) {
@@ -220,4 +224,5 @@ fun HomePokemonScroll(
                 }
         }
     }
+}
 }
