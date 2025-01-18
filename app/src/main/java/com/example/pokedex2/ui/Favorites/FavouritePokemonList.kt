@@ -1,4 +1,4 @@
-package com.example.pokedex2.ui.PokemonList
+package com.example.pokedex2.ui.Favorites
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.pokedex2.ui.HomePage.AffirmationCard
 import com.example.pokedex2.ui.components.EmptyStateScreen
 import com.example.pokedex2.viewModel.FavouritesViewModel
 import com.example.pokedex2.viewModel.SyncViewModel

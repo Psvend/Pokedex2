@@ -20,8 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokedex2.data.remote.EvolutionDetailUI
-import com.example.pokedex2.ui.PokemonList.PokemonTypeIcons
+import com.example.pokedex2.ui.HomePage.PokemonTypeIcons
 import com.example.pokedex2.ui.PokemonPage.PokemonAbilities
 import com.example.pokedex2.ui.PokemonPage.PokemonDescription
 import com.example.pokedex2.ui.PokemonPage.PokemonEvolvesTo
@@ -34,6 +35,7 @@ import com.example.pokedex2.ui.PokemonPage.PokemonStatsGraph
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
 import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.PokePageViewModel
+import com.example.pokedex2.viewModel.PokemonTypeColorViewModel
 import com.example.pokedex2.viewModel.SyncViewModel
 
 
@@ -43,7 +45,8 @@ fun PokemonPage(
     modifier: Modifier = Modifier,
     viewModel: PokePageViewModel = hiltViewModel(),
     syncViewModel: SyncViewModel = hiltViewModel(),
-    fetchAPIViewModel: MainPageViewModel = hiltViewModel()
+    fetchAPIViewModel: MainPageViewModel = hiltViewModel(),
+    typingColorViewModel: PokemonTypeColorViewModel = viewModel()
 ) {
     val pokemonDetail by viewModel.pokemonDetail.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
@@ -146,7 +149,7 @@ fun PokemonPage(
 
 
             pokemonDetail?.types?.map { it.type.name }?.let { types ->
-                PokemonTypeIcons(types = types, fontSize = 10)
+                PokemonTypeIcons(types = types, modifier = Modifier,fontSize = 10, getTypeColor = {type -> typingColorViewModel.getTypeColor(type)})
             }
 
 

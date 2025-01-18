@@ -192,10 +192,10 @@ fun FilterOverlay(
                                 pokeEvos.forEach{selectionEvoMap[it.id] = true}
                             }
                         },
-                        colors = ButtonDefaults.buttonColors(Color(0xFFE55655))
+                        colors = ButtonDefaults.buttonColors(Color(0xFFA91E1E))
                     ) {
                         Text(
-                            modifier = Modifier.background(Color(0xFFE55655)),
+                            modifier = Modifier.background(Color(0xFFA91E1E)),
                             text = if (allTypesSelected && allEvosSelected && allGensSelected) "Deselect all" else "Show all",
                             color = Color(0xFFFFD88E)
                         )
@@ -205,10 +205,10 @@ fun FilterOverlay(
 
                             onClose()
                         },
-                        colors = ButtonDefaults.buttonColors(Color(0xFFE55655))
+                        colors = ButtonDefaults.buttonColors(Color(0xFFA91E1E))
                     ) {
                         Text(
-                            modifier = Modifier.background(Color(0xFFE55655)),
+                            modifier = Modifier.background(Color(0xFFA91E1E)),
                             text = "Confirm",
                             color = Color(0xFFFFD88E)
                         )

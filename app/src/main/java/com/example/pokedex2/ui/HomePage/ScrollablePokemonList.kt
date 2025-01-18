@@ -1,4 +1,4 @@
-package com.example.pokedex2.ui.PokemonList
+package com.example.pokedex2.ui.HomePage
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

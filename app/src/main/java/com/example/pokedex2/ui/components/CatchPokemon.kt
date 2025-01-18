@@ -3,10 +3,9 @@ package com.example.pokedex2.ui.components
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,66 +14,24 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.pokedex2.R
 import com.example.pokedex2.model.Pokemon
-import com.example.pokedex2.viewModel.CatchPokemonViewModel
-
-
-@Composable
-fun CatchPokemonScreen(
-    viewModel: CatchPokemonViewModel = hiltViewModel()
-) {
-    val context = LocalContext.current
-    val currentPokemon by viewModel.currentPokemon.collectAsState()
-    val isAnimationActive by viewModel.isAnimationActive.collectAsState()
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFD9D9D9)),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if (currentPokemon != null) {
-            PokemonDetailsDialog(
-                pokemon = currentPokemon!!,
-                onDismiss = { viewModel.stopAnimation() }
-            )
-        } else {
-            Text(
-                text = "No Pokémon added to favorites yet!",
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Black
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = {
-                viewModel.fetchRandomPokemon()
-                viewModel.playSound(context)
-                viewModel.startAnimation()
-            }) {
-                Text("Catch 'em all!")
-            }
-        }
-        if (isAnimationActive) {
-            CatchAnimation(isActive = true)
-        }
-    }
-}
+import com.example.pokedex2.ui.HomePage.PokemonTypeIcons
+import com.example.pokedex2.viewModel.PokemonTypeColorViewModel
 
 @Composable
 fun CatchAnimation(isActive: Boolean) {
@@ -107,6 +64,7 @@ fun CatchAnimation(isActive: Boolean) {
 fun PokemonDetailsDialog(
     pokemon: Pokemon,
     onDismiss: () -> Unit,
+    typingColorViewModel: PokemonTypeColorViewModel = viewModel()
 ) {
     AlertDialog(
         onDismissRequest = { onDismiss() },
@@ -114,13 +72,12 @@ fun PokemonDetailsDialog(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    //.align(Alignment.CenterHorizontally)
             ) {
                 Text(
                     text = pokemon.name,
                     style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.primary,
-                    //modifier = Modifier.align(Alignment.CenterHorizontally) // Center title horizontally
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold
                 )
             }
         },
@@ -136,17 +93,25 @@ fun PokemonDetailsDialog(
                     modifier = Modifier.size(150.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Type: ${pokemon.type.joinToString(", ")}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.align(Alignment.CenterHorizontally) // Center text explicitly
-                )
+                Row(){
+                    PokemonTypeIcons(
+                        types = pokemon.type,
+                        modifier = Modifier,
+                        fontSize = 10,
+                        {type -> typingColorViewModel.getTypeColor(type)})
+                }
             }
         },
-        confirmButton = {}, // Empty confirm button since the Pokémon is saved directly
+        confirmButton = {},
         dismissButton = {
-            Button(onClick = onDismiss) {
-                Text("Close")
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(Color(0xFFA91E1E))
+                ) {
+                Text(
+                    "Close",
+                    color = Color(0xFFFFD88E)
+                )
             }
         }
     )

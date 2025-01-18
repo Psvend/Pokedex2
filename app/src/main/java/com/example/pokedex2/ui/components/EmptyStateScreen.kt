@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,7 +53,7 @@ fun EmptyStateScreen(
     Column(
         modifier
             .fillMaxSize()
-            .background(Color(0xFFD9D9D9)),
+            .background(Color(0xFFFFF9E6)),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -69,14 +70,14 @@ fun EmptyStateScreen(
         Spacer(modifier.height(16.dp))
         Text(
             text = "No Pokémon added to favorites yet!",
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.labelLarge,
             color = Color.Black
         )
         Spacer(modifier.height(16.dp))
         Text(
             text = "Catch your first?",
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.Gray
+            style = MaterialTheme.typography.headlineMedium,
+            color = Color.Black
         )
         Spacer(modifier.height(16.dp))
         Button(
@@ -85,9 +86,13 @@ fun EmptyStateScreen(
                 viewModel.playSound(context)
                 viewModel.startAnimation()
             },
-            modifier.align(Alignment.CenterHorizontally)
+            colors = ButtonDefaults.buttonColors(Color(0xFF4F6FDE)),
+            modifier = modifier.align(Alignment.CenterHorizontally)
         ) {
-            Text("Catch 'em all!")
+            Text(
+                "Catch 'em all!",
+                    color = Color(0xFFFDFDFD)
+            )
         }
     }
 
