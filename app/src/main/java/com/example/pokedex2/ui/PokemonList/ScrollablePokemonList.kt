@@ -1,5 +1,5 @@
 package com.example.pokedex2.ui.PokemonList
-//import com.example.pokedex2.viewModel.AffirmationViewModel
+import com.example.pokedex2.viewModel.AllPokemonsViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -42,11 +42,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.pokedex2.R
 import com.example.pokedex2.ui.SearchAndFilters.FilterOverlay
 import com.example.pokedex2.utils.RotatingLoader
 import com.example.pokedex2.viewModel.MainPageViewModel
+import com.example.pokedex2.viewModel.SearchViewModel
 import com.example.pokedex2.viewModel.SyncViewModel
 import kotlinx.coroutines.flow.filter
 
@@ -56,7 +58,8 @@ fun HomePokemonScroll(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     syncViewModel: SyncViewModel = hiltViewModel(),
-    fetchAPIViewModel: MainPageViewModel = hiltViewModel()
+    fetchAPIViewModel: MainPageViewModel = hiltViewModel(),
+    searchViewModel: SearchViewModel = viewModel(),
 ) {
     /*
 }
