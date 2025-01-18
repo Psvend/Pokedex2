@@ -1,6 +1,7 @@
 package com.example.pokedex2.ui.Navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -20,7 +21,8 @@ import com.example.pokedex2.viewModel.QuizViewModel
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    startDestination: String = "mainPage"
+    startDestination: String = "mainPage",
+    modifier: Modifier = Modifier
 ) {
     val mainPageViewModel: MainPageViewModel = hiltViewModel()
 
