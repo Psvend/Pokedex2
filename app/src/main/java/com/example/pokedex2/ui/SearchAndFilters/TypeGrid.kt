@@ -40,7 +40,7 @@ fun TypeGrid(
     ) {
         if (pokeTypes.isEmpty()) {
             item {
-                RotatingLoader() // Show a loader while the data is empty
+                RotatingLoader()
             }
         }
         items(pokeTypes) { localPokeType ->

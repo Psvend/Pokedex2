@@ -40,7 +40,7 @@ fun EvolutionGrid(
     ) {
         if (evolutions.isEmpty()) {
             item {
-                RotatingLoader() // Show a loader while the data is empty
+                RotatingLoader()
             }
         }
         items(evolutions) { localEvolution ->
@@ -69,6 +69,5 @@ fun EvolutionGrid(
             }
         }
     }
-
 }
 

@@ -1,5 +1,4 @@
 package com.example.pokedex2.ui.PokemonList
-import com.example.pokedex2.viewModel.AllPokemonsViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

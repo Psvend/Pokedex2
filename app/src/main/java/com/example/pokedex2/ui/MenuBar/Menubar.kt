@@ -1,11 +1,9 @@
 package com.example.pokedex2.ui.MenuBar
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Menu
@@ -68,39 +66,3 @@ fun MenuBar(
         }
     }
 }
-
-
-
-
-
-
-//OLD CODE (DO NOT DELETE) - PETRINE
-    /*
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ){
-        Scaffold( bottomBar = {
-            NavigationBar {
-                item.forEachIndexed { index, item -> NavigationBarItem(
-                    selected = index == selectedItemIndex,
-                    onClick = { selectedItemIndex = index },
-                    label = { item.title },
-                    icon = {
-                        Icon(
-                            imageVector = if (selectedItemIndex == index) item.selectedIcon else item.unselectedIcon,
-                            contentDescription = item.title
-                        )
-
-                    }
-                )
-                }
-            }
-        }
-        ) {
-
-        }
-    }
-}
-
-*/

@@ -1,30 +1,26 @@
 package com.example.pokedex2.ui.Navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.pokedex2.ui.PokePage.PokemonPage
-import com.example.pokedex2.ui.PokemonList.FavouritePokemonList
 import com.example.pokedex2.ui.PokemonList.ContentFrame
+import com.example.pokedex2.ui.PokemonList.FavouritePokemonList
 import com.example.pokedex2.ui.PokemonList.HomePokemonScroll
 import com.example.pokedex2.ui.Quiz.Quiz
 import com.example.pokedex2.ui.Quiz.StartingScreenForQuiz
-import com.example.pokedex2.viewModel.MainPageViewModel
-import com.example.pokedex2.viewModel.PokePageViewModel
 import com.example.pokedex2.ui.components.CatchPokemonScreen
+import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.QuizViewModel
 
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    startDestination: String = "mainPage",
-    modifier: Modifier = Modifier
+    startDestination: String = "mainPage"
 ) {
     val mainPageViewModel: MainPageViewModel = hiltViewModel()
 
