@@ -1,7 +1,10 @@
 package com.example.pokedex2.viewModel
 
+import android.content.Context
+import android.media.MediaPlayer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pokedex2.R
 import com.example.pokedex2.data.remote.PokemonApiService
 import com.example.pokedex2.data.remote.json.PokemonResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -55,6 +58,9 @@ class QuizViewModel @Inject constructor(
         return Random.nextInt(1, 1025) // Assuming there are 898 Pokémon
     }
 
-
+fun playSound(context: Context) {
+        val mediaPlayer = MediaPlayer.create(context, R.raw.whos_that_pokemon)
+        mediaPlayer.start()
+    }
 
 }

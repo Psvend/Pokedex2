@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -51,6 +52,7 @@ fun Quiz(
     val maxQuestions=10
     val time = remember { mutableIntStateOf(0) }
     val isTimeOut = remember { mutableStateOf(true) }
+    val context = LocalContext.current
 
     LaunchedEffect(isTimeOut.value) {
         if (isTimeOut.value) {
@@ -63,12 +65,14 @@ fun Quiz(
     }
     LaunchedEffect(Unit) {
         viewModel.fetchPokemonDetail(randomPokemonId.toString())
+        viewModel.playSound(context)
     }
 
     LaunchedEffect (triggerNextQuistion.value) {
         if (triggerNextQuistion.value && answerCounts.value < maxQuestions) {
             isClear.value = true
             kotlinx.coroutines.delay(1000)
+            viewModel.playSound(context)
             isClear.value = false
             selectedAnswer.value = null
             triggerNextQuistion.value = false
@@ -222,15 +226,6 @@ fun Quiz(
                         .clip(RoundedCornerShape(12.dp))
                 )
             }
-                Text(
-                text = "Time: ${time.value} seconds",
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.Black,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                textAlign = TextAlign.Center
-            )
         }
     }
 }
