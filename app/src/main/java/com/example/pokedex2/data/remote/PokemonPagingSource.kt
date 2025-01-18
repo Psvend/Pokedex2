@@ -2,6 +2,7 @@ package com.example.pokedex2.data.remote
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.example.pokedex2.data.remote.json.PokemonResult
 import retrofit2.HttpException
 import java.io.IOException
 

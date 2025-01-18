@@ -6,13 +6,10 @@ import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.pokedex2.data.remote.ChainLink
 import com.example.pokedex2.data.remote.EvolutionDetailUI
 import com.example.pokedex2.data.remote.PokemonApiService
 import com.example.pokedex2.data.remote.PokemonSpecies
-import com.example.pokedex2.data.remote.json.testPokemon
-import com.example.pokedex2.model.Affirmation
+import com.example.pokedex2.data.remote.json.PokemonResult
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,8 +24,8 @@ class PokePageViewModel @Inject constructor(
 ) : ViewModel() {
 
     //Add here for creating endpoints
-    private val _pokemonDetail = MutableStateFlow<testPokemon?>(null)
-    val pokemonDetail: StateFlow<testPokemon?> = _pokemonDetail
+    private val _pokemonDetail = MutableStateFlow<PokemonResult?>(null)
+    val pokemonDetail: StateFlow<PokemonResult?> = _pokemonDetail
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage

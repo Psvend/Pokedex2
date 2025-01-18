@@ -227,6 +227,5 @@ fun CircleDot(sizeOfDot: Int, dotColorInner: Color) {
                 radius = size.minDimension / 2
             )
         }
-
     }
 }

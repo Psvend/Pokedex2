@@ -1,6 +1,6 @@
 package com.example.pokedex2.data.remote.json
 
-data class testPokemon(
+data class PokemonResult(
     val abilities: List<Ability>,
     val base_experience: Int,
     val cries: Cries,

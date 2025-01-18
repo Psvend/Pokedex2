@@ -1,8 +1,6 @@
 package com.example.pokedex2
 
-//import com.example.pokedex2.ui.theme.PokemonDetailScreen
-//import com.example.pokedex2.ui.theme.PokemonPage2
-//import com.example.pokedex2.viewModel.PokemonPageViewModel
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,19 +12,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.pokedex2.ui.MenuBar.MenuBar
 import com.example.pokedex2.ui.Navigation.NavGraph
 import com.example.pokedex2.ui.Navigation.NavGraph2
-import com.example.pokedex2.ui.SearchAndFilters.TypeFilterUI
-import com.example.pokedex2.ui.TopBar.TopBar
 import com.example.pokedex2.ui.theme.Pokedex2Theme
-import com.example.pokedex2.utils.RotatingLoader
+import com.example.pokedex2.ui.TopBar.TopBar
 import com.example.pokedex2.viewModel.MenuBarViewModel
-import com.example.pokedex2.viewModel.PokeViewModel
-import com.example.pokedex2.viewModel.TopBarViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 data class BottomNavItem(
@@ -44,9 +37,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             Pokedex2Theme {
                 val navController = rememberNavController()
-                val topBarViewModel: TopBarViewModel = viewModel()
                 val menuBarViewModel: MenuBarViewModel = viewModel()
-                val pokeViewModel: PokeViewModel = hiltViewModel() // Injecting PokeViewModel
                 val selectedItemIndex by menuBarViewModel.selectedItemIndex.collectAsState()
 
                 Scaffold(
@@ -65,17 +56,22 @@ class MainActivity : ComponentActivity() {
                     when(selectedItemIndex){
                         0 ->  NavGraph(navController = navController,
                             startDestination = "mainPage" )
-
+                        1 ->  NavGraph(
+                            navController = navController,
+                            startDestination = "favouritePokemon",
+                            modifier = Modifier.padding(innerPadding)
+                        )
                        // 1 -> PokemonPage(pokemonPageViewModel = PokePageViewModel )
-
                         2 -> NavGraph2(navController = navController,
-                            startDestination = "startingScreenForQuiz")
-                        3 -> TypeFilterUI(modifier = Modifier.padding(innerPadding))
-                        else -> RotatingLoader()
+                            startDestination = "startingScreenForQuiz")                        //3 -> PokemonDetailScreen(pokeViewModel = viewModel, modifier = Modifier.padding(innerPadding))
+                        else -> NavGraph(navController = navController,
+                            startDestination = "mainPage")
                     }
                 }
             }
         }
     }
 }
+
+
 

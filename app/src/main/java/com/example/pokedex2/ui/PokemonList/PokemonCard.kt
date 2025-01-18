@@ -45,7 +45,6 @@ import com.example.pokedex2.ui.PokePage.LikeButton
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
 
 
-/*
 @Composable
 fun AffirmationCard(
     affirmation: Affirmation,
@@ -53,7 +52,7 @@ fun AffirmationCard(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    var isLiked by remember { mutableStateOf(affirmation.isLiked) }
+    //var isLiked by remember { mutableStateOf(affirmation.isLiked) }
 
     Card(
         modifier = modifier
@@ -94,23 +93,20 @@ fun AffirmationCard(
                             R.font.pressstart2p_regular)
                     ), fontSize = 15.sp)
                 )
-                PokemonTypeIcons(types = affirmation.typeIcon, fontSize = 6.sp)
+                PokemonTypeIcons(types = affirmation.typeIcon, fontSize = 6)
             }
             // Like button and ID
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(start = 8.dp)
             ) {
-                IconButton(onClick = {
-                    isLiked = !isLiked
-                    onLikeClicked()
-                }) {
+                IconButton(onClick = onLikeClicked) {
                     Icon(
                         painter = painterResource(
-                            if (isLiked) R.drawable.heart_filled else R.drawable.heart_empty
+                            if (affirmation.isLiked) R.drawable.heart_filled else R.drawable.heart_empty
                         ),
-                        contentDescription = if (isLiked) "Unlike" else "Like",
-                        tint = if (isLiked) Color(0xFFB11014) else Color(0xFFB11014)
+                        contentDescription = if (affirmation.isLiked) "Unlike" else "Like",
+                        tint = if (affirmation.isLiked) Color(0xFFB11014) else Color(0xFFB11014)
                     )
                 }
                 Text(
@@ -123,10 +119,10 @@ fun AffirmationCard(
     }
 }
 
- */
 
 
 
+/*
 
 @Composable
 fun AffirmationCard(
@@ -196,6 +192,8 @@ fun AffirmationCard(
     }
 }
 
+ */
+
 
 //Creates the boxes around each type
 @Composable
@@ -247,7 +245,7 @@ fun getTypeColor(type: String): Color {
         "fairy" -> Color(0xFFD685AD) // Pink
         "fighting" -> Color(0xFFC22E28) // Reddish Brown
         "psychic" -> Color(0xFFF95587) // Hot Pink
-        "dragon" -> Color(0xFF6F35FC)
+        "dragon" -> Color(0xFF6F35FC) //Light Blue
         "dark" -> Color(0xFF705746)
         "ghost" -> Color(0xFF735797)
         "rock" -> Color(0xFFB6A136)
@@ -255,3 +253,4 @@ fun getTypeColor(type: String): Color {
         else -> Color.Gray // Default Gray
     }
 }
+

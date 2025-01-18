@@ -10,15 +10,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.pokedex2.ui.PokePage.PokemonPage
+import com.example.pokedex2.ui.PokemonList.FavouritePokemonList
+import com.example.pokedex2.ui.PokemonList.ContentFrame
 import com.example.pokedex2.ui.PokemonList.HomePokemonScroll
-import com.example.pokedex2.ui.PokemonList.MainPageBackGround
 import com.example.pokedex2.ui.Quiz.Quiz
 import com.example.pokedex2.ui.Quiz.StartingScreenForQuiz
-import com.example.pokedex2.viewModel.AffirmationViewModel
+import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.PokePageViewModel
+import com.example.pokedex2.ui.components.CatchPokemonScreen
 import com.example.pokedex2.viewModel.QuizViewModel
-
-//import com.example.pokedex2.viewModel.PokemonPageViewModel
 
 @Composable
 fun NavGraph(
@@ -26,14 +26,29 @@ fun NavGraph(
     startDestination: String = "mainPage",
     modifier: Modifier = Modifier
 ) {
+    val mainPageViewModel: MainPageViewModel = hiltViewModel()
+
     NavHost(navController = navController, startDestination = startDestination) {
         composable("mainPage") {
-            val affirmationViewModel: AffirmationViewModel = hiltViewModel()
-            MainPageBackGround(
-                viewModel = affirmationViewModel,
-                modifier = modifier,
-                navController = navController
-            )
+            ContentFrame {
+                HomePokemonScroll(
+                    navController = navController,
+                    syncViewModel = hiltViewModel(),
+                    fetchAPIViewModel = mainPageViewModel
+                )
+            }
+        }
+        composable("favouritePokemon") {
+            ContentFrame {
+                FavouritePokemonList(
+                    favouritesViewModel = hiltViewModel(),
+                    syncViewModel = hiltViewModel(),
+                    navController = navController
+                )
+            }
+        }
+        composable("catchPokemonScreen") {
+            CatchPokemonScreen()
         }
         composable(
             route = "pokemonPage/{pokemonName}",
@@ -42,12 +57,9 @@ fun NavGraph(
             val pokemonName = backStackEntry.arguments?.getString("pokemonName") ?: ""
             PokemonPage(pokemonIdOrName = pokemonName)
         }
-
-
-
     }
 }
-//navcontroller from startingscreenforquiz to quiz
+//navController from startingScreenForQuiz to quiz
 @Composable
 fun NavGraph2(
     navController: NavHostController,

@@ -1,5 +1,7 @@
 package com.example.pokedex2.data.remote
 
+import com.example.pokedex2.data.remote.json.PokemonResult
+
 data class PokemonListDtoDto(
     val count : Int,
     val next : String?,
@@ -11,5 +13,3 @@ data class PokemonResult(
     val name : String,
     val url : String
 )
-
-

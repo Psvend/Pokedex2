@@ -14,30 +14,21 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 
-import com.example.pokedex2.viewModel.AllPokemonsViewModel
-import androidx.compose.runtime.*
-import com.example.pokedex2.viewModel.SyncViewModel
-
-
 @Composable
-fun MainPageBackGround(
-    viewModel: AllPokemonsViewModel,
+fun ContentFrame(
     modifier: Modifier = Modifier,
-    navController: NavHostController
+    content: @Composable () -> Unit
 ) {
-//    val affirmationList by viewModel.affirmations.collectAsState(initial = emptyList())
-
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFD9D9D9))
+            .background(Color(0xFFE55655))
     ) {
         Column(
             modifier = Modifier
@@ -57,10 +48,9 @@ fun MainPageBackGround(
                             .calculateStartPadding(layoutDirection),
                     )
             ) {
-                HomePokemonScroll(
-                    navController = navController,
-                    modifier = modifier
-                )
+                // Content navigation
+                content() // Render the passed composable
+
             }
         }
     }

@@ -1,8 +1,5 @@
 package com.example.pokedex2.model
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
-
 
 data class Affirmation (
     val id: Int,
