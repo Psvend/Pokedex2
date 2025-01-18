@@ -28,12 +28,12 @@ fun ContentFrame(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFE55655))
+            .background(Color(0xFFD9D9D9))
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 30.dp)
+                .padding(top = 25.dp)
         ) {
             Spacer(modifier = Modifier.height(65.dp))
 
