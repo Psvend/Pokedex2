@@ -3,8 +3,6 @@ package com.example.pokedex2.ui.PokePage
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -23,9 +20,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -683,50 +677,6 @@ fun PokemonStatsGraph(stats: List<Pair<String, Int>>, viewModel: PokePageViewMod
     }
 }
 
-/*
-@Composable
-fun LikeButton(
-    isLiked: Boolean,
-    onLikeClicked: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val interactionSource = remember { MutableInteractionSource() } // To disable ripple effect
-
-    Icon(
-        painter = painterResource(
-            id = if (isLiked) R.drawable.heart_filled else R.drawable.heart_empty
-        ),
-        contentDescription = if (isLiked) "Unlike" else "Like",
-        tint = Color(0xFFB11014), // Set the desired tint color
-        modifier = modifier
-            .size(40.dp) // Adjust size as needed
-            .clickable(
-                onClick = onLikeClicked,
-                interactionSource = interactionSource,
-                indication = null // Disable the ripple effect
-            )
-    )
-}
-
-
- */
-
-/*
-IconButton(onClick = onLikeClicked) {
-    Icon(
-        painter = painterResource(
-            if (affirmation.isLiked) R.drawable.heart_filled else R.drawable.heart_empty
-        ),
-        contentDescription = if (affirmation.isLiked) "Unlike" else "Like",
-        tint = if (affirmation.isLiked) Color(0xFFB11014) else Color(0xFFB11014)
-    )
-}
-
-onLikeClicked = { syncViewModel.toggleLike(affirmation) },
-
-
- */
-
 @Composable
 fun LikeButton(
     modifier: Modifier = Modifier,
@@ -744,93 +694,4 @@ fun LikeButton(
         )
     }
 }
-
-/*
-@Composable
-fun LikeButton(
-    pokemonId: Int, // Only pass the pokemonId
-    syncViewModel: SyncViewModel
-) {
-    // Get the current isLiked status for the pokemonId
-    val isLiked = syncViewModel.getIsLikedById(pokemonId)
-
-    // Button to toggle the like state
-    IconButton(onClick = {
-        syncViewModel.toggleLikeById(pokemonId)  // Toggle like based on the pokemonId
-    }) {
-        Icon(
-            imageVector = if (isLiked) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-            contentDescription = if (isLiked) "Liked" else "Not Liked"
-        )
-    }
-}
-
- */
-
-/*
-@Composable
-fun LikeButton(
-    isLiked: Boolean,
-    onLikeClicked: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-
-    IconButton(
-        onClick = onLikeClicked,
-        modifier = modifier
-            .size(40.dp) // Adjust size as needed
-
-    ) {
-        Icon(
-            painter = painterResource(
-                id = if (isLiked) R.drawable.heart_filled else R.drawable.heart_empty
-            ),
-            contentDescription = if (isLiked) "Unlike" else "Like",
-            tint = Color(0xFFB11014) // Set the desired tint color
-        )
-    }
-}
-
-
- */
-/*
-
-@Composable
-fun LikeButton(modifier: Modifier = Modifier) {
-    var isSelect by remember { mutableStateOf(false) }
-    val interactionSource = remember { MutableInteractionSource() }
-
-    Box(modifier = modifier) {
-        if (isSelect) {
-            Icon(
-                imageVector = Icons.Filled.Favorite,
-                contentDescription = "Like",
-                tint = Color(0xFFB11014),
-                modifier = Modifier
-                    .size(40.dp)
-                    .clickable(
-                        interactionSource = interactionSource,
-                        indication = null // Disable the ripple effect
-                    ) { isSelect = !isSelect }
-            )
-        } else {
-            Icon(
-                imageVector = Icons.Outlined.FavoriteBorder,
-                contentDescription = "Unlike",
-                tint = Color(0xFFB11014),  //Color.Gray
-                modifier = Modifier
-                    .size(40.dp)
-                    .clickable(
-                        interactionSource = interactionSource,
-                        indication = null // Disable the ripple effect
-                    ) { isSelect = !isSelect }
-            )
-        }
-    }
-}
-
-
-
- */
-
 

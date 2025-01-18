@@ -30,7 +30,7 @@ fun MenuBar(
     val items = listOf(
         BottomNavItem("Home", Icons.Filled.Home, Icons.Outlined.Home),
         BottomNavItem("Favorites", Icons.Filled.FavoriteBorder, Icons.Outlined.FavoriteBorder),
-        BottomNavItem("Edit", Icons.Filled.Menu, Icons.Outlined.Menu),
+        BottomNavItem("More", Icons.Filled.Menu, Icons.Outlined.Menu),
     )
 
     // Determine the background color based on the selected index for custom searchView..

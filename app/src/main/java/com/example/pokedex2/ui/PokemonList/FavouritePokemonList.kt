@@ -28,7 +28,8 @@ fun FavouritePokemonList(
     // Collect the list of favourite Pokémon from FavouritesViewModel
     val favouritePokemons by favouritesViewModel.getFavouriteAffirmations().collectAsState(initial = emptyList())
 
-    val sortedFavouritePokemons = favouritePokemons.sortedBy { it.name }
+    val sortedFavouritePokemons = favouritePokemons.sortedBy { it.number }
+
     if (sortedFavouritePokemons.isEmpty()) {
         // Show empty state. Point to catch pokemon with nav
         EmptyStateScreen(modifier = modifier)
@@ -40,7 +41,7 @@ fun FavouritePokemonList(
                 .fillMaxSize()
                 .background(Color(0xFFD9D9D9))
         ) {
-            items(favouritePokemons) { affirmation ->
+            items(sortedFavouritePokemons) { affirmation ->
                 AffirmationCard(
                     affirmation = affirmation,
                     navController = navController,
