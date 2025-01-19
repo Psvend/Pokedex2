@@ -22,7 +22,6 @@ import com.example.pokedex2.ui.theme.Pokedex2Theme
 import com.example.pokedex2.ui.TopBar.TopBar
 import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.MenuBarViewModel
-import com.example.pokedex2.viewModel.PokeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 data class BottomNavItem(

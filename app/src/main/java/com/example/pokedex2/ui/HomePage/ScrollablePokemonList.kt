@@ -37,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -60,7 +61,17 @@ fun HomePokemonScroll(
     fetchAPIViewModel: MainPageViewModel = hiltViewModel(),
     searchViewModel: SearchViewModel = viewModel(),
 ) {
+    /*
+}
+    val affirmationList by viewModel.affirmations.collectAsState(initial = emptyList())
+    val isLoading = viewModel.isLoading.value
+    val isPaginating = viewModel.isPaginating.value
+    val errorMessage = viewModel.errorMessage.value
 
+     */
+    val allSelected = searchViewModel.selectionMap.values.all { it }
+    val allGenSelected = searchViewModel.selectionGenMap.values.all { it }
+    val allEvoSelected = searchViewModel.selectionEvoMap.values.all { it }
     val isLoading by fetchAPIViewModel.isLoading.collectAsState()
     val isPaginating by fetchAPIViewModel.isPaginating.collectAsState()
     val errorMessage by fetchAPIViewModel.errorMessage.collectAsState()
@@ -73,8 +84,6 @@ fun HomePokemonScroll(
     LaunchedEffect(apiPokemons) {
         syncViewModel.syncPokemons(apiPokemons)
     }
-
-
 
     if (isLoading && syncedPokemons.isEmpty()) {
         Box(
@@ -120,17 +129,17 @@ fun HomePokemonScroll(
                 .fillMaxSize()
                 .background(Color(0xFFD9D9D9))
         ) {
-            Row (
+            Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
-            ){
+            ) {
+
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
                     placeholder = { Text("Search...") },
                     modifier = Modifier
-                        .weight(1f)
                         .padding(2.dp)
                         .background(Color.White, shape = RoundedCornerShape(25.dp)),
                     leadingIcon = {
@@ -151,60 +160,89 @@ fun HomePokemonScroll(
                     singleLine = true,
                     shape = RoundedCornerShape(25.dp)
                 )
-
-                    IconButton(
-                        onClick = {
-                            showFilterOverlay = !showFilterOverlay
-                        },
-                        modifier = Modifier.padding(8.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Settings,
-                            contentDescription = "Open Filters"
-                        )
-                    }
+                IconButton(
+                    onClick = {
+                        showFilterOverlay = !showFilterOverlay
+                    },
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Settings,
+                        contentDescription = "Open Filters"
+                    )
+                }
             }
             if (showFilterOverlay) {
                 FilterOverlay(
                     showOverlay = true,
-                    onClose = {showFilterOverlay = false}
+                    onClose = { showFilterOverlay = false }
                 )
-            }
-            LazyColumn(
-                state = listState,
-                modifier = modifier
-                    .fillMaxSize()
-                    .background(Color(0xFFD9D9D9))
-            ) {
-                items(syncedPokemons) { affirmation ->
-                    AffirmationCard(
-                        affirmation = affirmation,
-                        navController = navController,
-                        onLikeClicked = { syncViewModel.toggleLike(affirmation) },
-                        modifier = Modifier.padding(4.dp)
+            } else if (!allSelected && !allGenSelected && !allEvoSelected){
+                Column (
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .fillMaxSize()
+                        .background(Color(0xFFFFF9E6)),
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    Box(
+                        modifier
+                            .fillMaxWidth()
+                            .padding(top = 90.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.bug_image),
+                            contentDescription = "Empty List",
+                            modifier.size(250.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.padding(16.dp))
+                    Text(
+                        text = "No Pokémon matching criteria",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.Black
                     )
                 }
-                if (isPaginating) {
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            RotatingLoader()
+            } else if (allSelected && allGenSelected && allEvoSelected){
+                LazyColumn(
+                    state = listState,
+                    modifier = modifier
+                        .fillMaxSize()
+                        .background(Color(0xFFD9D9D9))
+                ) {
+                    items(syncedPokemons) { affirmation ->
+                        AffirmationCard(
+                            affirmation = affirmation,
+                            navController = navController,
+                            onLikeClicked = { syncViewModel.toggleLike(affirmation) },
+                            modifier = Modifier.padding(4.dp)
+                        )
+                    }
+                    if (isPaginating) {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                RotatingLoader()
+                            }
                         }
                     }
                 }
-            }
 
-        LaunchedEffect(listState) {
-            snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
-                .filter { it == syncedPokemons.size - 1 && !isPaginating && !isLoading }
-                .collect {
-                    fetchAPIViewModel.loadNextPage()
+                LaunchedEffect(listState) {
+                    snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+                        .filter { it == syncedPokemons.size - 1 && !isPaginating && !isLoading }
+                        .collect {
+                            fetchAPIViewModel.loadNextPage()
+                        }
                 }
+            }
         }
     }
-}
 }

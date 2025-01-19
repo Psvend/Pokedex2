@@ -224,12 +224,6 @@ class PokemonPageViewModel @Inject constructor(
     }
 
 
-
-
-
-
-
-
     fun getGrowthRateProgress(growthRate: String): Float {
         return when (growthRate.trim().lowercase()) {
             "slow" -> 0.2f
