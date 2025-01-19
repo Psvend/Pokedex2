@@ -78,22 +78,10 @@ fun PokemonPage(
     val affirmation = pokemonDetail?.let { pokePageViewModel.convertToAffirmation(it) }
         ?.find { it.name.equals(pokemonIdOrName, ignoreCase = true) }
 
-    val likedAffirmation = likedPokemons.find { it.name.equals(pokemonIdOrName, ignoreCase = true) }
-
 
     LaunchedEffect(pokemonIdOrName) {
         pokePageViewModel.fetchCachedPokemon(pokemonIdOrName)
     }
-
-    /*
-    LaunchedEffect (apiPokemons) {
-        syncViewModel.syncPokemons(apiPokemons)
-    }
-
-     */
-
-
-
 
     // Fetch Pokémon details when the page is displayed
     LaunchedEffect(pokemonIdOrName) {

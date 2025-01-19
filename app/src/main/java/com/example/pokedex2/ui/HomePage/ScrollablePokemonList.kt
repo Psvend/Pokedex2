@@ -1,4 +1,5 @@
 package com.example.pokedex2.ui.HomePage
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -44,9 +45,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.pokedex2.R
+import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.ui.SearchAndFilters.FilterOverlay
 import com.example.pokedex2.utils.RotatingLoader
 import com.example.pokedex2.viewModel.MainPageViewModel
+import com.example.pokedex2.viewModel.PokePageViewModel
 import com.example.pokedex2.viewModel.SearchViewModel
 import com.example.pokedex2.viewModel.SyncViewModel
 import kotlinx.coroutines.flow.filter
@@ -59,6 +62,7 @@ fun HomePokemonScroll(
     syncViewModel: SyncViewModel = hiltViewModel(),
     fetchAPIViewModel: MainPageViewModel = hiltViewModel(),
     searchViewModel: SearchViewModel = viewModel(),
+    pokePageViewModel: PokePageViewModel = hiltViewModel(),
 ) {
 
     val isLoading by fetchAPIViewModel.isLoading.collectAsState()
@@ -69,14 +73,22 @@ fun HomePokemonScroll(
     var showFilterOverlay by remember {mutableStateOf(false)}
     val apiPokemons by fetchAPIViewModel.apiPokemons.collectAsState(initial = emptyList())
     val syncedPokemons by syncViewModel.pokemonList.collectAsState(initial = emptyList())
+    val pokemonDetail by pokePageViewModel.pokemonDetail.collectAsState()
 
+/*
     LaunchedEffect(apiPokemons) {
         syncViewModel.syncPokemons(apiPokemons)
     }
 
+ */
+
+    val affirmationList = pokePageViewModel.convertToAffirmation(pokemonDetail)
 
 
-    if (isLoading && syncedPokemons.isEmpty()) {
+    Log.d("test", "$affirmationList")
+
+
+    if (isLoading && affirmationList.isEmpty()) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -85,7 +97,7 @@ fun HomePokemonScroll(
         ) {
             RotatingLoader()
         }
-    } else if (errorMessage != null && syncedPokemons.isEmpty()) {
+    } else if (errorMessage != null && affirmationList.isEmpty()) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -176,7 +188,9 @@ fun HomePokemonScroll(
                     .fillMaxSize()
                     .background(Color(0xFFD9D9D9))
             ) {
-                items(syncedPokemons) { affirmation ->
+                items(
+                    affirmationList
+                ) { affirmation ->
                     AffirmationCard(
                         affirmation = affirmation,
                         navController = navController,
@@ -200,7 +214,7 @@ fun HomePokemonScroll(
 
         LaunchedEffect(listState) {
             snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
-                .filter { it == syncedPokemons.size - 1 && !isPaginating && !isLoading }
+                .filter { it == affirmationList.size - 1 && !isPaginating && !isLoading }
                 .collect {
                     fetchAPIViewModel.loadNextPage()
                 }

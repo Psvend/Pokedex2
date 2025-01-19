@@ -70,6 +70,7 @@ dependencies {
 
     // ConstraintLayout
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.navigation.runtime.ktx)
 
     // Testing libraries
     testImplementation(libs.junit)

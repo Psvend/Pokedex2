@@ -32,7 +32,7 @@ class PokePageViewModel @Inject constructor (
         }
     }
 
-    fun convertToAffirmation(localCaching: LocalCaching): List<Affirmation>{
+    fun convertToAffirmation(localCaching: LocalCaching?): List<Affirmation>{
         viewModelScope.launch {
             // Load cached pokemons first
             val cachedPokemons = localCachingDao.getAllPokemons().map {
