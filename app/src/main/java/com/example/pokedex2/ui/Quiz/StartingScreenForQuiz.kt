@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.pokedex2.R
@@ -53,6 +52,7 @@ fun StartingScreenForQuiz(
             onClick = { navController.navigate("Quiz") },
             modifier = Modifier
                 .fillMaxWidth(0.7f),
+            colors = ButtonDefaults.buttonColors(Color(0xFF1DB5D4)),
             elevation = ButtonDefaults.buttonElevation(
                 defaultElevation = 6.dp,
                 pressedElevation = 12.dp

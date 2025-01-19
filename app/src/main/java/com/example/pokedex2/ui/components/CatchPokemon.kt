@@ -106,11 +106,10 @@ fun PokemonDetailsDialog(
         dismissButton = {
             Button(
                 onClick = onDismiss,
-                colors = ButtonDefaults.buttonColors(Color(0xFFA91E1E))
+                colors = ButtonDefaults.buttonColors(Color(0xFF1DB5D4))
                 ) {
                 Text(
-                    "Close",
-                    color = Color(0xFFFFD88E)
+                    "Close"
                 )
             }
         }

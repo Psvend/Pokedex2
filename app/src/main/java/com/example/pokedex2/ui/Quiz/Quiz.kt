@@ -23,12 +23,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.example.pokedex2.R
 import com.example.pokedex2.viewModel.QuizViewModel
 
 
@@ -91,34 +100,41 @@ fun Quiz(
     }
     Column (modifier = modifier.fillMaxSize()
         .background(Color(0xFFFFF9E6))
-        .padding(8.dp),
+        .padding(4.dp),
 
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Spacer(modifier = Modifier.height(80.dp))
+        Spacer(modifier = Modifier.height(85.dp))
 
         Text(
             text = "Who´s that pokemon?",
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.headlineSmall,
             color = Color.Black,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp),
-            textAlign = TextAlign.Center
+                .padding(top = 14.dp),
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold
         )
         if (answerCounts.value < maxQuestions) {
 
             QuizImage(model = pokemonDetail.value?.sprites?.front_default, isClear = isClear.value)
-
-            Text(
-                text = "Score: ${points.value}",
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.Black,
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                textAlign = TextAlign.Center
+                    .padding(5.dp)
+                    .background(Color.LightGray, shape = RoundedCornerShape(12.dp))
+                    .align(Alignment.CenterHorizontally)
             )
+            {
+                Text(
+                    text = "Score: ${points.value}",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.Black,
+                    modifier = Modifier.padding(7.dp),
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold
+                )
+            }
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -137,7 +153,8 @@ fun Quiz(
                             containerColor = when {
                                 selectedAnswer.value == option && option == pokemonDetail.value?.name -> Color.Green
                                 selectedAnswer.value == option -> Color.Red
-                                else -> Color.Blue
+                                else -> Color(0xFF1DB5D4)
+
                             },
                             contentColor = Color.White
                         ),
@@ -146,35 +163,82 @@ fun Quiz(
                             .padding(vertical = 2.dp)
                     ) {
                         Text(
-                            text = option
-                        )
+                            text = option,
+                            style = TextStyle(fontSize = 20.sp,)                       )
                     }
                 }
             }
 
         }else {
-            Text(
-                text = "Game Over",
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.Black,
+            Spacer(modifier = Modifier.padding(10.dp))
+            Box(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                contentAlignment = Alignment.Center
+            ) {
+                // Inner yellow color
+                Text(
+                    text = "Game Over",
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.pokedexfont)),
+                        fontSize = 34.sp,
+                        color = Color(0xFFFFD88E)
+                    ),
+
+                    )
+                // Outline blue color
+                Text(
+                    text = "Game Over",
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.pokedexfont)),
+                        fontSize = 34.sp,
+                        color = Color(0xFF000587),
+                        drawStyle = Stroke(
+                            miter = 10f,
+                            width = 5f,
+                            join = StrokeJoin.Round
+                        )
+                    )
+                )
+                // Shadow
+                Text(
+                    text = "Game Over",
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.pokedexfont)),
+                        fontSize = 34.sp,
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Black.copy(alpha = 0.4f),
+                                Color.Transparent,
+                                Color.Transparent
+                            ),
+                        ),
+                    )
+                )
+            }
+
+            Spacer(modifier = Modifier.padding(10.dp))
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                textAlign = TextAlign.Center
+                    .padding(5.dp)
+                    .background(Color.LightGray, shape = RoundedCornerShape(12.dp))
+                    .align(Alignment.CenterHorizontally)
             )
-            Text(
-                text = "Your score is: ${points.value}",
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.Black,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                textAlign = TextAlign.Center
-            )
+            {
+                Text(
+                    text = "Score: ${points.value}",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.Black,
+                    modifier = Modifier.padding(7.dp),
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            Spacer(modifier = Modifier.padding(10.dp))
+
             if(points.intValue==0){
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize(),
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     contentAlignment = Alignment.Center
                 ) {
                     AsyncImage(
@@ -188,8 +252,7 @@ fun Quiz(
             }
             else if (time.intValue<30){
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize(),
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     contentAlignment = Alignment.Center
                 ) {
                     AsyncImage(
@@ -202,8 +265,7 @@ fun Quiz(
                 }
             }else if(time.intValue in 31..59){
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize(),
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     contentAlignment = Alignment.Center
                 ) {
                 AsyncImage(
@@ -215,13 +277,18 @@ fun Quiz(
                 )
                 }
             }else {
-                AsyncImage(
-                    model = "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/143.png",
-                    contentDescription = "You are a pokemon master",
-                    modifier = Modifier
-                        .size(240.dp, 240.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                )
+                Box(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    contentAlignment = Alignment.Center
+                ) {
+                    AsyncImage(
+                        model = "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/143.png",
+                        contentDescription = "You are a pokemon master",
+                        modifier = Modifier
+                            .size(240.dp, 240.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                    )
+                }
             }
         }
     }

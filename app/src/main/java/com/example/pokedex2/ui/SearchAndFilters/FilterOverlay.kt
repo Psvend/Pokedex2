@@ -9,14 +9,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -154,12 +148,10 @@ fun FilterOverlay(
                     Button(
                         onClick = {onClose()},
                         modifier = Modifier,
-                        colors = ButtonDefaults.buttonColors(Color(0xFFA91E1E))
+                        colors = ButtonDefaults.buttonColors(Color(0xFF1DB5D4))
                     ) {
                         Text(
-                            modifier = Modifier.background(Color(0xFFA91E1E)),
-                            text = "Cancel",
-                            color = Color(0xFFFFD88E)
+                            text = "Cancel"
                         )
                     }
                     Button(
@@ -174,25 +166,20 @@ fun FilterOverlay(
                                 pokeEvos.forEach{selectionEvoMap[it.id] = true}
                             }
                         },
-                        colors = ButtonDefaults.buttonColors(Color(0xFFA91E1E))
+                        colors = ButtonDefaults.buttonColors(Color(0xFF1DB5D4))
                     ) {
                         Text(
-                            modifier = Modifier.background(Color(0xFFA91E1E)),
                             text = if (allTypesSelected && allEvosSelected && allGensSelected) "Deselect all" else "Show all",
-                            color = Color(0xFFFFD88E)
                         )
                     }
                     Button(
                         onClick = {
-
                             onClose()
                         },
-                        colors = ButtonDefaults.buttonColors(Color(0xFFA91E1E))
+                        colors = ButtonDefaults.buttonColors(Color(0xFF1DB5D4))
                     ) {
                         Text(
-                            modifier = Modifier.background(Color(0xFFA91E1E)),
-                            text = "Confirm",
-                            color = Color(0xFFFFD88E)
+                            text = "Confirm"
                         )
                     }
                 }
@@ -200,15 +187,3 @@ fun FilterOverlay(
         }
     }
 }
-
-/*IconButton(
-onClick = {onClose()},
-modifier = Modifier
-) {
-    Icon(
-        imageVector = Icons.Default.Clear,
-        tint = Color.DarkGray,
-        contentDescription = "Close FilterOverlay",
-        modifier = Modifier.size(10.dp)
-    )
-}*/
