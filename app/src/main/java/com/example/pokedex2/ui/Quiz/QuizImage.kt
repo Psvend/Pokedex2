@@ -30,11 +30,11 @@ fun QuizImage(model : String?, isClear: Boolean) {
 
         Box(
             modifier = Modifier
-                .height(300.dp)
-                .width(300.dp)
+                .height(260.dp)
+                .width(260.dp)
                 .shadow(8.dp, shape = RoundedCornerShape(12.dp))
                 .border(2.dp, Color.Gray, shape = RoundedCornerShape(12.dp))
-                .background(Color.White, shape = RoundedCornerShape(12.dp)),
+                .background(Color.LightGray, shape = RoundedCornerShape(12.dp)),
             contentAlignment = Alignment.Center
         ) {
             if (model != null) {

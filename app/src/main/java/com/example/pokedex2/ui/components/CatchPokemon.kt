@@ -3,6 +3,7 @@ package com.example.pokedex2.ui.components
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,7 +43,7 @@ fun CatchAnimation(isActive: Boolean) {
     if (isActive) {
         LaunchedEffect(Unit) {
             ballOffsetY.animateTo(
-                targetValue = 1f, // Drop the ball 300 pixels down
+                targetValue = 1f,
                 animationSpec = tween(durationMillis = 3000, easing = LinearOutSlowInEasing)
             )
         }
@@ -70,8 +71,8 @@ fun PokemonDetailsDialog(
         onDismissRequest = { onDismiss() },
         title = {
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = pokemon.name,
@@ -106,11 +107,10 @@ fun PokemonDetailsDialog(
         dismissButton = {
             Button(
                 onClick = onDismiss,
-                colors = ButtonDefaults.buttonColors(Color(0xFFA91E1E))
+                colors = ButtonDefaults.buttonColors(Color(0xFF1DB5D4))
                 ) {
                 Text(
-                    "Close",
-                    color = Color(0xFFFFD88E)
+                    "Close"
                 )
             }
         }
