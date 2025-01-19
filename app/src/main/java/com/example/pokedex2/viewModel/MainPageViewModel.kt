@@ -47,13 +47,25 @@ class MainPageViewModel @Inject constructor (
 
                 val fetchedPokemons = response.results.map { result ->
                     val detail = pokemonApiService.getPokemonDetail(result.name)
+                    val characterDetails = pokemonApiService.getCharacteristic(result.id)
+                    val speciesDetails = pokemonApiService.getPokemonSpecies(result.name)
+
+                    val evolutionChainUrl = speciesDetails.evolution_chain.url
+                    val evolutionChainId = evolutionChainUrl.split("/").last { it.isNotEmpty() }.toInt()
+
                     Affirmation(
                         id = detail.id,
                         name = detail.name.capitalizeFirstLetter(),
                         imageResourceId = detail.sprites.front_default ?: "",
                         typeIcon = detail.types.map { it.type.name.capitalizeFirstLetter() },
-                        isLiked = false, // Will be synced by SyncViewModel
-                        number = detail.id
+                        isLiked = false,
+                        number = detail.id,
+                        ability = detail.abilities.map { it.ability.name },
+                        heldItem = detail.held_items.map { it.item.name },
+                        characteristics = characterDetails.descriptions.map { it.description },
+                        growthRate = speciesDetails.growth_rate.name,
+                        evolutionChainId = evolutionChainId,
+                        stats = detail.stats.map { it.stat.name.capitalizeFirstLetter() to it.base_stat }
                     )
                 }
 
@@ -70,5 +82,9 @@ class MainPageViewModel @Inject constructor (
 
     fun loadNextPage() {
         fetchAffirmations(currentPage + 1)
+    }
+
+    fun getAffirmationByName(name: String): Affirmation? {
+        return _apiPokemons.value.find { it.name == name}
     }
 }

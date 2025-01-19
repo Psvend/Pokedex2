@@ -14,6 +14,16 @@ message FavouriteAffirmation {
     repeated string typeIcon = 4;
     bool isLiked = 5;
     int32 number = 6;
+    repeated string ability = 7;
+    repeated string heldItem = 8;
+    repeated string characteristics = 9;
+    string growthRate = 10;
+    int32 evolutionChainId = 11;
+    repeated Stat stats = 12;
+
 }
 
-
+message Stat {
+    string name = 1;
+    int32 value = 2;
+}

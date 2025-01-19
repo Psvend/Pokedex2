@@ -39,11 +39,11 @@ import com.example.pokedex2.viewModel.SyncViewModel
 
 @Composable
 fun PokemonPage(
-    pokemonIdOrName: String,
+    pokemonName: String,
     modifier: Modifier = Modifier,
     viewModel: PokePageViewModel = hiltViewModel(),
     syncViewModel: SyncViewModel = hiltViewModel(),
-    fetchAPIViewModel: MainPageViewModel = hiltViewModel()
+    mainPageViewModel: MainPageViewModel = hiltViewModel()
 ) {
     val pokemonDetail by viewModel.pokemonDetail.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
@@ -55,7 +55,7 @@ fun PokemonPage(
     val characteristicDescription by viewModel.characteristicDescription.collectAsState()
     val likedPokemons by syncViewModel.pokemonList.collectAsState()  // Observe the liked Pokémon list
     val isLiked = likedPokemons.any { it.id == pokemonDetail?.id }
-    val apiPokemons by fetchAPIViewModel.apiPokemons.collectAsState(initial = emptyList())
+    val apiPokemons by mainPageViewModel.apiPokemons.collectAsState(initial = emptyList())
     val syncedPokemons by syncViewModel.pokemonList.collectAsState(initial = emptyList())
     // Map the evolution data from your API into EvolutionDetailUI objects
     val evolutionDetailsUI = evolvesTo.map { evolution ->
@@ -66,12 +66,13 @@ fun PokemonPage(
         )
     }
 
-    val affirmation = pokemonDetail?.let { syncViewModel.getAffirmationById(it.id) }
+    val affirmation = mainPageViewModel.getAffirmationByName(pokemonName)
 
     LaunchedEffect(apiPokemons) {
         syncViewModel.syncPokemons(apiPokemons)
     }
     // Fetch Pokémon details when the page is displayed
+    /*
     LaunchedEffect(pokemonIdOrName) {
         viewModel.fetchPokemonDetail(pokemonIdOrName.lowercase())
         viewModel.fetchPokemonAbilities(pokemonIdOrName.lowercase())
@@ -93,6 +94,8 @@ fun PokemonPage(
             viewModel.fetchPokemonEncounters(url)
         }
     }
+
+     */
 
     Box(
         modifier = Modifier
@@ -117,11 +120,14 @@ fun PokemonPage(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                PokemonName(name = pokemonDetail?.name ?: "Unknown")
-
-                pokemonDetail?.id?.let { id ->
-                    PokemonNr(id = id)
+                if (affirmation != null) {
+                    PokemonName(name = affirmation.name ?: "Unknown")
                 }
+
+                if (affirmation != null) {
+                    PokemonNr(id = affirmation.id)
+                }
+
 
 
             }
@@ -134,20 +140,23 @@ fun PokemonPage(
             )
 
 
-            pokemonDetail?.id?.let {
-                if (affirmation != null) {
-                    PokemonImage(
-                        model = pokemonDetail?.sprites?.front_default,
-                        syncViewModel = syncViewModel,
-                        affirmation = affirmation
-                    )
-                }
+
+
+            if (affirmation != null) {
+                PokemonImage(
+                    model = affirmation.imageResourceId,
+                    syncViewModel = syncViewModel,
+                    affirmation = affirmation
+                )
             }
 
 
-            pokemonDetail?.types?.map { it.type.name }?.let { types ->
-                PokemonTypeIcons(types = types, fontSize = 10)
+
+
+            if (affirmation != null) {
+                PokemonTypeIcons(types = affirmation.typeIcon, fontSize = 10)
             }
+
 
 
             Spacer(modifier = Modifier.height(20.dp))

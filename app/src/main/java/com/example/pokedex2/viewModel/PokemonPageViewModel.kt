@@ -117,7 +117,7 @@ class PokePageViewModel @Inject constructor(
         }
     }
 
-
+/*
     fun fetchEvolutionChain(pokemonIdOrName: String) {
         viewModelScope.launch {
             try {
@@ -190,6 +190,8 @@ class PokePageViewModel @Inject constructor(
             }
         }
     }
+    
+ */
 
 
     fun fetchPokemonStats(name: String) {

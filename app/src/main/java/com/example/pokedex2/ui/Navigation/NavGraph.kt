@@ -53,7 +53,7 @@ fun NavGraph(
             arguments = listOf(navArgument("pokemonName") { type = NavType.StringType })
         ) { backStackEntry ->
             val pokemonName = backStackEntry.arguments?.getString("pokemonName") ?: ""
-            PokemonPage(pokemonIdOrName = pokemonName)
+            PokemonPage(pokemonName = pokemonName)
         }
     }
 }

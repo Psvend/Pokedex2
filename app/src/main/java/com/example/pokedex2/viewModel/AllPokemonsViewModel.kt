@@ -36,12 +36,11 @@ class AllPokemonsViewModel @Inject constructor(
 
                 val affirmationsList = response.results.map { result ->
                     val detail = pokemonApiService.getPokemonDetail(result.name)
+                    val characterDetails = pokemonApiService.getCharacteristic(result.id)
+                    val speciesDetails = pokemonApiService.getPokemonSpecies(result.name)
 
-                    //fetching encounter locations
-                    val encounters = pokemonApiService.getPokemonEncounters(detail.location_area_encounters)
-                    val locationNames = encounters.map { it.location_area.name.capitalizeFirstLetter()}
-
-
+                    val evolutionChainUrl = speciesDetails.evolution_chain.url
+                    val evolutionChainId = evolutionChainUrl.split("/").last { it.isNotEmpty() }.toInt()
 
                     Affirmation(
                         id = detail.id,
@@ -50,8 +49,14 @@ class AllPokemonsViewModel @Inject constructor(
                         typeIcon = detail.types.map { it.type.name.capitalizeFirstLetter() },
                         isLiked = false,
                         number = detail.id,
-                        encounterLocations = locationNames
+                        ability = detail.abilities.map { it.ability.name },
+                        heldItem = detail.held_items.map { it.item.name },
+                        characteristics = characterDetails.descriptions.map { it.description },
+                        growthRate = speciesDetails.growth_rate.name,
+                        evolutionChainId = evolutionChainId,
+                        stats = detail.stats.map { it.stat.name.capitalizeFirstLetter() to it.base_stat }
                     )
+
                 }
 
                 _affirmations.update { it + affirmationsList }

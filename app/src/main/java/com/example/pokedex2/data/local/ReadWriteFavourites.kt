@@ -5,6 +5,8 @@ import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.proto.FavouriteAffirmation
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import com.example.pokedex2.proto.Stat
+
 
 
 suspend fun saveFavouritePokemon(context: Context, affirmation: Affirmation) {
@@ -14,13 +16,11 @@ suspend fun saveFavouritePokemon(context: Context, affirmation: Affirmation) {
             .filter { it.id != affirmation.id }
             .toMutableList()
 
-        // Add the new Pokémon to the updated list
         updatedFavourites.add(affirmation.toProto())
 
-        // Rebuild the favourites list with the updated list
         currentFavourites.toBuilder()
-            .clearFavourites() // Clear the old list
-            .addAllFavourites(updatedFavourites) // Add the updated list
+            .clearFavourites()
+            .addAllFavourites(updatedFavourites)
             .build()
     }
 }
@@ -31,9 +31,15 @@ private fun Affirmation.toProto(): FavouriteAffirmation {
         .setId(id)
         .setName(name)
         .setImageResourceId(imageResourceId)
-        .addAllTypeIcon(typeIcon) // Add all type icons
+        .addAllTypeIcon(typeIcon)
         .setIsLiked(isLiked)
         .setNumber(number)
+        .addAllAbility(ability)
+        .addAllHeldItem(heldItem)
+        .addAllCharacteristics(characteristics)
+        .setGrowthRate(growthRate)
+        .setEvolutionChainId(evolutionChainId)
+        .addAllStats(stats.toProto())
         .build()
 }
 
@@ -52,7 +58,13 @@ private fun FavouriteAffirmation.toAffirmation(): Affirmation {
         imageResourceId = imageResourceId,
         typeIcon = typeIconList,
         isLiked = isLiked,
-        number = number
+        number = number,
+        ability = abilityList,
+        heldItem = heldItemList,
+        characteristics = characteristicsList,
+        growthRate = growthRate,
+        evolutionChainId = evolutionChainId,
+        stats = statsList.toDomain()
     )
 }
 
@@ -61,10 +73,26 @@ suspend fun removeFavouriteAffirmation(context: Context, affirmationId: Int) {
     context.favouritesDataStore.updateData { currentFavourites ->
         val updatedFavourites = currentFavourites.favouritesList.filter { it.id != affirmationId }
         currentFavourites.toBuilder()
-            .clearFavourites() // Clear the old list
-            .addAllFavourites(updatedFavourites) // Add updated list
+            .clearFavourites()
+            .addAllFavourites(updatedFavourites)
             .build()
     }
 }
 
+
+// Extensions for stats conversion
+
+private fun List<Pair<String, Int>>.toProto(): List<Stat> {
+    return map { (name, value) ->
+        Stat.newBuilder()
+            .setName(name)
+            .setValue(value)
+            .build()
+    }
+}
+
+
+private fun List<Stat>.toDomain(): List<Pair<String, Int>> {
+    return map { stat -> stat.name to stat.value }
+}
 
