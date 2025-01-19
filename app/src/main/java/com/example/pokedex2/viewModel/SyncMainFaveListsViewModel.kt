@@ -3,6 +3,7 @@ package com.example.pokedex2.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedex2.data.local.FavouritesRepository
+import com.example.pokedex2.data.local.LocalCachingDao
 import com.example.pokedex2.model.Affirmation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,27 +16,12 @@ import javax.inject.Inject
 @HiltViewModel
 class SyncViewModel @Inject constructor(
     private val favouritesRepository: FavouritesRepository,
+    private val localCachingDao: LocalCachingDao
     //private val mainPageViewModel: MainPageViewModel
 ) : ViewModel() {
 
     private val _pokemonList = MutableStateFlow<List<Affirmation>>(emptyList())
     val pokemonList: StateFlow<List<Affirmation>> = _pokemonList
-
-    /*
-    init {
-        viewModelScope.launch {
-            mainPageViewModel.apiPokemons.collect { apiPokemons ->
-                val likedPokemons = favouritesRepository.getFavourites().firstOrNull() ?: emptyList()
-
-                val syncedPokemons = apiPokemons.map { fetched ->
-                    fetched.copy(isLiked = likedPokemons.any { it.id == fetched.id })
-                }
-
-                _pokemonList.value = syncedPokemons
-            }
-        }
-    }
-     */
 
     fun syncPokemons(apiPokemons: List<Affirmation>) {
         viewModelScope.launch {

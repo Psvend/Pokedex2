@@ -16,4 +16,5 @@ data class PokemonEntity(
     val isDefault: Boolean,
     val order: Int,
     val isLiked: Boolean
-)
+) {
+}

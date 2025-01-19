@@ -3,6 +3,8 @@ package com.example.pokedex2.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pokedex2.data.local.LocalCaching
+import com.example.pokedex2.data.local.LocalCachingDao
 import com.example.pokedex2.data.remote.PokemonApiService
 import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
@@ -16,7 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainPageViewModel @Inject constructor (
-    private val pokemonApiService: PokemonApiService
+    private val pokemonApiService: PokemonApiService,
+    private val localCachingDao: LocalCachingDao // Inject the DAO
+
 ) : ViewModel() {
 
     private val _apiPokemons = MutableStateFlow<List<Affirmation>>(emptyList())
@@ -33,9 +37,12 @@ class MainPageViewModel @Inject constructor (
 
     private var currentPage = 0
 
+
     init {
-        fetchAffirmations() // Fetch API data on ViewModel initialization
+        loadPokemonsFromDatabase()
     }
+
+
 
     private fun fetchAffirmations(page: Int = 0) {
         viewModelScope.launch {
@@ -47,12 +54,6 @@ class MainPageViewModel @Inject constructor (
 
                 val fetchedPokemons = response.results.map { result ->
                     val detail = pokemonApiService.getPokemonDetail(result.name)
-                    val characterDetails = pokemonApiService.getCharacteristic(result.id)
-                    val speciesDetails = pokemonApiService.getPokemonSpecies(result.name)
-
-                    val evolutionChainUrl = speciesDetails.evolution_chain.url
-                    val evolutionChainId = evolutionChainUrl.split("/").last { it.isNotEmpty() }.toInt()
-
                     Affirmation(
                         id = detail.id,
                         name = detail.name.capitalizeFirstLetter(),
@@ -62,12 +63,24 @@ class MainPageViewModel @Inject constructor (
                         number = detail.id,
                         ability = detail.abilities.map { it.ability.name },
                         heldItem = detail.held_items.map { it.item.name },
-                        characteristics = characterDetails.descriptions.map { it.description },
-                        growthRate = speciesDetails.growth_rate.name,
-                        evolutionChainId = evolutionChainId,
                         stats = detail.stats.map { it.stat.name.capitalizeFirstLetter() to it.base_stat }
                     )
                 }
+
+                // Update database for local Caching
+                localCachingDao.insertPokemons(fetchedPokemons.map {
+                    LocalCaching(
+                        id = it.id,
+                        name = it.name,
+                        imageResourceId = it.imageResourceId,
+                        typeIcon = it.typeIcon.joinToString(","),
+                        isLiked = it.isLiked,
+                        number = it.number,
+                        ability = it.ability.joinToString(","),
+                        heldItem = it.heldItem.joinToString(","),
+                        stats = it.stats.joinToString(",") { stat -> "${stat.first}:${stat.second}" }
+                    )
+                })
 
                 _apiPokemons.update { if (page == 0) fetchedPokemons else it + fetchedPokemons }
                 currentPage = page
@@ -80,7 +93,42 @@ class MainPageViewModel @Inject constructor (
         }
     }
 
-    fun loadNextPage() {
+    private fun loadPokemonsFromDatabase() {
+        viewModelScope.launch {
+            // Load cached pokemons first
+            val cachedPokemons = localCachingDao.getAllPokemons().map {
+                Affirmation(
+                    id = it.id,
+                    name = it.name,
+                    imageResourceId = it.imageResourceId,
+                    typeIcon = it.typeIcon.split(","),
+                    isLiked = it.isLiked,
+                    number = it.number,
+                    ability = it.ability.split(","),
+                    heldItem = it.heldItem.split(","),
+                    stats = it.stats.split(",").map { stat ->
+                        val parts = stat.split(":")
+                        parts[0] to parts[1].toInt()
+                    }
+                )
+            }
+
+            // Show cached data immediately
+            _apiPokemons.value = cachedPokemons
+
+            // Load new data from the API
+            fetchAffirmations()
+        }
+    }
+
+
+    fun getPokemonFromDatabaseByName(name: String): Affirmation? {
+        return _apiPokemons.value.find { it.name.equals(name, ignoreCase = true) }
+
+    }
+
+
+        fun loadNextPage() {
         fetchAffirmations(currentPage + 1)
     }
 

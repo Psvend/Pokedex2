@@ -1,5 +1,6 @@
 package com.example.pokedex2.ui.PokePage
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,6 +36,7 @@ import com.example.pokedex2.ui.PokemonPage.PokemonStatsGraph
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
 import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.PokePageViewModel
+import com.example.pokedex2.viewModel.PokemonPageViewModel
 import com.example.pokedex2.viewModel.PokemonTypeColorViewModel
 import com.example.pokedex2.viewModel.SyncViewModel
 
@@ -43,12 +45,13 @@ import com.example.pokedex2.viewModel.SyncViewModel
 fun PokemonPage(
     pokemonIdOrName: String,
     modifier: Modifier = Modifier,
-    viewModel: PokePageViewModel = hiltViewModel(),
+    viewModel: PokemonPageViewModel = hiltViewModel(),
+    pokePageViewModel: PokePageViewModel = hiltViewModel(),
     syncViewModel: SyncViewModel = hiltViewModel(),
     fetchAPIViewModel: MainPageViewModel = hiltViewModel(),
     typingColorViewModel: PokemonTypeColorViewModel = viewModel()
 ) {
-    val pokemonDetail by viewModel.pokemonDetail.collectAsState()
+    //val pokemonDetail by viewModel.pokemonDetail.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
     val pokemonLocations by viewModel.pokemonLocations.collectAsState()
     val abilities by viewModel.abilities.collectAsState()
@@ -56,10 +59,13 @@ fun PokemonPage(
     val evolvesTo by viewModel.evolvesTo.collectAsState()
     val stats by viewModel.pokemonStats.collectAsState()
     val characteristicDescription by viewModel.characteristicDescription.collectAsState()
-    val likedPokemons by syncViewModel.pokemonList.collectAsState()  // Observe the liked Pokémon list
-    val isLiked = likedPokemons.any { it.id == pokemonDetail?.id }
+    val likedPokemons by syncViewModel.pokemonList.collectAsState()
+    //val isLiked = likedPokemons.any { it.id == pokemonDetail?.id }
     val apiPokemons by fetchAPIViewModel.apiPokemons.collectAsState(initial = emptyList())
-    val syncedPokemons by syncViewModel.pokemonList.collectAsState(initial = emptyList())
+    val syncedPokemons by syncViewModel.pokemonList.collectAsState()
+    val pokemonDetail by pokePageViewModel.pokemonDetail.collectAsState()
+    val isLiked = syncViewModel.pokemonList.collectAsState().value.any { it.id == pokemonDetail?.id }
+
     // Map the evolution data from your API into EvolutionDetailUI objects
     val evolutionDetailsUI = evolvesTo.map { evolution ->
         EvolutionDetailUI(
@@ -69,11 +75,23 @@ fun PokemonPage(
         )
     }
 
-    val affirmation = pokemonDetail?.let { syncViewModel.getAffirmationById(it.id) }
+    val affirmation = pokemonDetail?.let { pokePageViewModel.convertToAffirmation(it) }
+        ?.find { it.name.equals(pokemonIdOrName, ignoreCase = true) }
 
-    LaunchedEffect(apiPokemons) {
+    val likedAffirmation = likedPokemons.find { it.name.equals(pokemonIdOrName, ignoreCase = true) }
+
+
+    LaunchedEffect(pokemonIdOrName) {
+        pokePageViewModel.fetchCachedPokemon(pokemonIdOrName)
+    }
+
+    LaunchedEffect (apiPokemons) {
         syncViewModel.syncPokemons(apiPokemons)
     }
+
+
+
+
     // Fetch Pokémon details when the page is displayed
     LaunchedEffect(pokemonIdOrName) {
         viewModel.fetchPokemonDetail(pokemonIdOrName.lowercase())
@@ -90,12 +108,15 @@ fun PokemonPage(
         }
     }
 
+    /*
     // Fetch encounter locations
     LaunchedEffect(pokemonDetail?.location_area_encounters) {
         pokemonDetail?.location_area_encounters?.let { url ->
             viewModel.fetchPokemonEncounters(url)
         }
     }
+
+     */
 
     Box(
         modifier = Modifier
@@ -137,20 +158,25 @@ fun PokemonPage(
             )
 
 
-            pokemonDetail?.id?.let {
-                if (affirmation != null) {
+
+
+            if (affirmation != null) {
+                if (likedAffirmation != null) {
                     PokemonImage(
-                        model = pokemonDetail?.sprites?.front_default,
+                        model = affirmation.imageResourceId,
                         syncViewModel = syncViewModel,
-                        affirmation = affirmation
+                        affirmation = likedAffirmation
                     )
                 }
             }
 
 
-            pokemonDetail?.types?.map { it.type.name }?.let { types ->
-                PokemonTypeIcons(types = types, modifier = Modifier,fontSize = 10, getTypeColor = {type -> typingColorViewModel.getTypeColor(type)})
+
+
+            if (affirmation != null) {
+                PokemonTypeIcons(types = affirmation.typeIcon, modifier = Modifier,fontSize = 10, getTypeColor = {type -> typingColorViewModel.getTypeColor(type)})
             }
+
 
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -171,7 +197,7 @@ fun PokemonPage(
                 evolvesTo = evolutionDetailsUI,
                 currentPokemon = EvolutionDetailUI(
                     name = pokemonDetail?.name?.capitalizeFirstLetter() ?: "Unknown",
-                    imageUrl = pokemonDetail?.sprites?.front_default ?: "",
+                    imageUrl = pokemonDetail?.imageResourceId ?: "",
                     requirement = "This is the final form"
                 )
             )

@@ -36,9 +36,6 @@ private fun Affirmation.toProto(): FavouriteAffirmation {
         .setNumber(number)
         .addAllAbility(ability)
         .addAllHeldItem(heldItem)
-        .addAllCharacteristics(characteristics)
-        .setGrowthRate(growthRate)
-        .setEvolutionChainId(evolutionChainId)
         .addAllStats(stats.toProto())
         .build()
 }
@@ -61,9 +58,6 @@ private fun FavouriteAffirmation.toAffirmation(): Affirmation {
         number = number,
         ability = abilityList,
         heldItem = heldItemList,
-        characteristics = characteristicsList,
-        growthRate = growthRate,
-        evolutionChainId = evolutionChainId,
         stats = statsList.toDomain()
     )
 }

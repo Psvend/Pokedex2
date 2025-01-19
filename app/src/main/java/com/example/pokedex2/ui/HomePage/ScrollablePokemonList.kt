@@ -60,14 +60,7 @@ fun HomePokemonScroll(
     fetchAPIViewModel: MainPageViewModel = hiltViewModel(),
     searchViewModel: SearchViewModel = viewModel(),
 ) {
-    /*
-}
-    val affirmationList by viewModel.affirmations.collectAsState(initial = emptyList())
-    val isLoading = viewModel.isLoading.value
-    val isPaginating = viewModel.isPaginating.value
-    val errorMessage = viewModel.errorMessage.value
 
-     */
     val isLoading by fetchAPIViewModel.isLoading.collectAsState()
     val isPaginating by fetchAPIViewModel.isPaginating.collectAsState()
     val errorMessage by fetchAPIViewModel.errorMessage.collectAsState()
@@ -80,6 +73,8 @@ fun HomePokemonScroll(
     LaunchedEffect(apiPokemons) {
         syncViewModel.syncPokemons(apiPokemons)
     }
+
+
 
     if (isLoading && syncedPokemons.isEmpty()) {
         Box(

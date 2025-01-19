@@ -17,6 +17,7 @@ import com.example.pokedex2.ui.Quiz.StartingScreenForQuiz
 import com.example.pokedex2.ui.components.EmptyStateScreen
 import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.QuizViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 @Composable
 fun NavGraph(
@@ -57,7 +58,8 @@ fun NavGraph(
             arguments = listOf(navArgument("pokemonName") { type = NavType.StringType })
         ) { backStackEntry ->
             val pokemonName = backStackEntry.arguments?.getString("pokemonName") ?: ""
-            PokemonPage(pokemonName = pokemonName)
+            PokemonPage(pokemonIdOrName = pokemonName,
+                syncViewModel = hiltViewModel())
         }
     }
 }

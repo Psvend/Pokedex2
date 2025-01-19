@@ -36,11 +36,6 @@ class AllPokemonsViewModel @Inject constructor(
 
                 val affirmationsList = response.results.map { result ->
                     val detail = pokemonApiService.getPokemonDetail(result.name)
-                    val characterDetails = pokemonApiService.getCharacteristic(result.id)
-                    val speciesDetails = pokemonApiService.getPokemonSpecies(result.name)
-
-                    val evolutionChainUrl = speciesDetails.evolution_chain.url
-                    val evolutionChainId = evolutionChainUrl.split("/").last { it.isNotEmpty() }.toInt()
 
                     Affirmation(
                         id = detail.id,
@@ -51,9 +46,6 @@ class AllPokemonsViewModel @Inject constructor(
                         number = detail.id,
                         ability = detail.abilities.map { it.ability.name },
                         heldItem = detail.held_items.map { it.item.name },
-                        characteristics = characterDetails.descriptions.map { it.description },
-                        growthRate = speciesDetails.growth_rate.name,
-                        evolutionChainId = evolutionChainId,
                         stats = detail.stats.map { it.stat.name.capitalizeFirstLetter() to it.base_stat }
                     )
 
