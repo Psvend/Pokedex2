@@ -49,9 +49,8 @@ fun FilterOverlay(
     if(showOverlay){
         Box(
             modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.5f))
-                .wrapContentSize(align = Alignment.TopCenter)
+                .fillMaxWidth()
+                .background(Color.Black.copy(alpha = 0.5f)),
         ) {
             Column (
                 modifier = Modifier
@@ -61,31 +60,6 @@ fun FilterOverlay(
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
-                Row (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ){
-                    Text(
-                        text = "Filters",
-                        color = Color.Black,
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(Modifier.weight(1f))
-                    IconButton(
-                        onClick = {onClose()},
-                        modifier = Modifier
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Clear,
-                            tint = Color.DarkGray,
-                            contentDescription = "Close FilterOverlay",
-                            modifier = Modifier.size(75.dp)
-                        )
-                    }
-                }
-
-
                 when {
                     isLoading -> {
                         Box(
@@ -110,14 +84,12 @@ fun FilterOverlay(
                     else -> {
                         Box(
                             modifier = Modifier
-                                //.background(Color(0xFFE55655))
                                 .align(Alignment.Start)
                         ){
                             Text(
                                 modifier = Modifier.padding(6.dp),
                                 text = "Types:",
                                 color = Color.Black,
-                                //color = Color(0xFFFFD88E),
                                 style = MaterialTheme.typography.bodyLarge,
                                 fontWeight = FontWeight.Bold
                             )
@@ -152,14 +124,12 @@ fun FilterOverlay(
                         )
                         Box(
                             modifier = Modifier
-                                //.background(Color(0xFFE55655))
                                 .align(Alignment.Start)
                         ){
                             Text(
                                 modifier = Modifier.padding(6.dp),
                                 text = "Evolution Stages:",
                                 color = Color.Black,
-                                //color = Color(0xFFFFD88E),
                                 style = MaterialTheme.typography.bodyLarge,
                                 fontWeight = FontWeight.Bold
                             )
@@ -173,20 +143,32 @@ fun FilterOverlay(
                         )
                     }
                 }
+                Spacer(modifier = Modifier.padding(5.dp))
 
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 40.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Button(
+                        onClick = {onClose()},
+                        modifier = Modifier,
+                        colors = ButtonDefaults.buttonColors(Color(0xFFA91E1E))
+                    ) {
+                        Text(
+                            modifier = Modifier.background(Color(0xFFA91E1E)),
+                            text = "Cancel",
+                            color = Color(0xFFFFD88E)
+                        )
+                    }
+                    Button(
                         onClick = {
                             if (allTypesSelected) {
-                                // Deselect all types
                                 pokeTypes.forEach { selectionMap[it.id] = false }
                                 pokeGens.forEach{selectionGenMap[it.id] = false}
                                 pokeEvos.forEach{selectionEvoMap[it.id] = false}
                             } else {
-                                // Select all types
                                 pokeTypes.forEach { selectionMap[it.id] = true }
                                 pokeGens.forEach{selectionGenMap[it.id] = true}
                                 pokeEvos.forEach{selectionEvoMap[it.id] = true}
@@ -218,3 +200,15 @@ fun FilterOverlay(
         }
     }
 }
+
+/*IconButton(
+onClick = {onClose()},
+modifier = Modifier
+) {
+    Icon(
+        imageVector = Icons.Default.Clear,
+        tint = Color.DarkGray,
+        contentDescription = "Close FilterOverlay",
+        modifier = Modifier.size(10.dp)
+    )
+}*/

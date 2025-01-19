@@ -86,7 +86,7 @@ fun EmptyStateScreen(
                 viewModel.playSound(context)
                 viewModel.startAnimation()
             },
-            colors = ButtonDefaults.buttonColors(Color(0xFF4F6FDE)),
+            colors = ButtonDefaults.buttonColors(Color(0xFF1DB5D4)),
             modifier = modifier.align(Alignment.CenterHorizontally)
         ) {
             Text(

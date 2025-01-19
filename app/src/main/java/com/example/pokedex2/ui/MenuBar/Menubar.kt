@@ -31,13 +31,12 @@ fun MenuBar(
         BottomNavItem("More", Icons.Filled.Menu, Icons.Outlined.Menu),
     )
 
-    // Determine the background color based on the selected index for custom searchView..
     val backgroundColor = if (selectedItemIndex == 2) Color(0xFFE55655).copy(alpha = 0.9F) else Color(0xFFE55655).copy(alpha = 0.9f)
     val unselectedColor = if (selectedItemIndex == 2) Color(0xFF610003) else Color(0xFF610003)
     val selectedColor =  if (selectedItemIndex == 2) Color(0xFFFFD88E) else Color(0xFFFFD88E)
 
     NavigationBar(
-        containerColor = backgroundColor, // Set the NavigationBar background color to have a custom SearchView..
+        containerColor = backgroundColor,
     ) {
         items.forEachIndexed { index, item ->
             val isSelected = index == selectedItemIndex
