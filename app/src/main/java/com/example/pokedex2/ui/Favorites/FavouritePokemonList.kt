@@ -1,4 +1,4 @@
-package com.example.pokedex2.ui.PokemonList
+package com.example.pokedex2.ui.Favorites
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.pokedex2.ui.HomePage.AffirmationCard
 import com.example.pokedex2.ui.components.EmptyStateScreen
 import com.example.pokedex2.viewModel.FavouritesViewModel
 import com.example.pokedex2.viewModel.SyncViewModel
@@ -25,17 +26,13 @@ fun FavouritePokemonList(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
-    // Collect the list of favourite Pokémon from FavouritesViewModel
     val favouritePokemons by favouritesViewModel.getFavouriteAffirmations().collectAsState(initial = emptyList())
-
     val sortedFavouritePokemons = favouritePokemons.sortedBy { it.number }
 
     if (sortedFavouritePokemons.isEmpty()) {
-        // Show empty state. Point to catch pokemon with nav
         EmptyStateScreen(modifier = modifier)
 
     } else {
-        // Show list of favourite Pokémon
         LazyColumn(
             modifier = modifier
                 .fillMaxSize()
@@ -46,7 +43,6 @@ fun FavouritePokemonList(
                     affirmation = affirmation,
                     navController = navController,
                     onLikeClicked = {
-                        // Call toggleLike from SyncViewModel
                         syncViewModel.toggleLike(affirmation)
                     },
                     modifier = Modifier.padding(4.dp)

@@ -1,4 +1,4 @@
-package com.example.pokedex2.ui.PokemonList
+package com.example.pokedex2.ui.Favorites
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -47,9 +47,7 @@ fun ContentFrame(
                             .calculateStartPadding(layoutDirection),
                     )
             ) {
-                // Content navigation
                 content() // Render the passed composable
-
             }
         }
     }

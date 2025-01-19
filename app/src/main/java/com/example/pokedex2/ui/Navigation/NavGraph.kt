@@ -9,12 +9,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.pokedex2.ui.PokePage.PokemonPage
-import com.example.pokedex2.ui.PokemonList.ContentFrame
-import com.example.pokedex2.ui.PokemonList.FavouritePokemonList
-import com.example.pokedex2.ui.PokemonList.HomePokemonScroll
+import com.example.pokedex2.ui.Favorites.ContentFrame
+import com.example.pokedex2.ui.Favorites.FavouritePokemonList
+import com.example.pokedex2.ui.HomePage.HomePokemonScroll
 import com.example.pokedex2.ui.Quiz.Quiz
 import com.example.pokedex2.ui.Quiz.StartingScreenForQuiz
-import com.example.pokedex2.ui.components.CatchPokemonScreen
+import com.example.pokedex2.ui.components.EmptyStateScreen
 import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.QuizViewModel
 
@@ -46,7 +46,11 @@ fun NavGraph(
             }
         }
         composable("catchPokemonScreen") {
-            CatchPokemonScreen()
+            ContentFrame {
+                EmptyStateScreen(
+                    modifier = Modifier
+                )
+            }
         }
         composable(
             route = "pokemonPage/{pokemonName}",

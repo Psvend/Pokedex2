@@ -124,10 +124,10 @@ fun TopBar(
                         // Button with border and base color
                         Button(
                             onClick = {
-                                if(navController.currentDestination?.route == "pokemonPage/{pokemonName}") {
-                                    navController.navigate("mainPage")
+                                if(navController.currentDestination?.route != "mainpage" || navController.currentDestination?.route == "startingScreenForQuiz") {
+                                    navController.navigateUp()
                                 }else {
-                                    navController.navigate("startingScreenForQuiz")
+                                    navController.navigate("mainPage")
                                 }
                             },
                             shape = CircleShape,
@@ -136,7 +136,7 @@ fun TopBar(
                                 .matchParentSize()
                         ) { }
 
-                        if (currentRoute != "mainPage" && currentRoute != "startingScreenForQuiz") {
+                        if (currentRoute != "mainPage" && currentRoute != "startingScreenForQuiz" && currentRoute != "favoritePokemon" && currentRoute != "catchPokemonScreen") {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                                 contentDescription = "Go Back",

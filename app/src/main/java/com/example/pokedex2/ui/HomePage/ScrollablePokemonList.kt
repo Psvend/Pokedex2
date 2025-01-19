@@ -1,4 +1,4 @@
-package com.example.pokedex2.ui.PokemonList
+package com.example.pokedex2.ui.HomePage
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -82,7 +82,6 @@ fun HomePokemonScroll(
     }
 
     if (isLoading && syncedPokemons.isEmpty()) {
-        // Show a loading spinner during initial load
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -92,7 +91,6 @@ fun HomePokemonScroll(
             RotatingLoader()
         }
     } else if (errorMessage != null && syncedPokemons.isEmpty()) {
-        // Show error state
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -177,8 +175,6 @@ fun HomePokemonScroll(
                     onClose = {showFilterOverlay = false}
                 )
             }
-
-            // Show the Pokémon list
             LazyColumn(
                 state = listState,
                 modifier = modifier
@@ -207,7 +203,6 @@ fun HomePokemonScroll(
                 }
             }
 
-        // Detect scroll to bottom
         LaunchedEffect(listState) {
             snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
                 .filter { it == syncedPokemons.size - 1 && !isPaginating && !isLoading }

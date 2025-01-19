@@ -36,7 +36,7 @@ fun TypeGrid(
             .padding(horizontal = 18.dp, vertical = 5.dp),
         columns = StaggeredGridCells.Fixed(3),
         horizontalArrangement = Arrangement.spacedBy(20.dp),
-        verticalItemSpacing = 16.dp
+        verticalItemSpacing = 12.dp
     ) {
         if (pokeTypes.isEmpty()) {
             item {
