@@ -53,6 +53,7 @@ class MainPageViewModel @Inject constructor (
 
                 val fetchedPokemons = response.results.map { result ->
                     val detail = pokemonApiService.getPokemonDetail(result.name)
+
                     Affirmation(
                         id = detail.id,
                         name = detail.name.capitalizeFirstLetter(),

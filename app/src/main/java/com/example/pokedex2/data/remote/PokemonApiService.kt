@@ -19,6 +19,7 @@ interface PokemonApiService {
     ): PokemonResult
 
 
+
     @GET
     suspend fun getPokemonEncounters(
         @Url encountersUrl: String
