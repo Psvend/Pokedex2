@@ -85,9 +85,12 @@ fun PokemonPage(
         pokePageViewModel.fetchCachedPokemon(pokemonIdOrName)
     }
 
+    /*
     LaunchedEffect (apiPokemons) {
         syncViewModel.syncPokemons(apiPokemons)
     }
+
+     */
 
 
 
@@ -161,14 +164,13 @@ fun PokemonPage(
 
 
             if (affirmation != null) {
-                if (likedAffirmation != null) {
                     PokemonImage(
                         model = affirmation.imageResourceId,
                         syncViewModel = syncViewModel,
-                        affirmation = likedAffirmation
+                        affirmation = affirmation
                     )
                 }
-            }
+
 
 
 

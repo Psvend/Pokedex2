@@ -43,7 +43,6 @@ class MainPageViewModel @Inject constructor (
     }
 
 
-
     private fun fetchAffirmations(page: Int = 0) {
         viewModelScope.launch {
             try {
