@@ -66,7 +66,7 @@ class SyncViewModel @Inject constructor(
             }
         }
     }
-
+/*
     fun getIsLikedById(id: Int): Boolean {
         return _pokemonList.value.find { it.id == id }?.isLiked ?: false
     }
@@ -77,13 +77,13 @@ class SyncViewModel @Inject constructor(
 
     fun getAffirmationByName(name: String): Affirmation? {
         return _pokemonList.value.find { it.name == name}
-    }
+    }*/
 
     fun getAffirmationById(id: Int): Affirmation? {
         return _pokemonList.value.find { it.id == id}
     }
 
-    fun toggleLikeById(pokemonId: Int) {
+    /*fun toggleLikeById(pokemonId: Int) {
         viewModelScope.launch {
             // Find the Pokémon in the list by id
             val affirmation = _pokemonList.value.find { it.id == pokemonId }
@@ -104,6 +104,6 @@ class SyncViewModel @Inject constructor(
                 }
             }
         }
-    }
+    }*/
 
 }
