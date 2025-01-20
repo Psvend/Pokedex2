@@ -1,4 +1,4 @@
-package com.example.pokedex2.ui.SearchAndFilters
+package com.example.pokedex2.ui.Filters
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -73,4 +73,25 @@ fun TypeGrid(
 
 fun String.capitalizeFirstLetter(): String {
     return this.lowercase().replaceFirstChar { it.uppercase() }
+}
+
+fun String.AddSpaceAndCapitalize(): String {
+    val result = StringBuilder()
+    var capitalizeNext = false
+
+    for (char in this) {
+        if (char == '-') {
+            result.append(' ')
+            capitalizeNext = true
+        } else {
+            if (capitalizeNext) {
+                result.append(char.uppercaseChar())
+                capitalizeNext = false
+            } else {
+                result.append(char)
+            }
+        }
+    }
+
+    return result.toString()
 }

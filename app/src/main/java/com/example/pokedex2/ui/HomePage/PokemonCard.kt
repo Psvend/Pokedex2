@@ -36,7 +36,8 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.pokedex2.R
 import com.example.pokedex2.model.Affirmation
-import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
+import com.example.pokedex2.ui.Filters.AddSpaceAndCapitalize
+import com.example.pokedex2.ui.Filters.capitalizeFirstLetter
 import com.example.pokedex2.viewModel.PokemonTypeColorViewModel
 
 
@@ -80,7 +81,7 @@ fun AffirmationCard(
                     .weight(1f)
             ) {
                 Text(
-                    text = affirmation.name,
+                    text = affirmation.name.AddSpaceAndCapitalize(),
                     fontSize = 25.sp
                 )
                 PokemonTypeIcons(types = affirmation.typeIcon, modifier = Modifier,fontSize = 9, {type -> typingColorViewModel.getTypeColor(type)})
@@ -132,7 +133,7 @@ fun PokemonTypeIcons(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = type.capitalizeFirstLetter(),
+                    text = type.capitalizeFirstLetter().AddSpaceAndCapitalize(),
                     style = MaterialTheme.typography.bodySmall.copy(
                         fontFamily = FontFamily(Font(R.font.pressstart2p_regular)),
                         shadow = Shadow(

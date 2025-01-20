@@ -8,6 +8,7 @@ import com.example.pokedex2.data.DataPokeTypes
 import androidx.compose.ui.graphics.Color
 import com.example.pokedex2.data.DataPokeEvolutions
 import com.example.pokedex2.data.DataPokeGenerations
+import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.model.LocalEvolution
 import com.example.pokedex2.model.LocalGenerations
 import com.example.pokedex2.model.LocalPokeTypes
@@ -21,6 +22,11 @@ class SearchViewModel : ViewModel() {
     val selectionMap = mutableStateMapOf<Int, Boolean>()
     val selectionGenMap = mutableStateMapOf<Int, Boolean>()
     val selectionEvoMap = mutableStateMapOf<Int, Boolean>()
+    var pokeList = mutableStateOf<List<Affirmation>>(listOf())
+    private var cachedPokemonSearch = listOf<Affirmation>()
+    private var isSearchStarting = true
+    var isSearching = mutableStateOf(false)
+    
 
     init {
         Log.d("SearchViewModel", "Initializing ViewModel...")

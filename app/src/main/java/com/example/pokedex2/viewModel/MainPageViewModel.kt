@@ -7,7 +7,8 @@ import com.example.pokedex2.data.local.LocalCaching
 import com.example.pokedex2.data.local.LocalCachingDao
 import com.example.pokedex2.data.remote.PokemonApiService
 import com.example.pokedex2.model.Affirmation
-import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
+import com.example.pokedex2.ui.Filters.AddSpaceAndCapitalize
+import com.example.pokedex2.ui.Filters.capitalizeFirstLetter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -56,14 +57,14 @@ class MainPageViewModel @Inject constructor (
 
                     Affirmation(
                         id = detail.id,
-                        name = detail.name.capitalizeFirstLetter(),
-                        imageResourceId = detail.sprites.front_default ?: "",
-                        typeIcon = detail.types.map { it.type.name.capitalizeFirstLetter() },
+                        name = detail.name.capitalizeFirstLetter().AddSpaceAndCapitalize(),
+                        imageResourceId = detail.sprites.front_default,
+                        typeIcon = detail.types.map { it.type.name.capitalizeFirstLetter().AddSpaceAndCapitalize() },
                         isLiked = false,
                         number = detail.id,
                         ability = detail.abilities.map { it.ability.name },
                         heldItem = detail.held_items.map { it.item.name },
-                        stats = detail.stats.map { it.stat.name.capitalizeFirstLetter() to it.base_stat }
+                        stats = detail.stats.map { it.stat.name.capitalizeFirstLetter().AddSpaceAndCapitalize() to it.base_stat }
                     )
                 }
 

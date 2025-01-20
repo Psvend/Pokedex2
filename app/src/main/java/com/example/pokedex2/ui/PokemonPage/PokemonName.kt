@@ -7,13 +7,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
-import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
+import com.example.pokedex2.ui.Filters.AddSpaceAndCapitalize
+import com.example.pokedex2.ui.Filters.capitalizeFirstLetter
 
 @Composable
 fun PokemonName(name: String) {
     Column {
         Text(
-            text = name.capitalizeFirstLetter() ?: "Loading...",
+            text = name.capitalizeFirstLetter().AddSpaceAndCapitalize() ?: "Loading...",
             style = TextStyle(
                 fontSize = 24.sp,
                 fontFamily = FontFamily.Default,

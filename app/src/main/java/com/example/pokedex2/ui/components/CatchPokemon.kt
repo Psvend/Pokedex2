@@ -3,7 +3,6 @@ package com.example.pokedex2.ui.components
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,6 +30,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.pokedex2.R
 import com.example.pokedex2.model.Pokemon
+import com.example.pokedex2.ui.Filters.AddSpaceAndCapitalize
+import com.example.pokedex2.ui.Filters.capitalizeFirstLetter
 import com.example.pokedex2.ui.HomePage.PokemonTypeIcons
 import com.example.pokedex2.viewModel.PokemonTypeColorViewModel
 
@@ -75,7 +76,7 @@ fun PokemonDetailsDialog(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = pokemon.name,
+                    text = pokemon.name.capitalizeFirstLetter().AddSpaceAndCapitalize(),
                     style = MaterialTheme.typography.headlineSmall,
                     color = Color.Black,
                     fontWeight = FontWeight.Bold
@@ -94,12 +95,12 @@ fun PokemonDetailsDialog(
                     modifier = Modifier.size(150.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Row(){
+                Row {
                     PokemonTypeIcons(
                         types = pokemon.type,
                         modifier = Modifier,
-                        fontSize = 10,
-                        {type -> typingColorViewModel.getTypeColor(type)})
+                        fontSize = 14
+                    ) { type -> typingColorViewModel.getTypeColor(type) }
                 }
             }
         },
