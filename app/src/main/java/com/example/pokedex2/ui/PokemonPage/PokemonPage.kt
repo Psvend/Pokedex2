@@ -1,6 +1,5 @@
 package com.example.pokedex2.ui.PokePage
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -64,6 +63,8 @@ fun PokemonPage(
     val apiPokemons by fetchAPIViewModel.apiPokemons.collectAsState(initial = emptyList())
     val syncedPokemons by syncViewModel.pokemonList.collectAsState()
     val pokemonDetail by pokePageViewModel.pokemonDetail.collectAsState()
+    val pokemonDetailList by pokePageViewModel.pokemonDetailList.collectAsState()
+
     val isLiked = syncViewModel.pokemonList.collectAsState().value.any { it.id == pokemonDetail?.id }
 
     // Map the evolution data from your API into EvolutionDetailUI objects
@@ -75,8 +76,8 @@ fun PokemonPage(
         )
     }
 
-    val affirmation = pokemonDetail?.let { pokePageViewModel.convertToAffirmation(it) }
-        ?.find { it.name.equals(pokemonIdOrName, ignoreCase = true) }
+    val affirmation = pokemonDetailList.let { pokePageViewModel.convertToAffirmation(it) }
+        .find { it?.name.equals(pokemonIdOrName, ignoreCase = true) }
 
 
     LaunchedEffect(pokemonIdOrName) {
@@ -154,14 +155,10 @@ fun PokemonPage(
             if (affirmation != null) {
                     PokemonImage(
                         model = affirmation.imageResourceId,
-                        syncViewModel = syncViewModel,
+                        pokePageViewModel = pokePageViewModel,
                         affirmation = affirmation
                     )
                 }
-
-
-
-
 
             if (affirmation != null) {
                 PokemonTypeIcons(types = affirmation.typeIcon, modifier = Modifier,fontSize = 10, getTypeColor = {type -> typingColorViewModel.getTypeColor(type)})

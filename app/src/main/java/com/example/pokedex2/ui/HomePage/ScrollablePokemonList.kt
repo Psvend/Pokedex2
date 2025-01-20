@@ -3,6 +3,8 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -67,21 +69,15 @@ fun HomePokemonScroll(
     val isLoading by fetchAPIViewModel.isLoading.collectAsState()
     val isPaginating by fetchAPIViewModel.isPaginating.collectAsState()
     val errorMessage by fetchAPIViewModel.errorMessage.collectAsState()
+
+
     val listState = rememberLazyListState()
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var showFilterOverlay by remember {mutableStateOf(false)}
-    val apiPokemons by fetchAPIViewModel.apiPokemons.collectAsState(initial = emptyList())
-    val syncedPokemons by syncViewModel.pokemonList.collectAsState(initial = emptyList())
-    val pokemonDetail by pokePageViewModel.pokemonDetail.collectAsState()
 
-/*
-    LaunchedEffect(apiPokemons) {
-        syncViewModel.syncPokemons(apiPokemons)
-    }
 
- */
 
-    val affirmationList = pokePageViewModel.convertToAffirmation(pokemonDetail)
+    val affirmationList = pokePageViewModel.convertToAffirmation(pokePageViewModel.getAllPokemon())
 
 
     Log.d("test", "$affirmationList")
@@ -190,12 +186,17 @@ fun HomePokemonScroll(
                 items(
                     affirmationList
                 ) { affirmation ->
-                    AffirmationCard(
-                        affirmation = affirmation,
-                        navController = navController,
-                        onLikeClicked = { syncViewModel.toggleLike(affirmation) },
-                        modifier = Modifier.padding(4.dp)
-                    )
+                    if (affirmation != null) {
+                        AffirmationCard(
+                            affirmation = affirmation,
+                            navController = navController,
+                            onLikeClicked = {
+                                pokePageViewModel.toggleLike(affirmation.name)
+                                affirmation.isLiked = !affirmation.isLiked
+                            },
+                            modifier = Modifier.padding(4.dp)
+                        )
+                    }
                 }
                 if (isPaginating) {
                     item {

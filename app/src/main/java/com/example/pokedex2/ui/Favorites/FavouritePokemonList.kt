@@ -1,11 +1,13 @@
 package com.example.pokedex2.ui.Favorites
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -15,19 +17,33 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.pokedex2.ui.HomePage.AffirmationCard
 import com.example.pokedex2.ui.components.EmptyStateScreen
-import com.example.pokedex2.viewModel.FavouritesViewModel
-import com.example.pokedex2.viewModel.SyncViewModel
+import com.example.pokedex2.viewModel.PokePageViewModel
 
 
 @Composable
 fun FavouritePokemonList(
-    favouritesViewModel: FavouritesViewModel = hiltViewModel(),
-    syncViewModel: SyncViewModel = hiltViewModel(),
+    pokePageViewModel: PokePageViewModel = hiltViewModel(),
     navController: NavHostController,
     modifier: Modifier = Modifier,
-) {
-    val favouritePokemons by favouritesViewModel.getFavouriteAffirmations().collectAsState(initial = emptyList())
-    val sortedFavouritePokemons = favouritePokemons.sortedBy { it.number }
+
+
+    ) {
+    val favouritePokemons by pokePageViewModel.pokemonLikedList.collectAsState()
+    val pokemonDetail by pokePageViewModel.pokemonDetail.collectAsState()
+    val pokemonDetailList by pokePageViewModel.pokemonDetailList.collectAsState()
+    val pokemonLikedList by pokePageViewModel.pokemonLikedList.collectAsState()
+
+
+    LaunchedEffect (pokemonLikedList) {
+        pokePageViewModel.getAllLikedPokemons()
+    }
+
+
+    val affirmationList = pokePageViewModel.convertToAffirmation(pokemonLikedList)
+    val sortedFavouritePokemons = affirmationList.sortedBy { it?.number }
+
+    Log.d("tag", "$affirmationList $sortedFavouritePokemons")
+
 
     if (sortedFavouritePokemons.isEmpty()) {
         EmptyStateScreen(modifier = modifier)
@@ -39,14 +55,16 @@ fun FavouritePokemonList(
                 .background(Color(0xFFD9D9D9))
         ) {
             items(sortedFavouritePokemons) { affirmation ->
-                AffirmationCard(
-                    affirmation = affirmation,
-                    navController = navController,
-                    onLikeClicked = {
-                        syncViewModel.toggleLike(affirmation)
-                    },
-                    modifier = Modifier.padding(4.dp)
-                )
+                if (affirmation != null) {
+                    AffirmationCard(
+                        affirmation = affirmation,
+                        navController = navController,
+                        onLikeClicked = {
+                            pokePageViewModel.toggleLike(affirmation.name)
+                        },
+                        modifier = Modifier.padding(4.dp),
+                    )
+                }
             }
         }
     }

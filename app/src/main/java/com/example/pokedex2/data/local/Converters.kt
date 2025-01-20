@@ -16,4 +16,14 @@ class Converters {
     fun fromList(list: List<String>): String {
         return Gson().toJson(list)
     }
+
+    @TypeConverter
+    fun fromBooleanToInt(value: Boolean): Int {
+        return if (value) 1 else 0
+    }
+
+    @TypeConverter
+    fun toBooleanFromInt(value: Int): Boolean {
+        return value == 1
+    }
 }

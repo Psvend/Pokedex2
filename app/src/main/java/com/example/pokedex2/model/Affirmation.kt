@@ -7,7 +7,7 @@ data class Affirmation (
     val name: String,
     val imageResourceId: String,
     val typeIcon: List<String>,
-    val isLiked: Boolean,
+    var isLiked: Boolean,
     val number: Int,
     val ability: List<String>,
     val heldItem: List<String>,

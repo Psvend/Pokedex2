@@ -40,8 +40,6 @@ fun NavGraph(
         composable("favouritePokemon") {
             ContentFrame {
                 FavouritePokemonList(
-                    favouritesViewModel = hiltViewModel(),
-                    syncViewModel = hiltViewModel(),
                     navController = navController
                 )
             }

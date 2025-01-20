@@ -43,20 +43,21 @@ import com.example.pokedex2.viewModel.PokemonTypeColorViewModel
 @Composable
 fun AffirmationCard(
     affirmation: Affirmation,
-    onLikeClicked: () -> Unit,
+    onLikeClicked: () -> Unit, // Pass a callback with the new state
     navController: NavHostController,
     modifier: Modifier = Modifier,
     typingColorViewModel: PokemonTypeColorViewModel = viewModel()
 ) {
+
+
     Card(
         modifier = modifier
             .padding(4.dp)
             .clickable {
-                // Navigate to pokemonPage with the Pokémon name
                 navController.navigate("pokemonPage/${affirmation.name.lowercase()}")
             },
         colors = CardDefaults.cardColors(Color(0xFFFFF9E6)),
-        shape = RectangleShape
+        shape = RoundedCornerShape(8.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -64,7 +65,6 @@ fun AffirmationCard(
                 .fillMaxWidth()
                 .padding(8.dp),
         ) {
-            // Pokémon image
             Image(
                 painter = rememberAsyncImagePainter(affirmation.imageResourceId),
                 contentDescription = affirmation.name,
@@ -73,25 +73,22 @@ fun AffirmationCard(
                     .padding(8.dp),
                 contentScale = ContentScale.Crop
             )
-            // Pokémon name and type
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 16.dp)
             ) {
-                Text(
-                    text = affirmation.name,
-                    fontSize = 25.sp
-                )
-                PokemonTypeIcons(types = affirmation.typeIcon, modifier = Modifier,fontSize = 10, {type -> typingColorViewModel.getTypeColor(type)})
+                Text(text = affirmation.name, fontSize = 25.sp)
+                PokemonTypeIcons(types = affirmation.typeIcon, modifier = Modifier, fontSize = 10) {
+                        type -> typingColorViewModel.getTypeColor(type)
+                }
             }
-            // Like button and ID
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(start = 8.dp)
             ) {
-                IconButton(onClick = onLikeClicked) {
+                IconButton(onClick = { onLikeClicked() }) {
                     Icon(
                         painter = painterResource(
                             if (affirmation.isLiked) R.drawable.heart_filled else R.drawable.heart_empty
@@ -102,13 +99,14 @@ fun AffirmationCard(
                 }
                 Text(
                     text = "#" + affirmation.number.toString(),
-                    style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily(Font(R.font.pressstart2p_regular)), fontSize = 10.sp),
+                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp),
                     modifier = Modifier.padding(top = 4.dp)
                 )
             }
         }
     }
 }
+
 
 @Composable
 fun PokemonTypeIcons(

@@ -3,8 +3,10 @@ package com.example.pokedex2.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pokedex2.data.local.FavouritesRepository
 import com.example.pokedex2.data.local.LocalCaching
 import com.example.pokedex2.data.local.LocalCachingDao
+import com.example.pokedex2.data.local.Converters
 import com.example.pokedex2.data.remote.PokemonApiService
 import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
@@ -19,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainPageViewModel @Inject constructor (
     private val pokemonApiService: PokemonApiService,
-    private val localCachingDao: LocalCachingDao // Inject the DAO
+    private val localCachingDao: LocalCachingDao,
+    private val favouritesRepository: FavouritesRepository// Inject the DAO
 
 ) : ViewModel() {
 
@@ -112,27 +115,21 @@ class MainPageViewModel @Inject constructor (
                     }
                 )
             }
-
             // Show cached data immediately
             _apiPokemons.value = cachedPokemons
 
-            // Load new data from the API
-            fetchAffirmations()
+            if (cachedPokemons.size < 1024) {
+                fetchAffirmations()
+            }
         }
     }
 
 
-    fun getPokemonFromDatabaseByName(name: String): Affirmation? {
-        return _apiPokemons.value.find { it.name.equals(name, ignoreCase = true) }
-
-    }
 
 
-        fun loadNextPage() {
+
+    fun loadNextPage() {
         fetchAffirmations(currentPage + 1)
     }
 
-    fun getAffirmationByName(name: String): Affirmation? {
-        return _apiPokemons.value.find { it.name == name}
-    }
 }
