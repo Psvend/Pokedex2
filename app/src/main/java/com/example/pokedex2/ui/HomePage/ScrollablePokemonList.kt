@@ -48,7 +48,7 @@ import com.example.pokedex2.R
 import com.example.pokedex2.ui.Filters.FilterOverlay
 import com.example.pokedex2.utils.RotatingLoader
 import com.example.pokedex2.viewModel.MainPageViewModel
-import com.example.pokedex2.viewModel.PokePageViewModel
+import com.example.pokedex2.viewModel.PrimaryViewModel
 import com.example.pokedex2.viewModel.SearchViewModel
 import com.example.pokedex2.viewModel.SyncViewModel
 import kotlinx.coroutines.flow.filter
@@ -60,7 +60,7 @@ fun HomePokemonScroll(
     syncViewModel: SyncViewModel = hiltViewModel(),
     fetchAPIViewModel: MainPageViewModel = hiltViewModel(),
     searchViewModel: SearchViewModel = viewModel(),
-    pokePageViewModel: PokePageViewModel = hiltViewModel(),
+    pokePageViewModel: PrimaryViewModel = hiltViewModel(),
 ) {
 
 
@@ -68,8 +68,7 @@ fun HomePokemonScroll(
     val isPaginating by fetchAPIViewModel.isPaginating.collectAsState()
     val errorMessage by fetchAPIViewModel.errorMessage.collectAsState()
     val listState = rememberLazyListState()
-    val syncedPokemons by syncViewModel.pokemonList.collectAsState(initial = emptyList())
-    val pokemonDetail by pokePageViewModel.pokemonDetail.collectAsState()
+    val pokemonDetail by pokePageViewModel.pokemonDetailList.collectAsState()
     val affirmationList = pokePageViewModel.convertToAffirmation(pokemonDetail)
 
     var showFilterOverlay by remember {mutableStateOf(false)}
@@ -79,10 +78,13 @@ fun HomePokemonScroll(
     val allGenSelected = searchViewModel.selectionGenMap.values.all { it }
     val allEvoSelected = searchViewModel.selectionEvoMap.values.all { it }
 
+
     val filteredAffirmationList = affirmationList.filter { affirmation ->
-        val matchesSearch = searchQuery.isBlank() || affirmation.doesMatchQuery(searchQuery)
-        matchesSearch
+        searchQuery.isBlank() || affirmation?.doesMatchQuery(searchQuery) == true
     }
+    println(filteredAffirmationList)
+
+
 
     Log.d("test", "$affirmationList")
 
@@ -96,7 +98,7 @@ fun HomePokemonScroll(
         ) {
             RotatingLoader()
         }
-    } else if (errorMessage != null && syncedPokemons.isEmpty()) {
+    } else if (errorMessage != null && affirmationList.isEmpty()) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -217,14 +219,17 @@ fun HomePokemonScroll(
                         .background(Color(0xFFD9D9D9))
                 ) {
                     items(
-                        filteredAffirmationList
+                       filteredAffirmationList
+
                     ) { affirmation ->
-                        AffirmationCard(
-                            affirmation = affirmation,
-                            navController = navController,
-                            onLikeClicked = { syncViewModel.toggleLike(affirmation) },
-                            modifier = Modifier.padding(4.dp)
-                        )
+                        if (affirmation != null) {
+                            AffirmationCard(
+                                affirmation = affirmation,
+                                navController = navController,
+                                onLikeClicked = { syncViewModel.toggleLike(affirmation) },
+                                modifier = Modifier.padding(4.dp)
+                            )
+                        }
                     }
                     if (isPaginating) {
                         item {

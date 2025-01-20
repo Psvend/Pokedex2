@@ -17,12 +17,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.pokedex2.ui.HomePage.AffirmationCard
 import com.example.pokedex2.ui.components.EmptyStateScreen
-import com.example.pokedex2.viewModel.PokePageViewModel
-
+import com.example.pokedex2.viewModel.PrimaryViewModel
 
 @Composable
 fun FavouritePokemonList(
-    pokePageViewModel: PokePageViewModel = hiltViewModel(),
+    pokePageViewModel: PrimaryViewModel = hiltViewModel(),
     navController: NavHostController,
     modifier: Modifier = Modifier,
 

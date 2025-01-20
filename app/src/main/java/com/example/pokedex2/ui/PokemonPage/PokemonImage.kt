@@ -19,11 +19,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.pokedex2.model.Affirmation
-import com.example.pokedex2.viewModel.PokePageViewModel
+import com.example.pokedex2.viewModel.PrimaryViewModel
 import com.example.pokedex2.viewModel.SyncViewModel
 
 @Composable
-fun PokemonImage(model: String?, pokePageViewModel: PokePageViewModel, affirmation: Affirmation) {
+fun PokemonImage(model: String?, pokePageViewModel: PrimaryViewModel, affirmation: Affirmation) {
     Box(
         modifier = Modifier
             .fillMaxWidth()

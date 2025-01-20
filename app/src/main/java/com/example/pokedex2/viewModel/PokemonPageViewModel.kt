@@ -1,7 +1,6 @@
 package com.example.pokedex2.viewModel
 
 
-
 import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
@@ -59,7 +58,6 @@ class PokemonPageViewModel @Inject constructor(
     val characteristicDescription: StateFlow<String> = _characteristicDescription
 
 
-
     //Then add it here and then at PokemonPage
     fun fetchPokemonDetail(nameOrId: String) {
         viewModelScope.launch {
@@ -84,7 +82,9 @@ class PokemonPageViewModel @Inject constructor(
             try {
                 val encounters = pokemonApiService.getPokemonEncounters(encountersUrl)
                 _pokemonLocations.value =
-                    encounters.map { it.location_area.name.capitalizeFirstLetter().addSpaceAndCapitalize() }
+                    encounters.map {
+                        it.location_area.name.capitalizeFirstLetter().addSpaceAndCapitalize()
+                    }
             } catch (e: Exception) {
                 _pokemonLocations.value = listOf("No locations available")
             }
@@ -146,15 +146,21 @@ class PokemonPageViewModel @Inject constructor(
                     if (currentChainLink.evolves_to.isEmpty()) {
                         break // No further evolution links
                     }
-                    currentChainLink = currentChainLink.evolves_to.first() // Continue to the next link
+                    currentChainLink =
+                        currentChainLink.evolves_to.first() // Continue to the next link
                 }
 
                 // Process the "evolves_to" list for the current Pokémon
                 for (evolution in currentChainLink.evolves_to) {
-                    val speciesName = evolution.species.name.capitalizeFirstLetter().addSpaceAndCapitalize()
+                    val speciesName =
+                        evolution.species.name.capitalizeFirstLetter().addSpaceAndCapitalize()
                     val minLevel = evolution.evolution_details.firstOrNull()?.min_level
                     val imageUrl =
-                        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.species.url.split("/").last { it.isNotEmpty() }}.png"
+                        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
+                            evolution.species.url.split(
+                                "/"
+                            ).last { it.isNotEmpty() }
+                        }.png"
 
                     val requirement = if (minLevel != null) {
                         "Level $minLevel"
@@ -190,14 +196,15 @@ class PokemonPageViewModel @Inject constructor(
             }
         }
     }
-    
 
 
     fun fetchPokemonStats(name: String) {
         viewModelScope.launch {
             try {
                 val pokemon = pokemonApiService.getPokemonStats(name)
-                val stats = pokemon.stats.map { it.stat.name.capitalizeFirstLetter().addSpaceAndCapitalize() to it.base_stat }
+                val stats = pokemon.stats.map {
+                    it.stat.name.capitalizeFirstLetter().addSpaceAndCapitalize() to it.base_stat
+                }
                 _pokemonStats.value = stats
             } catch (e: Exception) {
                 Log.e("fetchPokemonStats", "Error fetching stats: ${e.message}")
@@ -249,9 +256,7 @@ class PokemonPageViewModel @Inject constructor(
     }
 
 
-
-
-    fun getStatColor(statName: String): androidx.compose.ui.graphics.Color {
+    fun getStatColor(statName: String): Color {
         return when (statName.lowercase()) {
             "hp" -> Color(0xFFFF0000) // Red for HP
             "attack" -> Color(0xFFFFA500) // Orange for Attack
@@ -262,7 +267,6 @@ class PokemonPageViewModel @Inject constructor(
             else -> Color(0xFF808080) // Gray for unknown or unhandled stats
         }
     }
-
 
 
 }

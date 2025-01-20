@@ -3,10 +3,8 @@ package com.example.pokedex2.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pokedex2.data.local.FavouritesRepository
 import com.example.pokedex2.data.local.LocalCaching
 import com.example.pokedex2.data.local.LocalCachingDao
-import com.example.pokedex2.data.local.Converters
 import com.example.pokedex2.data.remote.PokemonApiService
 import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.ui.Filters.addSpaceAndCapitalize
@@ -23,7 +21,6 @@ import javax.inject.Inject
 class MainPageViewModel @Inject constructor (
     private val pokemonApiService: PokemonApiService,
     private val localCachingDao: LocalCachingDao,
-    private val favouritesRepository: FavouritesRepository// Inject the DAO
 
 ) : ViewModel() {
 

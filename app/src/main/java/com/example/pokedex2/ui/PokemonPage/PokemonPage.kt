@@ -35,7 +35,7 @@ import com.example.pokedex2.ui.PokemonPage.PokemonNr
 import com.example.pokedex2.ui.PokemonPage.PokemonStatsGraph
 import com.example.pokedex2.ui.Filters.capitalizeFirstLetter
 import com.example.pokedex2.viewModel.MainPageViewModel
-import com.example.pokedex2.viewModel.PokePageViewModel
+import com.example.pokedex2.viewModel.PrimaryViewModel
 import com.example.pokedex2.viewModel.PokemonPageViewModel
 import com.example.pokedex2.viewModel.PokemonTypeColorViewModel
 import com.example.pokedex2.viewModel.SyncViewModel
@@ -46,7 +46,7 @@ fun PokemonPage(
     pokemonIdOrName: String,
     modifier: Modifier = Modifier,
     viewModel: PokemonPageViewModel = hiltViewModel(),
-    pokePageViewModel: PokePageViewModel = hiltViewModel(),
+    pokePageViewModel: PrimaryViewModel = hiltViewModel(),
     syncViewModel: SyncViewModel = hiltViewModel(),
     fetchAPIViewModel: MainPageViewModel = hiltViewModel(),
     typingColorViewModel: PokemonTypeColorViewModel = viewModel()

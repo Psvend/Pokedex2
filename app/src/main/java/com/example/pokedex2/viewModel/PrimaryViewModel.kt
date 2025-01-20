@@ -1,4 +1,4 @@
-package com .example.pokedex2.viewModel
+package com.example.pokedex2.viewModel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -14,9 +14,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
-class PokePageViewModel @Inject constructor (
+class PrimaryViewModel @Inject constructor(
     private val localCachingDao: LocalCachingDao, // Inject LocalCachingDao to access cached data
     private val favouritesRepository: FavouritesRepository
 ) : ViewModel() {
@@ -42,18 +41,11 @@ class PokePageViewModel @Inject constructor (
         return _pokemonLikedList.value
     }
 
-
-
     fun getAllPokemon(): List<LocalCaching?> {
         viewModelScope.launch {
             _pokemonDetailList.value = localCachingDao.getAllPokemons()
         }
         return _pokemonDetailList.value
-    }
-
-    fun getPokemonByName(name: String) : LocalCaching? {
-        val pokemon = pokemonDetailList.find { it?.name == name  }
-        return pokemon
     }
 
     fun fetchCachedPokemon(pokemonIdOrName: String) {
@@ -110,6 +102,10 @@ class PokePageViewModel @Inject constructor (
             }
         }
     }
+
+
+
+
 
 
 }
