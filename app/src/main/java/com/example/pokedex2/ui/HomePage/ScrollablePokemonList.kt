@@ -68,9 +68,7 @@ fun HomePokemonScroll(
     val isPaginating by fetchAPIViewModel.isPaginating.collectAsState()
     val errorMessage by fetchAPIViewModel.errorMessage.collectAsState()
     val listState = rememberLazyListState()
-    val pokemonDetail by pokePageViewModel.pokemonDetailList.collectAsState()
-    val affirmationList = pokePageViewModel.convertToAffirmation(pokemonDetail)
-
+    val affirmationList by fetchAPIViewModel.apiPokemons.collectAsState()
     var showFilterOverlay by remember {mutableStateOf(false)}
     var searchQuery by rememberSaveable { mutableStateOf("") }
 
@@ -79,13 +77,11 @@ fun HomePokemonScroll(
     val allEvoSelected = searchViewModel.selectionEvoMap.values.all { it }
 
 
-    LaunchedEffect (pokemonDetail) {
-        pokePageViewModel.getAllPokemon()
+    val filteredAffirmationList = affirmationList.filter { affirmation ->
+        searchQuery.isBlank() || affirmation.doesMatchQuery(searchQuery)
     }
 
-    val filteredAffirmationList = affirmationList.filter { affirmation ->
-        searchQuery.isBlank() || affirmation?.doesMatchQuery(searchQuery) == true
-    }
+
 
 
 
@@ -222,14 +218,12 @@ fun HomePokemonScroll(
                        filteredAffirmationList
 
                     ) { affirmation ->
-                        if (affirmation != null) {
-                                AffirmationCard(
-                                    affirmation = affirmation,
-                                    navController = navController,
-                                    onLikeClicked = { pokePageViewModel.toggleLike(affirmation.name)},
-                                    modifier = Modifier.padding(4.dp),
-                                )
-                        }
+                        AffirmationCard(
+                            affirmation = affirmation,
+                            navController = navController,
+                            onLikeClicked = { pokePageViewModel.toggleLike(affirmation.name)},
+                            modifier = Modifier.padding(4.dp),
+                        )
                     }
                     if (isPaginating) {
                         item {

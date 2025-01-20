@@ -116,12 +116,11 @@ class MainPageViewModel @Inject constructor (
             }
             // Show cached data immediately
             _apiPokemons.value = cachedPokemons
-
             if (cachedPokemons.size < 1024) {
                 fetchAffirmations()
             }
-
         }
+
     }
 
 
