@@ -60,7 +60,7 @@ fun PokemonImage(model: String?, syncViewModel: SyncViewModel, affirmation: Affi
         LikeButton(
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(end = 50.dp, top = 20.dp),
+                .padding(end = 40.dp, top = 30.dp),
             affirmation = affirmation,
             onLikeClicked = { syncViewModel.toggleLike(affirmation) },
 
