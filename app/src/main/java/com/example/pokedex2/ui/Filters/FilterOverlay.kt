@@ -9,8 +9,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,7 +57,29 @@ fun FilterOverlay(
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
-
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Filters",
+                        color = Color.Black,
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(Modifier.weight(1f))
+                    IconButton(
+                        onClick = { onClose() },
+                        modifier = Modifier
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            tint = Color.DarkGray,
+                            contentDescription = "Close FilterOverlay",
+                            modifier = Modifier.size(40.dp)
+                        )
+                    }
+                }
                 when {
                     isLoading -> {
                         Box(
@@ -94,6 +121,7 @@ fun FilterOverlay(
                             onToggleSelection = { id -> searchViewModel.toggleSelection(id) },
                             getTypeColor = { id, color -> searchViewModel.getTypeColor(id, color) }
                         )
+                        Spacer(modifier = Modifier.padding(5.dp))
                         Box(
                             modifier = Modifier
                                 .align(Alignment.Start)

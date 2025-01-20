@@ -47,7 +47,7 @@ fun GenerationGrid(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .aspectRatio(2.0f)
+                        .aspectRatio(1.6f)
                         .border(1.dp, Color.White, RoundedCornerShape(25.dp))
                         .background(
                             color = getColor(localGeneration.id),
