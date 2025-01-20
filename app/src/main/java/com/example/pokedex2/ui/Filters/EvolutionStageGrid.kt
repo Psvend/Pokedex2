@@ -1,4 +1,4 @@
-package com.example.pokedex2.ui.SearchAndFilters
+package com.example.pokedex2.ui.Filters
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,58 +19,55 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.pokedex2.model.LocalPokeTypes
+import com.example.pokedex2.model.LocalEvolution
 import com.example.pokedex2.utils.RotatingLoader
 
 @Composable
-fun TypeGrid(
+fun EvolutionGrid(
     modifier: Modifier = Modifier,
-    pokeTypes: List<LocalPokeTypes>,
-    selectionMap: Map<Int, Boolean>,
+    evolutions: List<LocalEvolution>,
+    selectionEvoMap: Map<Int, Boolean>,
     onToggleSelection: (Int) -> Unit,
-    getTypeColor: (Int, String) -> Color
+    getColor: (Int) -> Color
 ) {
     LazyVerticalStaggeredGrid(
         modifier = modifier
             //.weight(1f)
             .padding(horizontal = 18.dp, vertical = 5.dp),
-        columns = StaggeredGridCells.Fixed(3),
-        horizontalArrangement = Arrangement.spacedBy(20.dp),
-        verticalItemSpacing = 12.dp
+        columns = StaggeredGridCells.Fixed(5),
+        horizontalArrangement = Arrangement.spacedBy(15.dp),
+        verticalItemSpacing = 16.dp
     ) {
-        if (pokeTypes.isEmpty()) {
+        if (evolutions.isEmpty()) {
             item {
                 RotatingLoader()
             }
         }
-        items(pokeTypes) { localPokeType ->
-            val isSelected = selectionMap[localPokeType.id] ?: false
+        items(evolutions) { localEvolution ->
+            val isSelected = selectionEvoMap[localEvolution.id] ?: false
 
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(3.0f)
+                    .aspectRatio(2.0f)
                     .border(1.dp, Color.White, RoundedCornerShape(25.dp))
                     .background(
-                        color = getTypeColor(localPokeType.id, localPokeType.color),
+                        color = getColor(localEvolution.id),
                         shape = RoundedCornerShape(25.dp)
                     )
                     .clickable {
-                        onToggleSelection(localPokeType.id)
+                        onToggleSelection(localEvolution.id)
                     },
                 contentAlignment = Alignment.Center
             ) {
 
                 Text(
-                    text = localPokeType.name,
+                    text = localEvolution.stage,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = if (isSelected) Color.Black else Color.White
+                    color = if (isSelected) Color(0xFFFFD88E) else Color.White
                 )
             }
         }
     }
 }
 
-fun String.capitalizeFirstLetter(): String {
-    return this.lowercase().replaceFirstChar { it.uppercase() }
-}

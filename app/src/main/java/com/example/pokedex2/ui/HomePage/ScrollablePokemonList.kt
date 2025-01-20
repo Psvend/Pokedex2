@@ -3,8 +3,6 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,7 +45,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.pokedex2.R
-import com.example.pokedex2.ui.SearchAndFilters.FilterOverlay
+import com.example.pokedex2.ui.Filters.FilterOverlay
 import com.example.pokedex2.utils.RotatingLoader
 import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.PokePageViewModel
@@ -57,7 +55,6 @@ import kotlinx.coroutines.flow.filter
 
 @Composable
 fun HomePokemonScroll(
-   // viewModel: AffirmationViewModel,
     navController: NavHostController,
     modifier: Modifier = Modifier,
     syncViewModel: SyncViewModel = hiltViewModel(),
@@ -66,19 +63,26 @@ fun HomePokemonScroll(
     pokePageViewModel: PokePageViewModel = hiltViewModel(),
 ) {
 
+
     val isLoading by fetchAPIViewModel.isLoading.collectAsState()
     val isPaginating by fetchAPIViewModel.isPaginating.collectAsState()
     val errorMessage by fetchAPIViewModel.errorMessage.collectAsState()
-
-
     val listState = rememberLazyListState()
-    var searchQuery by rememberSaveable { mutableStateOf("") }
+    val syncedPokemons by syncViewModel.pokemonList.collectAsState(initial = emptyList())
+    val pokemonDetail by pokePageViewModel.pokemonDetail.collectAsState()
+    val affirmationList = pokePageViewModel.convertToAffirmation(pokemonDetail)
+
     var showFilterOverlay by remember {mutableStateOf(false)}
+    var searchQuery by rememberSaveable { mutableStateOf("") }
 
+    val allSelected = searchViewModel.selectionMap.values.all { it }
+    val allGenSelected = searchViewModel.selectionGenMap.values.all { it }
+    val allEvoSelected = searchViewModel.selectionEvoMap.values.all { it }
 
-
-    val affirmationList = pokePageViewModel.convertToAffirmation(pokePageViewModel.getAllPokemon())
-
+    val filteredAffirmationList = affirmationList.filter { affirmation ->
+        val matchesSearch = searchQuery.isBlank() || affirmation.doesMatchQuery(searchQuery)
+        matchesSearch
+    }
 
     Log.d("test", "$affirmationList")
 
@@ -92,7 +96,7 @@ fun HomePokemonScroll(
         ) {
             RotatingLoader()
         }
-    } else if (errorMessage != null && affirmationList.isEmpty()) {
+    } else if (errorMessage != null && syncedPokemons.isEmpty()) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -127,18 +131,21 @@ fun HomePokemonScroll(
                 .fillMaxSize()
                 .background(Color(0xFFD9D9D9))
         ) {
-            Row (
-                modifier = Modifier.fillMaxWidth(),
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(3.dp, bottom = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
-            ){
+            ) {
+
                 OutlinedTextField(
                     value = searchQuery,
-                    onValueChange = { searchQuery = it },
+                    onValueChange = { searchQuery = it},
                     placeholder = { Text("Search...") },
                     modifier = Modifier
+                        .padding(4.dp)
                         .weight(1f)
-                        .padding(2.dp)
                         .background(Color.White, shape = RoundedCornerShape(25.dp)),
                     leadingIcon = {
                         Icon(
@@ -159,66 +166,88 @@ fun HomePokemonScroll(
                     shape = RoundedCornerShape(25.dp)
                 )
 
-                    IconButton(
-                        onClick = {
-                            showFilterOverlay = !showFilterOverlay
-                        },
-                        modifier = Modifier.padding(8.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Settings,
-                            contentDescription = "Open Filters"
-                        )
-                    }
+                IconButton(
+                    onClick = {
+                        showFilterOverlay = !showFilterOverlay
+                    },
+                    modifier = Modifier.padding(3.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Settings,
+                        contentDescription = "Open Filters"
+                    )
+                }
             }
             if (showFilterOverlay) {
                 FilterOverlay(
                     showOverlay = true,
-                    onClose = {showFilterOverlay = false}
+                    onClose = { showFilterOverlay = false }
                 )
-            }
-            LazyColumn(
-                state = listState,
-                modifier = modifier
-                    .fillMaxSize()
-                    .background(Color(0xFFD9D9D9))
-            ) {
-                items(
-                    affirmationList
-                ) { affirmation ->
-                    if (affirmation != null) {
+            } else if (!allSelected && !allEvoSelected && !allGenSelected){
+                Column(
+                    modifier
+                        .fillMaxSize()
+                        .background(Color(0xFFFFF9E6))
+                        .padding(bottom = 170.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box(
+                        modifier.size(260.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.bug_image),
+                            contentDescription = "Empty List",
+                            modifier.size(240.dp)
+                        )
+                    }
+                    Spacer(modifier.height(16.dp))
+                    Text(
+                        text = "No Pokémon matching criteria!",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.Black
+                    )
+                }
+            }else if (allSelected && allEvoSelected && allGenSelected){
+                LazyColumn(
+                    state = listState,
+                    modifier = modifier
+                        .fillMaxSize()
+                        .background(Color(0xFFD9D9D9))
+                ) {
+                    items(
+                        filteredAffirmationList
+                    ) { affirmation ->
                         AffirmationCard(
                             affirmation = affirmation,
                             navController = navController,
-                            onLikeClicked = {
-                                pokePageViewModel.toggleLike(affirmation.name)
-                                affirmation.isLiked = !affirmation.isLiked
-                            },
+                            onLikeClicked = { syncViewModel.toggleLike(affirmation) },
                             modifier = Modifier.padding(4.dp)
                         )
                     }
-                }
-                if (isPaginating) {
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            RotatingLoader()
+                    if (isPaginating) {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                RotatingLoader()
+                            }
                         }
                     }
                 }
-            }
 
-        LaunchedEffect(listState) {
-            snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
-                .filter { it == affirmationList.size - 1 && !isPaginating && !isLoading }
-                .collect {
-                    fetchAPIViewModel.loadNextPage()
+                LaunchedEffect(listState) {
+                    snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+                        .filter { it == affirmationList.size - 1 && !isPaginating && !isLoading }
+                        .collect {
+                            fetchAPIViewModel.loadNextPage()
+                        }
                 }
+            }
         }
     }
-}
 }

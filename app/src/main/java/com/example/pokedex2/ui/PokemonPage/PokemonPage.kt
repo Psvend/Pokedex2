@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokedex2.data.remote.EvolutionDetailUI
+import com.example.pokedex2.ui.Filters.addSpaceAndCapitalize
 import com.example.pokedex2.ui.HomePage.PokemonTypeIcons
 import com.example.pokedex2.ui.PokemonPage.PokemonAbilities
 import com.example.pokedex2.ui.PokemonPage.PokemonDescription
@@ -32,7 +33,7 @@ import com.example.pokedex2.ui.PokemonPage.PokemonLocation
 import com.example.pokedex2.ui.PokemonPage.PokemonName
 import com.example.pokedex2.ui.PokemonPage.PokemonNr
 import com.example.pokedex2.ui.PokemonPage.PokemonStatsGraph
-import com.example.pokedex2.ui.SearchAndFilters.capitalizeFirstLetter
+import com.example.pokedex2.ui.Filters.capitalizeFirstLetter
 import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.PokePageViewModel
 import com.example.pokedex2.viewModel.PokemonPageViewModel
@@ -70,7 +71,7 @@ fun PokemonPage(
     // Map the evolution data from your API into EvolutionDetailUI objects
     val evolutionDetailsUI = evolvesTo.map { evolution ->
         EvolutionDetailUI(
-            name = evolution.name.capitalizeFirstLetter(),
+            name = evolution.name.capitalizeFirstLetter().addSpaceAndCapitalize(),
             imageUrl = evolution.imageUrl, // URL to the Pokémon's sprite
             requirement = evolution.requirement // "Level 22" or "High Friendship"
         )
@@ -183,7 +184,7 @@ fun PokemonPage(
             PokemonEvolvesTo(
                 evolvesTo = evolutionDetailsUI,
                 currentPokemon = EvolutionDetailUI(
-                    name = pokemonDetail?.name?.capitalizeFirstLetter() ?: "Unknown",
+                    name = pokemonDetail?.name?.capitalizeFirstLetter()?.addSpaceAndCapitalize() ?: "Unknown",
                     imageUrl = pokemonDetail?.imageResourceId ?: "",
                     requirement = "This is the final form"
                 )

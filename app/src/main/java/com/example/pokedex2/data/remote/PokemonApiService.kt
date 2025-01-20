@@ -51,7 +51,10 @@ interface PokemonApiService {
         @Path("id") id: Int
     ): CharacteristicResponse
 
-
+    @GET("type/{typeId}")
+    suspend fun getType(
+        @Path("typeId") typeId: Int
+    ): PokemonByTypeResponse
 
 
     companion object {
