@@ -77,7 +77,6 @@ fun HomePokemonScroll(
 
     val allSelected = searchViewModel.selectionMap.values.all { it }
     val allGenSelected = searchViewModel.selectionGenMap.values.all { it }
-    val allEvoSelected = searchViewModel.selectionEvoMap.values.all { it }
 
     val filteredAffirmationList = affirmationList.filter { affirmation ->
         val matchesSearch = searchQuery.isBlank() || affirmation.doesMatchQuery(searchQuery)
@@ -183,7 +182,7 @@ fun HomePokemonScroll(
                     showOverlay = true,
                     onClose = { showFilterOverlay = false }
                 )
-            } else if (!allSelected && !allEvoSelected && !allGenSelected){
+            } else if (!allSelected && !allGenSelected){
                 Column(
                     modifier
                         .fillMaxSize()
@@ -209,7 +208,7 @@ fun HomePokemonScroll(
                         color = Color.Black
                     )
                 }
-            }else if (allSelected && allEvoSelected && allGenSelected){
+            }else if (allSelected && allGenSelected){
                 LazyColumn(
                     state = listState,
                     modifier = modifier

@@ -31,13 +31,10 @@ fun FilterOverlay(
     val isLoading = searchViewModel.isLoading.value
     val selectionMap = searchViewModel.selectionMap
     val selectionGenMap = searchViewModel.selectionGenMap
-    val selectionEvoMap = searchViewModel.selectionEvoMap
     val allTypesSelected = selectionMap.values.all { it } // Check if all are selected
     val allGensSelected = selectionGenMap.values.all {it}
-    val allEvosSelected = selectionEvoMap.values.all {it}
     val pokeTypes = searchViewModel.pokeTypes.value
     val pokeGens = searchViewModel.pokeGenerations.value
-    val pokeEvos = searchViewModel.pokeEvolutions.value
 
 
     if(showOverlay){
@@ -128,13 +125,6 @@ fun FilterOverlay(
                                 fontWeight = FontWeight.Bold
                             )
                         }
-                        EvolutionGrid(
-                            modifier = Modifier,
-                            evolutions = pokeEvos,
-                            selectionEvoMap = selectionEvoMap,
-                            onToggleSelection = {id -> searchViewModel.toggleSelection(id)},
-                            getColor = {id -> searchViewModel.getButtonColor(id)}
-                        )
                     }
                 }
                 Spacer(modifier = Modifier.padding(5.dp))
@@ -159,17 +149,15 @@ fun FilterOverlay(
                             if (allTypesSelected) {
                                 pokeTypes.forEach { selectionMap[it.id] = false }
                                 pokeGens.forEach{selectionGenMap[it.id] = false}
-                                pokeEvos.forEach{selectionEvoMap[it.id] = false}
                             } else {
                                 pokeTypes.forEach { selectionMap[it.id] = true }
                                 pokeGens.forEach{selectionGenMap[it.id] = true}
-                                pokeEvos.forEach{selectionEvoMap[it.id] = true}
                             }
                         },
                         colors = ButtonDefaults.buttonColors(Color(0xFF1DB5D4))
                     ) {
                         Text(
-                            text = if (allTypesSelected && allEvosSelected && allGensSelected) "Deselect all" else "Select all",
+                            text = if (allTypesSelected && allGensSelected) "Deselect all" else "Select all",
                         )
                     }
                     Button(

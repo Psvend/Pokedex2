@@ -5,10 +5,8 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
-import com.example.pokedex2.data.DataPokeEvolutions
 import com.example.pokedex2.data.DataPokeGenerations
 import com.example.pokedex2.data.DataPokeTypes
-import com.example.pokedex2.model.LocalEvolution
 import com.example.pokedex2.model.LocalGenerations
 import com.example.pokedex2.model.LocalPokeTypes
 
@@ -16,17 +14,14 @@ import com.example.pokedex2.model.LocalPokeTypes
 class SearchViewModel : ViewModel() {
     val pokeTypes = mutableStateOf<List<LocalPokeTypes>>(emptyList())
     val pokeGenerations = mutableStateOf<List<LocalGenerations>>(emptyList())
-    val pokeEvolutions = mutableStateOf<List<LocalEvolution>>(emptyList())
     val isLoading = mutableStateOf(true)
     val selectionMap = mutableStateMapOf<Int, Boolean>()
     val selectionGenMap = mutableStateMapOf<Int, Boolean>()
-    val selectionEvoMap = mutableStateMapOf<Int, Boolean>()
 
     init {
         Log.d("SearchViewModel", "Initializing ViewModel...")
         loadTypes()
         loadGenerations()
-        loadEvolutions()
     }
 
     private fun loadTypes() {
@@ -62,19 +57,6 @@ class SearchViewModel : ViewModel() {
         isLoading.value = false
     }
 
-    private fun loadEvolutions() {
-        Log.d("SearchViewModel", "Loading evolutions...")
-        val evolutions = DataPokeEvolutions().loadEvolutions()
-        pokeEvolutions.value = evolutions
-
-        //Log generations
-        Log.d("SearchViewModel", "Evolutions loaded: $evolutions")
-
-        evolutions.forEach {evolution->
-            selectionEvoMap[evolution.id] = true
-        }
-        isLoading.value = false
-    }
 
     fun getTypeColor(typeId: Int, defaultColor: String): Color {
         return if (selectionMap[typeId] == true) {
@@ -85,7 +67,7 @@ class SearchViewModel : ViewModel() {
     }
 
     fun getButtonColor(id: Int): Color {
-        return if (selectionGenMap[id] == true ||selectionEvoMap[id] == true) {
+        return if (selectionGenMap[id] == true) {
             Color(0xFFA91E1E)
         } else {
             Color.DarkGray
@@ -97,8 +79,6 @@ class SearchViewModel : ViewModel() {
             selectionMap[id] = !(selectionMap[id] ?: false)
         } else if (id in 19..26){
             selectionGenMap[id] = !(selectionGenMap[id] ?: false)
-        } else if (id in 27..29){
-            selectionEvoMap[id] = !(selectionEvoMap[id] ?: false)
         }
     }
 }
