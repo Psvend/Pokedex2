@@ -64,7 +64,6 @@ fun HomePokemonScroll(
     pokePageViewModel: PokePageViewModel = hiltViewModel(),
 ) {
 
-     */
     val allSelected = searchViewModel.selectionMap.values.all { it }
     val allGenSelected = searchViewModel.selectionGenMap.values.all { it }
     val allEvoSelected = searchViewModel.selectionEvoMap.values.all { it }
