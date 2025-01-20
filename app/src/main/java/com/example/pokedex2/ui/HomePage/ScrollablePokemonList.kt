@@ -79,14 +79,14 @@ fun HomePokemonScroll(
     val allEvoSelected = searchViewModel.selectionEvoMap.values.all { it }
 
 
+    LaunchedEffect (pokemonDetail) {
+        pokePageViewModel.getAllPokemon()
+    }
+
     val filteredAffirmationList = affirmationList.filter { affirmation ->
         searchQuery.isBlank() || affirmation?.doesMatchQuery(searchQuery) == true
     }
-    println(filteredAffirmationList)
 
-
-
-    Log.d("test", "$affirmationList")
 
 
     if (isLoading && affirmationList.isEmpty()) {
@@ -223,12 +223,12 @@ fun HomePokemonScroll(
 
                     ) { affirmation ->
                         if (affirmation != null) {
-                            AffirmationCard(
-                                affirmation = affirmation,
-                                navController = navController,
-                                onLikeClicked = { syncViewModel.toggleLike(affirmation) },
-                                modifier = Modifier.padding(4.dp)
-                            )
+                                AffirmationCard(
+                                    affirmation = affirmation,
+                                    navController = navController,
+                                    onLikeClicked = { pokePageViewModel.toggleLike(affirmation.name)},
+                                    modifier = Modifier.padding(4.dp),
+                                )
                         }
                     }
                     if (isPaginating) {

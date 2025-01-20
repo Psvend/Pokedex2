@@ -29,8 +29,31 @@ class PrimaryViewModel @Inject constructor(
     private val _pokemonLikedList = MutableStateFlow<List<LocalCaching?>>(emptyList())
     val pokemonLikedList: StateFlow<List<LocalCaching?>> = _pokemonLikedList
 
+    private val _getPokemon = MutableStateFlow<LocalCaching?>(null)
+    val getPokemon: StateFlow<LocalCaching?> = _getPokemon
+
+    private val _pokemonList = MutableStateFlow<List<LocalCaching>>(emptyList())
+    val pokemonList: StateFlow<List<LocalCaching>> = _pokemonList
+
+    private val _pokemonLike = MutableStateFlow<LocalCaching?>(null)
+    val pokemonLike: StateFlow<LocalCaching?> = _pokemonLike
+
+    private val _pokemonPlaceholder = MutableStateFlow<LocalCaching?>(null)
+    val pokemonPlaceholder: StateFlow<LocalCaching?> = _pokemonPlaceholder
+
     private val _convertedDetail = MutableStateFlow<List<Affirmation?>>(emptyList())
     val convertedDetail: StateFlow<List<Affirmation?>> = _convertedDetail
+
+    private val _convertedAffirmation = MutableStateFlow<Affirmation?>(null)
+    val convertedAffirmation: StateFlow<Affirmation?> = _convertedAffirmation
+
+    fun getPokemonByName(name: String) : LocalCaching? {
+        viewModelScope.launch {
+            val pokemon = localCachingDao.getPokemonByname(name)
+            _getPokemon.value=pokemon
+        }
+        return _getPokemon.value
+    }
 
     fun getAllLikedPokemons() : List<LocalCaching?> {
         viewModelScope.launch {
@@ -81,29 +104,78 @@ class PrimaryViewModel @Inject constructor(
         return _convertedDetail.value
     }
 
+    fun convertSingleAffirmation(localCaching : LocalCaching) : Affirmation? {
+        viewModelScope.launch {
+            val pokemon =
+                    Affirmation(
+                        id = localCaching.id,
+                        name = localCaching.name,
+                        imageResourceId = localCaching.imageResourceId,
+                        typeIcon = localCaching.typeIcon.split(","),
+                        isLiked = localCaching.isLiked,
+                        number = localCaching.number,
+                        ability = localCaching.ability.split(","),
+                        heldItem = localCaching.heldItem.split(","),
+                        stats = localCaching.stats.split(",").map { stat ->
+                            val parts = stat.split(":")
+                            parts[0] to parts[1].toInt()
+                        }
+                    )
+            _convertedAffirmation.value = pokemon
+
+        }
+        return _convertedAffirmation.value
+    }
+
     fun toggleLike(name: String) {
         viewModelScope.launch {
-            val pokemon = localCachingDao.getPokemonByname(name)
-            val newIsLiked = !pokemon.isLiked
+            _pokemonLike.value = localCachingDao.getPokemonByname(name)
+            val isLiked = !_pokemonLike.value!!.isLiked
+            val pokemon = _pokemonLike.value!!.copy(isLiked = isLiked)
 
-            // Update the database
-            if (newIsLiked) {
-                localCachingDao.addLike(name)
+            // Update cache
+            if (isLiked) {
+                localCachingDao.addLike(pokemon.name)
+
             } else {
-                localCachingDao.removeLike(name)
+                localCachingDao.removeLike(pokemon.name)
             }
 
-            // Update the _pokemonLikedList to reflect the new state
-            _pokemonLikedList.update { currentList ->
-                currentList.map { pokemonItem ->
-                    if (pokemonItem?.name == name) pokemonItem.copy(isLiked = newIsLiked)
-                    else pokemonItem
-                }
+            _pokemonLikedList.update { list ->
+                list.map {
+                    if (it?.id == pokemon.id) pokemon else it}
             }
         }
     }
+    /*
+    fun toggleLike(name: String) {
+        viewModelScope.launch {
+            _pokemonLike.value = localCachingDao.getPokemonByname(name)
+            val isLiked = !_pokemonLike.value!!.isLiked
+            val pokemon = _pokemonLike.value!!.copy(isLiked = isLiked)
+
+            // Update cache
+            if (isLiked) {
+                localCachingDao.addLike(pokemon.name)
+
+            } else {
+                localCachingDao.removeLike(pokemon.name)
+            }
 
 
+        }
+
+    }
+
+_pokemonList.update { currentList ->
+                currentList.map { pokemonItem ->
+                    if (pokemonItem.name == name) pokemonItem.copy(isLiked = isLiked)
+                    else pokemonItem
+                }
+            }
+
+
+     */
 
 
 

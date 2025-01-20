@@ -1,5 +1,6 @@
 package com.example.pokedex2.ui.PokePage
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -66,8 +67,6 @@ fun PokemonPage(
     val pokemonDetail by pokePageViewModel.pokemonDetail.collectAsState()
     val pokemonDetailList by pokePageViewModel.pokemonDetailList.collectAsState()
 
-    val isLiked = syncViewModel.pokemonList.collectAsState().value.any { it.id == pokemonDetail?.id }
-
     // Map the evolution data from your API into EvolutionDetailUI objects
     val evolutionDetailsUI = evolvesTo.map { evolution ->
         EvolutionDetailUI(
@@ -77,13 +76,19 @@ fun PokemonPage(
         )
     }
 
-    val affirmation = pokemonDetailList.let { pokePageViewModel.convertToAffirmation(it) }
-        .find { it?.name.equals(pokemonIdOrName, ignoreCase = true) }
 
+
+    LaunchedEffect (pokemonDetailList) {
+        pokePageViewModel.getAllPokemon()
+    }
 
     LaunchedEffect(pokemonIdOrName) {
         pokePageViewModel.fetchCachedPokemon(pokemonIdOrName)
     }
+
+    val affirmation = pokemonDetail?.let { pokePageViewModel.convertSingleAffirmation(it) }
+
+
 
     // Fetch Pokémon details when the page is displayed
     LaunchedEffect(pokemonIdOrName) {

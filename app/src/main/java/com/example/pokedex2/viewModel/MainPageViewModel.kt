@@ -1,6 +1,7 @@
 package com.example.pokedex2.viewModel
 
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedex2.data.local.LocalCaching
@@ -119,6 +120,7 @@ class MainPageViewModel @Inject constructor (
             if (cachedPokemons.size < 1024) {
                 fetchAffirmations()
             }
+
         }
     }
 

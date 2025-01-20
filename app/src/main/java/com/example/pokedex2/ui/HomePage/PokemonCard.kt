@@ -1,5 +1,6 @@
 package com.example.pokedex2.ui.HomePage
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,7 +11,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -18,19 +23,29 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
@@ -39,6 +54,8 @@ import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.ui.Filters.addSpaceAndCapitalize
 import com.example.pokedex2.ui.Filters.capitalizeFirstLetter
 import com.example.pokedex2.viewModel.PokemonTypeColorViewModel
+import com.example.pokedex2.viewModel.PrimaryViewModel
+import com.example.pokedex2.viewModel.SyncViewModel
 
 
 @Composable
@@ -47,8 +64,13 @@ fun AffirmationCard(
     onLikeClicked: () -> Unit,
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    typingColorViewModel: PokemonTypeColorViewModel = viewModel()
-) {
+    typingColorViewModel: PokemonTypeColorViewModel = viewModel(),
+    primaryViewModel: PrimaryViewModel = hiltViewModel(),
+    syncViewModel: SyncViewModel = hiltViewModel(),
+){
+
+    var isToggled by remember { mutableStateOf(false) }
+
     Card(
         modifier = modifier
             .padding(4.dp)
@@ -84,21 +106,32 @@ fun AffirmationCard(
                     text = affirmation.name.addSpaceAndCapitalize(),
                     fontSize = 25.sp
                 )
-                PokemonTypeIcons(types = affirmation.typeIcon, modifier = Modifier,fontSize = 9, {type -> typingColorViewModel.getTypeColor(type)})
+                PokemonTypeIcons(types = affirmation.typeIcon, modifier = Modifier,fontSize = 9) { type ->
+                    typingColorViewModel.getTypeColor(
+                        type
+                    )
+                }
             }
             // Like button and ID
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(start = 8.dp)
             ) {
-                IconButton(onClick = onLikeClicked) {
+                IconButton(onClick = {onLikeClicked()
+                isToggled=!isToggled}) {
                     Icon(
-                        painter = painterResource(
-                            if (affirmation.isLiked) R.drawable.heart_filled else R.drawable.heart_empty
-                        ),
-                        contentDescription = if (affirmation.isLiked) "Unlike" else "Like",
-                        tint = if (affirmation.isLiked) Color(0xFFB11014) else Color(0xFFB11014)
+                        imageVector = if (isToggled || affirmation.isLiked) {
+                            Icons.Default.Favorite
+                        } else {
+                            Icons.Default.FavoriteBorder
+                        },
+                        contentDescription = if (isToggled) "Toggled Icon" else "Default Icon",
+                        tint = Color(0xFFB11014),
+                        modifier = Modifier
+                            .size(35.dp)
+
                     )
+
                 }
                 Text(
                     text = "#" + affirmation.number.toString(),

@@ -56,8 +56,7 @@ fun NavGraph(
             arguments = listOf(navArgument("pokemonName") { type = NavType.StringType })
         ) { backStackEntry ->
             val pokemonName = backStackEntry.arguments?.getString("pokemonName") ?: ""
-            PokemonPage(pokemonIdOrName = pokemonName,
-                syncViewModel = hiltViewModel())
+            PokemonPage(pokemonIdOrName = pokemonName)
         }
     }
 }
