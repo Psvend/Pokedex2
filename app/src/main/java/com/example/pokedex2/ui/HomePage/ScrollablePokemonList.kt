@@ -182,42 +182,69 @@ fun HomePokemonScroll(
                     showOverlay = true,
                     onClose = { showFilterOverlay = false }
                 )
-            }
-            LazyColumn(
-                state = listState,
-                modifier = modifier
-                    .fillMaxSize()
-                    .background(Color(0xFFD9D9D9))
-            ) {
-                items(
-                    affirmationList
-                ) { affirmation ->
-                    AffirmationCard(
-                        affirmation = affirmation,
-                        navController = navController,
-                        onLikeClicked = { syncViewModel.toggleLike(affirmation) },
-                        modifier = Modifier.padding(4.dp)
+            } else if (!allSelected && !allEvoSelected && !allGenSelected){
+                Column(
+                    modifier
+                        .fillMaxSize()
+                        .background(Color(0xFFFFF9E6))
+                        .padding(bottom = 170.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box(
+                        modifier.size(260.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.bug_image),
+                            contentDescription = "Empty List",
+                            modifier.size(240.dp)
+                        )
+                    }
+                    Spacer(modifier.height(16.dp))
+                    Text(
+                        text = "No Pokémon matching criteria!",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.Black
                     )
                 }
-                if (isPaginating) {
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            RotatingLoader()
+            }else if (allSelected && allEvoSelected && allGenSelected){
+                LazyColumn(
+                    state = listState,
+                    modifier = modifier
+                        .fillMaxSize()
+                        .background(Color(0xFFD9D9D9))
+                ) {
+                    items(
+                        affirmationList
+                    ) { affirmation ->
+                        AffirmationCard(
+                            affirmation = affirmation,
+                            navController = navController,
+                            onLikeClicked = { syncViewModel.toggleLike(affirmation) },
+                            modifier = Modifier.padding(4.dp)
+                        )
+                    }
+                    if (isPaginating) {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                RotatingLoader()
+                            }
                         }
                     }
                 }
-            }
 
-        LaunchedEffect(listState) {
-            snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
-                .filter { it == affirmationList.size - 1 && !isPaginating && !isLoading }
-                .collect {
-                    fetchAPIViewModel.loadNextPage()
+                LaunchedEffect(listState) {
+                    snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+                        .filter { it == affirmationList.size - 1 && !isPaginating && !isLoading }
+                        .collect {
+                            fetchAPIViewModel.loadNextPage()
+                        }
                 }
             }
         }
