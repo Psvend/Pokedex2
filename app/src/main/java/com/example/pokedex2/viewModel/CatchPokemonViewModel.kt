@@ -50,7 +50,7 @@ class CatchPokemonViewModel @Inject constructor(
 
     fun stopAnimation() {
         _isAnimationActive.value = false
-        _currentPokemon.value = null // Clear the PokémonDialog when stopping the animation
+        _currentPokemon.value = null
     }
 
     fun playSound(context: Context) {

@@ -109,8 +109,6 @@ fun TopBar(
                                 ),
                             )
                         )
-
-
                     }
                 },
 
@@ -124,7 +122,7 @@ fun TopBar(
                         // Button with border and base color
                         Button(
                             onClick = {
-                                if(navController.currentDestination?.route != "mainpage" || navController.currentDestination?.route == "startingScreenForQuiz") {
+                                if(navController.currentDestination?.route != "mainpage" || navController.currentDestination?.route == "startingScreenForQuiz" || navController.currentDestination?.route == "favoritePokemon") {
                                     navController.navigateUp()
                                 }else {
                                     navController.navigate("mainPage")
@@ -136,7 +134,7 @@ fun TopBar(
                                 .matchParentSize()
                         ) { }
 
-                        if (currentRoute != "mainPage" && currentRoute != "startingScreenForQuiz" && currentRoute != "favoritePokemon" && currentRoute != "catchPokemonScreen") {
+                        if (currentRoute != "mainPage" && currentRoute != "startingScreenForQuiz" && currentRoute != "favouritePokemon" && currentRoute != "catchPokemonScreen") {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                                 contentDescription = "Go Back",
@@ -170,7 +168,6 @@ fun TopBar(
 
                 },
 
-
                 actions = {
                     CircleDot(
                         sizeOfDot = 12,
@@ -184,7 +181,6 @@ fun TopBar(
                         sizeOfDot = 12,
                         dotColorInner = Color.Green
                     )
-
                 },
             )
         }

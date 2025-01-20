@@ -19,7 +19,6 @@ class AllPokemonsViewModel @Inject constructor(
     private val pokemonApiService: PokemonApiService
 ) : ViewModel() {
 
-
     private val _affirmations = MutableStateFlow<List<Affirmation>>(emptyList())
 
     val isLoading = mutableStateOf(true)

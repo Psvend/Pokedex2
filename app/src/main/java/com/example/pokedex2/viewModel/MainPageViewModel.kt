@@ -38,11 +38,9 @@ class MainPageViewModel @Inject constructor (
 
     private var currentPage = 0
 
-
     init {
         loadPokemonsFromDatabase()
     }
-
 
     private fun fetchAffirmations(page: Int = 0) {
         viewModelScope.launch {
@@ -50,7 +48,7 @@ class MainPageViewModel @Inject constructor (
                 if (page == 0) _isLoading.value = true else _isPaginating.value = true
 
                 val offset = 0
-                val response = pokemonApiService.getPokemonList(offset, 1025)
+                val response = pokemonApiService.getPokemonList(offset, 100)
 
                 val fetchedPokemons = response.results.map { result ->
                     val detail = pokemonApiService.getPokemonDetail(result.name)

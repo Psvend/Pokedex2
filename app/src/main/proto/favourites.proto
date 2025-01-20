@@ -20,7 +20,6 @@ message FavouriteAffirmation {
     string growthRate = 10;
     int32 evolutionChainId = 11;
     repeated Stat stats = 12;
-
 }
 
 message Stat {

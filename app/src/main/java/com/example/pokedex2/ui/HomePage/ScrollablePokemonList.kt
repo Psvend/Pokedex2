@@ -62,8 +62,6 @@ fun HomePokemonScroll(
     searchViewModel: SearchViewModel = viewModel(),
     pokePageViewModel: PokePageViewModel = hiltViewModel(),
 ) {
-
-
     val isLoading by fetchAPIViewModel.isLoading.collectAsState()
     val isPaginating by fetchAPIViewModel.isPaginating.collectAsState()
     val errorMessage by fetchAPIViewModel.errorMessage.collectAsState()
