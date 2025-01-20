@@ -43,6 +43,7 @@ fun FilterOverlay(
                 .fillMaxWidth()
                 .background(Color.Black.copy(alpha = 0.5f)),
         ) {
+
             Column (
                 modifier = Modifier
                     .background(Color(0xFFFFF9E6))
@@ -51,6 +52,7 @@ fun FilterOverlay(
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
+
                 when {
                     isLoading -> {
                         Box(
@@ -113,18 +115,6 @@ fun FilterOverlay(
                             onToggleSelection = {id -> searchViewModel.toggleSelection(id)},
                             getColor = {id -> searchViewModel.getButtonColor(id)}
                         )
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.Start)
-                        ){
-                            Text(
-                                modifier = Modifier.padding(6.dp),
-                                text = "Evolution Stages:",
-                                color = Color.Black,
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
                     }
                 }
                 Spacer(modifier = Modifier.padding(5.dp))
