@@ -68,7 +68,7 @@ class SearchViewModel : ViewModel() {
 
     fun getButtonColor(id: Int): Color {
         return if (selectionGenMap[id] == true) {
-            Color(0xFFA91E1E)
+            Color(0xFF0F748A)
         } else {
             Color.DarkGray
         }

@@ -96,14 +96,12 @@ fun FilterOverlay(
                         )
                         Box(
                             modifier = Modifier
-                                //.background(Color(0xFFE55655))
                                 .align(Alignment.Start)
                         ){
                             Text(
                                 modifier = Modifier.padding(6.dp),
                                 text = "Generations:",
                                 color = Color.Black,
-                                //color = Color(0xFFFFD88E),
                                 style = MaterialTheme.typography.bodyLarge,
                                 fontWeight = FontWeight.Bold
                             )
@@ -111,7 +109,6 @@ fun FilterOverlay(
                         GenerationGrid(
                             modifier = Modifier,
                             generations = pokeGens,
-                            selectionGenerationMap = selectionGenMap,
                             onToggleSelection = {id -> searchViewModel.toggleSelection(id)},
                             getColor = {id -> searchViewModel.getButtonColor(id)}
                         )

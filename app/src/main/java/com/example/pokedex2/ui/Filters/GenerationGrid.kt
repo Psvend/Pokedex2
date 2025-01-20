@@ -27,7 +27,6 @@ import com.example.pokedex2.utils.RotatingLoader
 fun GenerationGrid(
     modifier: Modifier = Modifier,
     generations: List<LocalGenerations>,
-    selectionGenerationMap: Map<Int, Boolean>,
     onToggleSelection: (Int) -> Unit,
     getColor: (Int) -> Color
 ) {
@@ -45,8 +44,6 @@ fun GenerationGrid(
             }
         }
         items(generations) { localGeneration ->
-            val isSelected = selectionGenerationMap[localGeneration.id] ?: false
-
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -65,7 +62,7 @@ fun GenerationGrid(
                     Text(
                         text = localGeneration.generation,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = if (isSelected) Color(0xFFFFD88E) else Color.White
+                        color =  Color.White
                     )
                 }
             }
