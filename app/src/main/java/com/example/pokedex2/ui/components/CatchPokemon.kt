@@ -1,8 +1,11 @@
 package com.example.pokedex2.ui.components
 
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,10 +22,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -34,29 +48,35 @@ import com.example.pokedex2.ui.Filters.addSpaceAndCapitalize
 import com.example.pokedex2.ui.Filters.capitalizeFirstLetter
 import com.example.pokedex2.ui.HomePage.PokemonTypeIcons
 import com.example.pokedex2.viewModel.PokemonTypeColorViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun CatchAnimation(isActive: Boolean) {
-    {TODO("Make whole current view schrink into nothing when animation before animation. For a clear canvas/background")}
-    val ballOffsetY = remember { androidx.compose.animation.core.Animatable(0f) } // Start ball top of screen
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val screenHeightFloat = LocalConfiguration.current.screenHeightDp.toFloat()
+    val ballOffsetY = remember { Animatable(screenHeight.value) } // Start at the bottom of the screen
 
-    //Animation
+    // Animation
     if (isActive) {
         LaunchedEffect(Unit) {
             ballOffsetY.animateTo(
-                targetValue = 1f,
-                animationSpec = tween(durationMillis = 3000, easing = LinearOutSlowInEasing)
+                targetValue = screenHeightFloat / 2, // Center of the screen
+                animationSpec = tween(durationMillis = 2000, easing = LinearOutSlowInEasing)
             )
         }
     }
+
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black), // Clear canvas with black background
         contentAlignment = Alignment.Center
     ) {
         Image(
             painter = painterResource(id = R.drawable.closed_pokeball),
             contentDescription = "Pokeball",
-            modifier = Modifier.offset(10.dp)
+            modifier = Modifier
+                .offset(y = ballOffsetY.value.dp - screenHeight / 2) // Animate the vertical position
         )
     }
 }
@@ -117,3 +137,93 @@ fun PokemonDetailsDialog(
         }
     )
 }
+
+@Composable
+fun SparkleAnimation(isActive: Boolean) {
+    val sparkles = ImageBitmap.imageResource(R.drawable.sparkle) // Load the sprite sheet
+    val frameWidth = sparkles.width / 6 // Assuming 6 frames per row
+    val frameHeight = sparkles.height / 6 // Assuming 6 rows
+
+    var currentFrame by remember { mutableStateOf(0) }
+
+    if (isActive) {
+        LaunchedEffect(Unit) {
+            while (isActive) {
+                currentFrame = (currentFrame + 1) % 36 // Loop through 36 frames
+                delay(100) // Adjust delay to control frame speed
+            }
+        }
+    }
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val row = currentFrame / 6
+        val col = currentFrame % 6
+
+        // Calculate source rectangle
+        val srcRect = Rect(
+            left = (col * frameWidth).toFloat(),
+            top = (row * frameHeight).toFloat(),
+            right = ((col + 1) * frameWidth).toFloat(),
+            bottom = ((row + 1) * frameHeight).toFloat()
+        )
+
+        // Calculate destination rectangle (centered sparkle)
+        val dstLeft = size.width / 2 - 64
+        val dstTop = size.height / 2 - 64
+        val dstRight = size.width / 2 + 64
+        val dstBottom = size.height / 2 + 64
+
+        // Draw the specific frame using low-level Canvas API
+        drawIntoCanvas { canvas ->
+            canvas.nativeCanvas.drawBitmap(
+                sparkles.asAndroidBitmap(), // Convert ImageBitmap to Android Bitmap
+                android.graphics.Rect(
+                    srcRect.left.toInt(),
+                    srcRect.top.toInt(),
+                    srcRect.right.toInt(),
+                    srcRect.bottom.toInt()
+                ),
+                android.graphics.Rect(
+                    dstLeft.toInt(),
+                    dstTop.toInt(),
+                    dstRight.toInt(),
+                    dstBottom.toInt()
+                ),
+                null
+            )
+        }
+    }
+}
+
+
+
+@Composable
+fun CatchAndSparkleAnimation(isActive: Boolean) {
+    val density = LocalDensity.current
+    val screenHeightPx = with(density) { LocalConfiguration.current.screenHeightDp.dp.toPx() } // Convert screen height to pixels
+    val ballOffsetY = remember { Animatable(screenHeightPx) } // Start at the bottom of the screen
+    var showSparkles by remember { mutableStateOf(false) }
+
+    if (isActive) {
+        LaunchedEffect(Unit) {
+            ballOffsetY.animateTo(
+                targetValue = screenHeightPx / 2,
+                animationSpec = tween(durationMillis = 2000, easing = LinearOutSlowInEasing)
+            )
+            showSparkles = true // Show sparkles after the ball animation
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        if (showSparkles) {
+            SparkleAnimation(isActive = true)
+        } else {
+            Image(
+                painter = painterResource(id = R.drawable.closed_pokeball),
+                contentDescription = "Pokeball",
+                modifier = Modifier.offset(y = with(density) { ballOffsetY.value.toDp() })
+            )
+        }
+    }
+}
+

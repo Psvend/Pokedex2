@@ -31,7 +31,6 @@ import com.example.pokedex2.R
 import com.example.pokedex2.viewModel.CatchPokemonViewModel
 import kotlinx.coroutines.delay
 
-
 @Composable
 fun EmptyStateScreen(
     viewModel: CatchPokemonViewModel = hiltViewModel(),
@@ -39,75 +38,85 @@ fun EmptyStateScreen(
 ) {
     val context = LocalContext.current
     val currentPokemon by viewModel.currentPokemon.collectAsState()
-    val isAnimationActive by viewModel.isAnimationActive.collectAsState()
+    val currentStep by viewModel.currentStep.collectAsState()
 
-    var showDialog by remember { mutableStateOf(false) }
-
-    // Delay showing the dialog when a new Pokémon is fetched
-    LaunchedEffect(currentPokemon) {
-        if (currentPokemon != null) {
-            delay(2000L) // 2 sec
-            showDialog = true
-        }
-    }
-    Column(
-        modifier
+    Box(
+        modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFF9E6)),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(if (currentStep != CatchPokemonViewModel.AnimationStep.Idle) Color(0xffeae6d5) else Color(0xffeae6d5)),
+
+
+    contentAlignment = Alignment.Center
     ) {
-        Box(
-            modifier.size(150.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                painter = painterResource(R.drawable.bug_image),
-                contentDescription = "Empty List",
-                modifier.size(128.dp)
-            )
-        }
-        Spacer(modifier.height(16.dp))
-        Text(
-            text = "No Pokémon added to favorites yet!",
-            style = MaterialTheme.typography.labelLarge,
-            color = Color.Black
-        )
-        Spacer(modifier.height(16.dp))
-        Text(
-            text = "Catch your first?",
-            style = MaterialTheme.typography.headlineMedium,
-            color = Color.Black
-        )
-        Spacer(modifier.height(16.dp))
-        Button(
-            onClick = {
-                viewModel.fetchRandomPokemon()
-                viewModel.playSound(context)
-                viewModel.startAnimation()
-            },
-            colors = ButtonDefaults.buttonColors(Color(0xFF1DB5D4)),
-            modifier = modifier.align(Alignment.CenterHorizontally)
-        ) {
-            Text(
-                "Catch 'em all!",
-                    color = Color(0xFFFDFDFD)
-            )
-        }
-    }
-
-    // Show the animation and dialog if needed
-    if (isAnimationActive) {
-        CatchAnimation(isActive = true)
-    }
-
-    if (showDialog && currentPokemon != null) {
-        PokemonDetailsDialog(
-            pokemon = currentPokemon!!,
-            onDismiss = {
-                viewModel.stopAnimation()
-                showDialog = false // Hide the dialog
+        when (currentStep) {
+            CatchPokemonViewModel.AnimationStep.Idle -> {
+                // Initial screen with button to start catching
+                Column(
+                    modifier = modifier,
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box(
+                        modifier.size(150.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.bug_image),
+                            contentDescription = "Empty List",
+                            modifier.size(128.dp)
+                        )
+                    }
+                    Spacer(modifier.height(16.dp))
+                    Text(
+                        text = "No Pokémon added to favorites yet!",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = Color.Black
+                    )
+                    Spacer(modifier.height(16.dp))
+                    Text(
+                        text = "Catch your first?",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = Color.Black
+                    )
+                    Spacer(modifier.height(16.dp))
+                    Button(
+                        onClick = { viewModel.fetchRandomPokemon() },
+                        colors = ButtonDefaults.buttonColors(Color(0xFF1DB5D4)),
+                        modifier = modifier.align(Alignment.CenterHorizontally)
+                    ) {
+                        Text(
+                            "Catch 'em all!",
+                            color = Color(0xFFFDFDFD)
+                        )
+                    }
+                }
             }
-        )
+            CatchPokemonViewModel.AnimationStep.CatchAnimation -> {
+                // Pokeball animation
+                CatchAnimation(isActive = true)
+                LaunchedEffect(Unit) {
+                    delay(2000L) // Wait for the animation duration
+                    viewModel.proceedToNextStep()
+                }
+            }
+            CatchPokemonViewModel.AnimationStep.SparkleAnimation -> {
+                // Sparkle animation and sound
+                SparkleAnimation(isActive = true)
+                LaunchedEffect(Unit) {
+                    viewModel.playSound(context)
+                    delay(2000L) // Wait for the sparkle duration
+                    viewModel.proceedToNextStep()
+                }
+            }
+            CatchPokemonViewModel.AnimationStep.ShowDialog -> {
+                // Show Pokémon details dialog
+                currentPokemon?.let { pokemon ->
+                    PokemonDetailsDialog(
+                        pokemon = pokemon,
+                        onDismiss = { viewModel.reset() }
+                    )
+                }
+            }
+        }
     }
 }
