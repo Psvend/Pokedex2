@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.pokedex2.ui.Filters.AddSpaceAndCapitalize
+import com.example.pokedex2.ui.Filters.addSpaceAndCapitalize
 import com.example.pokedex2.ui.Filters.capitalizeFirstLetter
 
 @Composable
@@ -49,7 +49,7 @@ fun PokemonAbilities(abilities: List<String>) {
             } else {
                 abilities.forEach { ability ->
                     Text(
-                        text = ability.capitalizeFirstLetter().AddSpaceAndCapitalize(),
+                        text = ability.capitalizeFirstLetter().addSpaceAndCapitalize(),
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = Color.DarkGray
                         ),

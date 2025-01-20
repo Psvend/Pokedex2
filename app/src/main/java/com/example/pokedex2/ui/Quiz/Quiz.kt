@@ -38,6 +38,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.pokedex2.R
+import com.example.pokedex2.ui.Filters.addSpaceAndCapitalize
+import com.example.pokedex2.ui.Filters.capitalizeFirstLetter
 import com.example.pokedex2.viewModel.QuizViewModel
 
 
@@ -92,8 +94,10 @@ fun Quiz(
     }
     val answerOptions = remember(pokemonDetail.value, pokemonNames.value) {
         if (pokemonDetail.value != null) {
-            val correctAnswer = pokemonDetail.value?.name ?: "Unknown"
-            (pokemonNames.value.shuffled().take(3) + correctAnswer).shuffled()
+            val correctAnswer = pokemonDetail.value?.name?.capitalizeFirstLetter()
+                ?.addSpaceAndCapitalize()
+                ?: "Unknown"
+            (pokemonNames.value.shuffled().take(3) + correctAnswer).shuffled().capitalizeFirstLetter().addSpaceAndCapitalize()
         } else {
             emptyList()
         }
@@ -143,7 +147,8 @@ fun Quiz(
                     Button(
                         onClick = {
                             selectedAnswer.value = option
-                            if (option == pokemonDetail.value?.name) {
+                            if (option == pokemonDetail.value?.name?.capitalizeFirstLetter()
+                                    ?.addSpaceAndCapitalize()) {
                                 points.value += 1
                             }
                             triggerNextQuistion.value = true
@@ -151,7 +156,8 @@ fun Quiz(
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = when {
-                                selectedAnswer.value == option && option == pokemonDetail.value?.name -> Color.Green
+                                selectedAnswer.value == option && option == pokemonDetail.value?.name?.capitalizeFirstLetter()
+                                    ?.addSpaceAndCapitalize()  -> Color.Green
                                 selectedAnswer.value == option -> Color.Red
                                 else -> Color(0xFF1DB5D4)
 

@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.pokedex2.ui.Filters.AddSpaceAndCapitalize
+import com.example.pokedex2.ui.Filters.addSpaceAndCapitalize
 import com.example.pokedex2.ui.Filters.capitalizeFirstLetter
 import com.example.pokedex2.viewModel.PokemonPageViewModel
 
@@ -83,7 +83,7 @@ fun PokemonGrowthRate(
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Text(
-                    text = growthRate.capitalizeFirstLetter().AddSpaceAndCapitalize(),
+                    text = growthRate.capitalizeFirstLetter().addSpaceAndCapitalize(),
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = Color.Gray,
                     )

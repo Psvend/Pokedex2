@@ -30,7 +30,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.pokedex2.R
 import com.example.pokedex2.model.Pokemon
-import com.example.pokedex2.ui.Filters.AddSpaceAndCapitalize
+import com.example.pokedex2.ui.Filters.addSpaceAndCapitalize
 import com.example.pokedex2.ui.Filters.capitalizeFirstLetter
 import com.example.pokedex2.ui.HomePage.PokemonTypeIcons
 import com.example.pokedex2.viewModel.PokemonTypeColorViewModel
@@ -76,7 +76,7 @@ fun PokemonDetailsDialog(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = pokemon.name.capitalizeFirstLetter().AddSpaceAndCapitalize(),
+                    text = pokemon.name.capitalizeFirstLetter().addSpaceAndCapitalize(),
                     style = MaterialTheme.typography.headlineSmall,
                     color = Color.Black,
                     fontWeight = FontWeight.Bold

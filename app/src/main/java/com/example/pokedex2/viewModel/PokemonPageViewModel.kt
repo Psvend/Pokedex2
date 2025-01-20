@@ -10,7 +10,7 @@ import com.example.pokedex2.data.remote.EvolutionDetailUI
 import com.example.pokedex2.data.remote.PokemonApiService
 import com.example.pokedex2.data.remote.PokemonSpecies
 import com.example.pokedex2.data.remote.json.PokemonResult
-import com.example.pokedex2.ui.Filters.AddSpaceAndCapitalize
+import com.example.pokedex2.ui.Filters.addSpaceAndCapitalize
 import com.example.pokedex2.ui.Filters.capitalizeFirstLetter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -84,7 +84,7 @@ class PokemonPageViewModel @Inject constructor(
             try {
                 val encounters = pokemonApiService.getPokemonEncounters(encountersUrl)
                 _pokemonLocations.value =
-                    encounters.map { it.location_area.name.capitalizeFirstLetter().AddSpaceAndCapitalize() }
+                    encounters.map { it.location_area.name.capitalizeFirstLetter().addSpaceAndCapitalize() }
             } catch (e: Exception) {
                 _pokemonLocations.value = listOf("No locations available")
             }
@@ -133,7 +133,7 @@ class PokemonPageViewModel @Inject constructor(
 
                 // Find the current Pokémon in the chain
                 val currentPokemon = EvolutionDetailUI(
-                    name = species.name.capitalizeFirstLetter().AddSpaceAndCapitalize(),
+                    name = species.name.capitalizeFirstLetter().addSpaceAndCapitalize(),
                     imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${species.id}.png",
                     requirement = "This is the final form"
                 )
@@ -151,7 +151,7 @@ class PokemonPageViewModel @Inject constructor(
 
                 // Process the "evolves_to" list for the current Pokémon
                 for (evolution in currentChainLink.evolves_to) {
-                    val speciesName = evolution.species.name.capitalizeFirstLetter().AddSpaceAndCapitalize()
+                    val speciesName = evolution.species.name.capitalizeFirstLetter().addSpaceAndCapitalize()
                     val minLevel = evolution.evolution_details.firstOrNull()?.min_level
                     val imageUrl =
                         "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.species.url.split("/").last { it.isNotEmpty() }}.png"
@@ -197,7 +197,7 @@ class PokemonPageViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val pokemon = pokemonApiService.getPokemonStats(name)
-                val stats = pokemon.stats.map { it.stat.name.capitalizeFirstLetter().AddSpaceAndCapitalize() to it.base_stat }
+                val stats = pokemon.stats.map { it.stat.name.capitalizeFirstLetter().addSpaceAndCapitalize() to it.base_stat }
                 _pokemonStats.value = stats
             } catch (e: Exception) {
                 Log.e("fetchPokemonStats", "Error fetching stats: ${e.message}")

@@ -75,7 +75,7 @@ fun String.capitalizeFirstLetter(): String {
     return this.lowercase().replaceFirstChar { it.uppercase() }
 }
 
-fun String.AddSpaceAndCapitalize(): String {
+fun String.addSpaceAndCapitalize(): String {
     val result = StringBuilder()
     var capitalizeNext = false
 
@@ -95,3 +95,12 @@ fun String.AddSpaceAndCapitalize(): String {
 
     return result.toString()
 }
+
+fun List<String>.capitalizeFirstLetter(): List<String> {
+    return this.map { it.capitalizeFirstLetter() }
+}
+
+fun List<String>.addSpaceAndCapitalize(): List<String> {
+    return this.map { it.addSpaceAndCapitalize() }
+}
+
