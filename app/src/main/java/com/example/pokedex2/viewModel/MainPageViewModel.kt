@@ -48,8 +48,8 @@ class MainPageViewModel @Inject constructor (
             try {
                 if (page == 0) _isLoading.value = true else _isPaginating.value = true
 
-                val offset = page * 20
-                val response = pokemonApiService.getPokemonList(offset, 20)
+                val offset = 0
+                val response = pokemonApiService.getPokemonList(offset, 1025)
 
                 val fetchedPokemons = response.results.map { result ->
                     val detail = pokemonApiService.getPokemonDetail(result.name)
