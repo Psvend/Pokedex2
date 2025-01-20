@@ -43,17 +43,11 @@ class PokePageViewModel @Inject constructor (
     }
 
 
-
     fun getAllPokemon(): List<LocalCaching?> {
         viewModelScope.launch {
             _pokemonDetailList.value = localCachingDao.getAllPokemons()
         }
         return _pokemonDetailList.value
-    }
-
-    fun getPokemonByName(name: String) : LocalCaching? {
-        val pokemon = pokemonDetailList.find { it?.name == name  }
-        return pokemon
     }
 
     fun fetchCachedPokemon(pokemonIdOrName: String) {
@@ -110,6 +104,4 @@ class PokePageViewModel @Inject constructor (
             }
         }
     }
-
-
 }
