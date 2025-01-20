@@ -55,7 +55,6 @@ import kotlinx.coroutines.flow.filter
 
 @Composable
 fun HomePokemonScroll(
-   // viewModel: AffirmationViewModel,
     navController: NavHostController,
     modifier: Modifier = Modifier,
     syncViewModel: SyncViewModel = hiltViewModel(),
@@ -73,17 +72,8 @@ fun HomePokemonScroll(
     val listState = rememberLazyListState()
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var showFilterOverlay by remember {mutableStateOf(false)}
-    val apiPokemons by fetchAPIViewModel.apiPokemons.collectAsState(initial = emptyList())
     val syncedPokemons by syncViewModel.pokemonList.collectAsState(initial = emptyList())
     val pokemonDetail by pokePageViewModel.pokemonDetail.collectAsState()
-
-/*
-    LaunchedEffect(apiPokemons) {
-        syncViewModel.syncPokemons(apiPokemons)
-    }
-
- */
-
     val affirmationList = pokePageViewModel.convertToAffirmation(pokemonDetail)
 
 
@@ -135,7 +125,9 @@ fun HomePokemonScroll(
                 .background(Color(0xFFD9D9D9))
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(3.dp, bottom = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -145,7 +137,8 @@ fun HomePokemonScroll(
                     onValueChange = { searchQuery = it },
                     placeholder = { Text("Search...") },
                     modifier = Modifier
-                        .padding(2.dp)
+                        .padding(4.dp)
+                        .weight(1f)
                         .background(Color.White, shape = RoundedCornerShape(25.dp)),
                     leadingIcon = {
                         Icon(
@@ -169,7 +162,7 @@ fun HomePokemonScroll(
                     onClick = {
                         showFilterOverlay = !showFilterOverlay
                     },
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(3.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Settings,

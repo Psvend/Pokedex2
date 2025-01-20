@@ -169,7 +169,7 @@ fun FilterOverlay(
                         colors = ButtonDefaults.buttonColors(Color(0xFF1DB5D4))
                     ) {
                         Text(
-                            text = if (allTypesSelected && allEvosSelected && allGensSelected) "Deselect all" else "Show all",
+                            text = if (allTypesSelected && allEvosSelected && allGensSelected) "Deselect all" else "Select all",
                         )
                     }
                     Button(

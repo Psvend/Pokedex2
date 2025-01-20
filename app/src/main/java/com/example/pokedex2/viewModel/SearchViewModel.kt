@@ -21,10 +21,6 @@ class SearchViewModel : ViewModel() {
     val selectionMap = mutableStateMapOf<Int, Boolean>()
     val selectionGenMap = mutableStateMapOf<Int, Boolean>()
     val selectionEvoMap = mutableStateMapOf<Int, Boolean>()
-    var searchQuery = mutableStateOf("Name, number or description")
-    var active = mutableStateOf(false)
-    var showDialog = mutableStateOf(false)
-    var acceptSearchCriteria = mutableStateOf(false)
 
     init {
         Log.d("SearchViewModel", "Initializing ViewModel...")
@@ -42,7 +38,7 @@ class SearchViewModel : ViewModel() {
         Log.d("SearchViewModel", "Types loaded: $types")
 
         types.forEach { type ->
-            selectionMap[type.id] = false
+            selectionMap[type.id] = true
         }
 
         // Log selectionMap. Printing in logcat
@@ -60,7 +56,7 @@ class SearchViewModel : ViewModel() {
         Log.d("SearchViewModel", "Generations loaded: $generations")
 
         generations.forEach {generation->
-            selectionGenMap[generation.id] = false
+            selectionGenMap[generation.id] = true
         }
 
         isLoading.value = false
@@ -75,9 +71,8 @@ class SearchViewModel : ViewModel() {
         Log.d("SearchViewModel", "Evolutions loaded: $evolutions")
 
         evolutions.forEach {evolution->
-            selectionEvoMap[evolution.id] = false
+            selectionEvoMap[evolution.id] = true
         }
-
         isLoading.value = false
     }
 
@@ -85,7 +80,7 @@ class SearchViewModel : ViewModel() {
         return if (selectionMap[typeId] == true) {
             Color(android.graphics.Color.parseColor(defaultColor)) // Selected color
         } else {
-            Color.DarkGray // Unselected type color
+            Color.DarkGray
         }
     }
 
@@ -97,13 +92,6 @@ class SearchViewModel : ViewModel() {
         }
     }
 
-    fun clearSearch() {
-        searchQuery.value = ""
-        active.value = false
-        acceptSearchCriteria.value = false
-        selectionMap.clear()
-    }
-
     fun toggleSelection(id: Int) {
         if (id <= 18) {
             selectionMap[id] = !(selectionMap[id] ?: false)
@@ -111,20 +99,6 @@ class SearchViewModel : ViewModel() {
             selectionGenMap[id] = !(selectionGenMap[id] ?: false)
         } else if (id in 27..29){
             selectionEvoMap[id] = !(selectionEvoMap[id] ?: false)
-        }
-    }
-
-
-
-    fun selectAll() {
-        pokeTypes.value.forEach { selectionMap[it.id] = true }
-    }
-
-    fun validateCriteria() {
-        if (selectionMap.containsValue(true) || searchQuery.value.isNotBlank() && searchQuery.value != "Name, number or description") {
-            acceptSearchCriteria.value = true
-        } else {
-            showDialog.value = true
         }
     }
 }

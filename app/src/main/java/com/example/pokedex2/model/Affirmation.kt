@@ -13,4 +13,4 @@ data class Affirmation (
     val heldItem: List<String>,
     val stats: List<Pair<String, Int>>
 
-)
+){}
