@@ -1,4 +1,5 @@
 package com.example.pokedex2.ui.HomePage
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -37,7 +38,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -48,6 +48,7 @@ import com.example.pokedex2.R
 import com.example.pokedex2.ui.SearchAndFilters.FilterOverlay
 import com.example.pokedex2.utils.RotatingLoader
 import com.example.pokedex2.viewModel.MainPageViewModel
+import com.example.pokedex2.viewModel.PokePageViewModel
 import com.example.pokedex2.viewModel.SearchViewModel
 import com.example.pokedex2.viewModel.SyncViewModel
 import kotlinx.coroutines.flow.filter
@@ -60,13 +61,8 @@ fun HomePokemonScroll(
     syncViewModel: SyncViewModel = hiltViewModel(),
     fetchAPIViewModel: MainPageViewModel = hiltViewModel(),
     searchViewModel: SearchViewModel = viewModel(),
+    pokePageViewModel: PokePageViewModel = hiltViewModel(),
 ) {
-    /*
-}
-    val affirmationList by viewModel.affirmations.collectAsState(initial = emptyList())
-    val isLoading = viewModel.isLoading.value
-    val isPaginating = viewModel.isPaginating.value
-    val errorMessage = viewModel.errorMessage.value
 
      */
     val allSelected = searchViewModel.selectionMap.values.all { it }
@@ -80,12 +76,22 @@ fun HomePokemonScroll(
     var showFilterOverlay by remember {mutableStateOf(false)}
     val apiPokemons by fetchAPIViewModel.apiPokemons.collectAsState(initial = emptyList())
     val syncedPokemons by syncViewModel.pokemonList.collectAsState(initial = emptyList())
+    val pokemonDetail by pokePageViewModel.pokemonDetail.collectAsState()
 
+/*
     LaunchedEffect(apiPokemons) {
         syncViewModel.syncPokemons(apiPokemons)
     }
 
-    if (isLoading && syncedPokemons.isEmpty()) {
+ */
+
+    val affirmationList = pokePageViewModel.convertToAffirmation(pokemonDetail)
+
+
+    Log.d("test", "$affirmationList")
+
+
+    if (isLoading && affirmationList.isEmpty()) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -177,70 +183,42 @@ fun HomePokemonScroll(
                     showOverlay = true,
                     onClose = { showFilterOverlay = false }
                 )
-            } else if (!allSelected && !allGenSelected && !allEvoSelected){
-                Column (
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth()
-                        .fillMaxSize()
-                        .background(Color(0xFFFFF9E6)),
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ){
-                    Box(
-                        modifier
-                            .fillMaxWidth()
-                            .padding(top = 90.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.bug_image),
-                            contentDescription = "Empty List",
-                            modifier.size(250.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.padding(16.dp))
-                    Text(
-                        text = "No Pokémon matching criteria",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.Black
+            }
+            LazyColumn(
+                state = listState,
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(Color(0xFFD9D9D9))
+            ) {
+                items(
+                    affirmationList
+                ) { affirmation ->
+                    AffirmationCard(
+                        affirmation = affirmation,
+                        navController = navController,
+                        onLikeClicked = { syncViewModel.toggleLike(affirmation) },
+                        modifier = Modifier.padding(4.dp)
                     )
                 }
-            } else if (allSelected && allGenSelected && allEvoSelected){
-                LazyColumn(
-                    state = listState,
-                    modifier = modifier
-                        .fillMaxSize()
-                        .background(Color(0xFFD9D9D9))
-                ) {
-                    items(syncedPokemons) { affirmation ->
-                        AffirmationCard(
-                            affirmation = affirmation,
-                            navController = navController,
-                            onLikeClicked = { syncViewModel.toggleLike(affirmation) },
-                            modifier = Modifier.padding(4.dp)
-                        )
-                    }
-                    if (isPaginating) {
-                        item {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                RotatingLoader()
-                            }
+                if (isPaginating) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            RotatingLoader()
                         }
                     }
                 }
+            }
 
-                LaunchedEffect(listState) {
-                    snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
-                        .filter { it == syncedPokemons.size - 1 && !isPaginating && !isLoading }
-                        .collect {
-                            fetchAPIViewModel.loadNextPage()
-                        }
+        LaunchedEffect(listState) {
+            snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+                .filter { it == affirmationList.size - 1 && !isPaginating && !isLoading }
+                .collect {
+                    fetchAPIViewModel.loadNextPage()
                 }
             }
         }

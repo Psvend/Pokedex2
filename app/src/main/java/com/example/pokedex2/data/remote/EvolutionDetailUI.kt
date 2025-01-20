@@ -5,3 +5,5 @@ data class EvolutionDetailUI(
     val imageUrl: String,
     val requirement: String
 )
+
+

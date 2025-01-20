@@ -2,7 +2,7 @@ package com.example.pokedex2.data.remote
 import com.example.pokedex2.data.remote.json.NamedAPIResource
 import com.google.gson.annotations.SerializedName
 
-data class EvolutionDetail(
+data class EvolutionDetailOlg(
     @SerializedName("item") val item: NamedAPIResource? = null,
     @SerializedName("trigger") val trigger: NamedAPIResource? = null,
     @SerializedName("gender") val gender: Int? = null,

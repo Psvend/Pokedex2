@@ -20,6 +20,7 @@ import com.example.pokedex2.ui.Navigation.NavGraph
 import com.example.pokedex2.ui.Navigation.NavGraph2
 import com.example.pokedex2.ui.theme.Pokedex2Theme
 import com.example.pokedex2.ui.TopBar.TopBar
+import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.MenuBarViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
