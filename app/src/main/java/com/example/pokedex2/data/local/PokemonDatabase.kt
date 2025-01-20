@@ -8,6 +8,5 @@ import androidx.room.TypeConverters
 @TypeConverters(Converters::class)
 abstract class PokemonDatabase: RoomDatabase() {
     abstract fun pokemonDao(): PokemonDao
-
 }
 

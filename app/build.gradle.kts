@@ -1,4 +1,3 @@
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -44,7 +43,6 @@ android {
 }
 
 dependencies {
-    // Proto and datastore
     // DataStore and Protobuf
     implementation(libs.androidx.datastore) // DataStore dependency
     implementation(libs.protobuf.javalite) // Protobuf Lite
@@ -54,19 +52,27 @@ dependencies {
     // Retrofit with Scalar Converter
     implementation(libs.converter.gson)
 
+    // Navigation
     implementation(libs.androidx.navigation.compose)
+
+    // Core & lifecycle
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+
+    // Compose UI
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation (libs.coil.kt.coil.compose)
-    implementation(libs.support.annotations)
+    implementation(libs.coil.kt.coil.compose)
+
+    // ConstraintLayout
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.androidx.datastore.core.android)
+    implementation(libs.androidx.navigation.runtime.ktx)
+
+    // Testing libraries
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -75,29 +81,31 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation (libs.androidx.lifecycle.runtime.compose)
-    implementation (libs.androidx.lifecycle.viewmodel.compose)
+    // Room dependencies
+    implementation(libs.androidx.room.ktx) // Room library for Kotlin extensions
+    ksp(libs.androidx.room.compiler) // Room compiler for annotation processing
+    implementation(libs.androidx.room.paging) // Room paging support
+
+    // Paging
+    implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.androidx.paging.compose)
 
     // Dagger - Hilt
-    implementation (libs.hilt.android)
-    ksp (libs.hilt.android.compiler)
-    ksp (libs.androidx.hilt.compiler)
-    implementation (libs.androidx.hilt.navigation.compose)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    ksp(libs.androidx.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.dagger.android)
     ksp(libs.dagger.compiler)
     implementation(libs.hilt.android.v252)
     ksp(libs.hilt.android.compiler.v252)
 
-    implementation (libs.androidx.room.ktx)
-    ksp (libs.androidx.room.compiler)
-    implementation (libs.androidx.room.paging)
-    // Paging
-    implementation (libs.androidx.paging.runtime.ktx)
-    implementation (libs.androidx.paging.compose)
+    // Lifecycle Compose Integration
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 }
 
 // Setup protobuf configuration, generating lite Java and Kotlin classes
-
 protobuf {
     protoc {
         artifact = libs.protobuf.protoc.get().toString() // Correct Protobuf artifact

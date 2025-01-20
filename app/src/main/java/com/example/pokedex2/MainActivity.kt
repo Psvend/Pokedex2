@@ -20,8 +20,8 @@ import com.example.pokedex2.ui.Navigation.NavGraph
 import com.example.pokedex2.ui.Navigation.NavGraph2
 import com.example.pokedex2.ui.theme.Pokedex2Theme
 import com.example.pokedex2.ui.TopBar.TopBar
+import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.MenuBarViewModel
-import com.example.pokedex2.viewModel.PokeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 data class BottomNavItem(
@@ -39,7 +39,6 @@ class MainActivity : ComponentActivity() {
             Pokedex2Theme {
                 val navController = rememberNavController()
                 val menuBarViewModel: MenuBarViewModel = viewModel()
-                val pokeViewModel: PokeViewModel = hiltViewModel() // Injecting PokeViewModel
                 val selectedItemIndex by menuBarViewModel.selectedItemIndex.collectAsState()
 
                 Scaffold(

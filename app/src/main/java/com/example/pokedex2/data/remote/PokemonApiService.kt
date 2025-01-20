@@ -19,6 +19,7 @@ interface PokemonApiService {
     ): PokemonResult
 
 
+
     @GET
     suspend fun getPokemonEncounters(
         @Url encountersUrl: String
@@ -50,7 +51,10 @@ interface PokemonApiService {
         @Path("id") id: Int
     ): CharacteristicResponse
 
-
+    @GET("type/{typeId}")
+    suspend fun getType(
+        @Path("typeId") typeId: Int
+    ): PokemonByTypeResponse
 
 
     companion object {

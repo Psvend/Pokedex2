@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class PokePageViewModel @Inject constructor(
+class PokemonPageViewModel @Inject constructor(
     private val pokemonApiService: PokemonApiService
 ) : ViewModel() {
 
@@ -117,7 +117,6 @@ class PokePageViewModel @Inject constructor(
         }
     }
 
-
     fun fetchEvolutionChain(pokemonIdOrName: String) {
         viewModelScope.launch {
             try {
@@ -190,6 +189,7 @@ class PokePageViewModel @Inject constructor(
             }
         }
     }
+    
 
 
     fun fetchPokemonStats(name: String) {
@@ -222,12 +222,6 @@ class PokePageViewModel @Inject constructor(
             }
         }
     }
-
-
-
-
-
-
 
 
     fun getGrowthRateProgress(growthRate: String): Float {

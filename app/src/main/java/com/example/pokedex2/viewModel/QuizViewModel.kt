@@ -20,15 +20,6 @@ class QuizViewModel @Inject constructor(
     private val pokemonApiService: PokemonApiService
 
 ) :ViewModel() {
-    /*
-    val pokemonPagingFlow: Flow<PagingData<PokemonResult>> = Pager(
-        config = PagingConfig(pageSize = 20),
-        pagingSourceFactory = { PokemonPagingSource(pokemonApiService)
-         }
-
-    ).flow.cachedIn(viewModelScope)
-
-     */
 
     private val _pokemonDetail = MutableStateFlow<PokemonResult?>(null)
     val pokemonDetail: StateFlow<PokemonResult?> = _pokemonDetail
@@ -55,7 +46,7 @@ class QuizViewModel @Inject constructor(
     }
 
     fun getRandomPokemonId(): Int {
-        return Random.nextInt(1, 1025) // Assuming there are 898 Pokémon
+        return Random.nextInt(1, 1025)
     }
 
 fun playSound(context: Context) {

@@ -15,3 +15,18 @@ data class ChainLink(
     @SerializedName("evolution_details") val evolution_details: List<EvolutionDetail> = emptyList(),
     @SerializedName("is_baby") val isBaby: Boolean = false
 )
+
+data class EvolutionDetail(
+    val min_level: Int?,
+    val trigger: Trigger
+)
+
+data class Trigger(
+    val name: String,
+    val url: String
+)
+
+data class Species(
+    val name: String,
+    val url: String
+)
