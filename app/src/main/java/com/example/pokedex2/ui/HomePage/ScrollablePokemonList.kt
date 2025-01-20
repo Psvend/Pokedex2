@@ -63,19 +63,26 @@ fun HomePokemonScroll(
     pokePageViewModel: PokePageViewModel = hiltViewModel(),
 ) {
 
-    val allSelected = searchViewModel.selectionMap.values.all { it }
-    val allGenSelected = searchViewModel.selectionGenMap.values.all { it }
-    val allEvoSelected = searchViewModel.selectionEvoMap.values.all { it }
+
     val isLoading by fetchAPIViewModel.isLoading.collectAsState()
     val isPaginating by fetchAPIViewModel.isPaginating.collectAsState()
     val errorMessage by fetchAPIViewModel.errorMessage.collectAsState()
     val listState = rememberLazyListState()
-    var searchQuery by rememberSaveable { mutableStateOf("") }
-    var showFilterOverlay by remember {mutableStateOf(false)}
     val syncedPokemons by syncViewModel.pokemonList.collectAsState(initial = emptyList())
     val pokemonDetail by pokePageViewModel.pokemonDetail.collectAsState()
     val affirmationList = pokePageViewModel.convertToAffirmation(pokemonDetail)
 
+    var showFilterOverlay by remember {mutableStateOf(false)}
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+
+    val allSelected = searchViewModel.selectionMap.values.all { it }
+    val allGenSelected = searchViewModel.selectionGenMap.values.all { it }
+    val allEvoSelected = searchViewModel.selectionEvoMap.values.all { it }
+
+    val filteredAffirmationList = affirmationList.filter { affirmation ->
+        val matchesSearch = searchQuery.isBlank() || affirmation.doesMatchQuery(searchQuery)
+        matchesSearch
+    }
 
     Log.d("test", "$affirmationList")
 
@@ -134,7 +141,7 @@ fun HomePokemonScroll(
 
                 OutlinedTextField(
                     value = searchQuery,
-                    onValueChange = { searchQuery = it },
+                    onValueChange = { searchQuery = it},
                     placeholder = { Text("Search...") },
                     modifier = Modifier
                         .padding(4.dp)
@@ -158,6 +165,7 @@ fun HomePokemonScroll(
                     singleLine = true,
                     shape = RoundedCornerShape(25.dp)
                 )
+
                 IconButton(
                     onClick = {
                         showFilterOverlay = !showFilterOverlay
@@ -209,7 +217,7 @@ fun HomePokemonScroll(
                         .background(Color(0xFFD9D9D9))
                 ) {
                     items(
-                        affirmationList
+                        filteredAffirmationList
                     ) { affirmation ->
                         AffirmationCard(
                             affirmation = affirmation,
