@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -60,7 +61,7 @@ fun PokemonImage(model: String?, syncViewModel: SyncViewModel, affirmation: Affi
         LikeButton(
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(end = 40.dp, top = 30.dp),
+                .offset(x = (-25).dp, y = 25.dp),
             affirmation = affirmation,
             onLikeClicked = { syncViewModel.toggleLike(affirmation) },
 
