@@ -101,7 +101,7 @@ fun HomePokemonScroll(
         ) {
             RotatingLoader()
         }
-    } else if (errorMessage != null && syncedPokemons.isEmpty()) {
+    } else if (errorMessage != null && affirmationList.isEmpty()) {
         Box(
             modifier = Modifier
                 .fillMaxSize()

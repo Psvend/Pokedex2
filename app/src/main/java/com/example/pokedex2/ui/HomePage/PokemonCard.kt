@@ -84,7 +84,11 @@ fun AffirmationCard(
                     text = affirmation.name.addSpaceAndCapitalize(),
                     fontSize = 25.sp
                 )
-                PokemonTypeIcons(types = affirmation.typeIcon, modifier = Modifier,fontSize = 9, {type -> typingColorViewModel.getTypeColor(type)})
+                PokemonTypeIcons(types = affirmation.typeIcon, modifier = Modifier,fontSize = 9) { type ->
+                    typingColorViewModel.getTypeColor(
+                        type
+                    )
+                }
             }
             // Like button and ID
             Column(
