@@ -99,15 +99,6 @@ fun PokemonPage(
         }
     }
 
-    /*
-    // Fetch encounter locations
-    LaunchedEffect(pokemonDetail?.location_area_encounters) {
-        pokemonDetail?.location_area_encounters?.let { url ->
-            viewModel.fetchPokemonEncounters(url)
-        }
-    }
-
-     */
 
     Box(
         modifier = Modifier

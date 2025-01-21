@@ -14,14 +14,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class CatchPokemonViewModel @Inject constructor(
     private val pokemonApiService: PokemonApiService,
 ) : ViewModel() {
 
-    private val _isAnimationActive = MutableStateFlow(false)
-    val isAnimationActive: StateFlow<Boolean> get() = _isAnimationActive
+    private val _currentStep = MutableStateFlow(AnimationStep.Idle)
+    val currentStep: StateFlow<AnimationStep> = _currentStep
 
     private val _currentPokemon = MutableStateFlow<Pokemon?>(null)
     val currentPokemon: StateFlow<Pokemon?> get() = _currentPokemon
@@ -38,6 +37,7 @@ class CatchPokemonViewModel @Inject constructor(
                     number = pokemon.id,
                     sprites = pokemon.sprites
                 )
+                startAnimation()
             } catch (e: Exception) {
                 Log.e("Catch", "Error fetching Pokémon", e)
             }
@@ -45,16 +45,31 @@ class CatchPokemonViewModel @Inject constructor(
     }
 
     fun startAnimation() {
-        _isAnimationActive.value = true
+        _currentStep.value = AnimationStep.CatchAnimation
     }
 
-    fun stopAnimation() {
-        _isAnimationActive.value = false
-        _currentPokemon.value = null // Clear the PokémonDialog when stopping the animation
+    fun proceedToNextStep() {
+        when (_currentStep.value) {
+            AnimationStep.CatchAnimation -> _currentStep.value = AnimationStep.SparkleAnimation
+            AnimationStep.SparkleAnimation -> _currentStep.value = AnimationStep.ShowDialog
+            else -> _currentStep.value = AnimationStep.Idle
+        }
+    }
+
+    fun reset() {
+        _currentStep.value = AnimationStep.Idle
+        _currentPokemon.value = null
     }
 
     fun playSound(context: Context) {
         val mediaPlayer = MediaPlayer.create(context, R.raw.whos_that_pokemon)
         mediaPlayer.start()
+    }
+
+    enum class AnimationStep {
+        Idle,
+        CatchAnimation,
+        SparkleAnimation,
+        ShowDialog
     }
 }

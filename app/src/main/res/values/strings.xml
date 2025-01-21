@@ -1,13 +1,3 @@
 <resources>
-    <string name="app_name">Pokedex2</string>
-    <string name="Bulbasaur">"Bulbasaur"</string>
-    <string name="Ivysaur">"Ivysaur"</string>
-    <string name="Venusaur">Venusaur</string>
-    <string name="Charmander">Charmander</string>
-    <string name="Charmeleon">Charmeleon</string>
-    <string name="Charizard">Charizard</string>
-    <string name="Squirtle">Squirtle</string>
-    <string name="Wartortle">Wartortle</string>
-    <string name="Blastoise">Blastoise</string>
-    <string name="Caterpie">Caterpie</string>
+    <string name="app_name">Pokedex</string>
 </resources>
