@@ -60,7 +60,12 @@ fun TypeGrid(
                         shape = RoundedCornerShape(25.dp)
                     )
                     .clickable {
-                        onTypeSelected(localPokeType.name)
+                        onToggleSelection(localPokeType.id)
+                        if (isSelected) {
+                            onTypeSelected("")
+                        } else {
+                            onTypeSelected(localPokeType.name)
+                        }
                     },
                 contentAlignment = Alignment.Center
             ) {

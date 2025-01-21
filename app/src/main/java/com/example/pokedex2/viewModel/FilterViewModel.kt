@@ -76,8 +76,15 @@ class FilterViewModel : ViewModel() {
 
     fun toggleSelection(id: Int) {
         if (id <= 18) {
-            selectionMap[id] = !(selectionMap[id] ?: false)
-        } else if (id in 19..27){
+            val isSelected = selectionMap[id] ?: false
+            selectionMap.keys.forEach { key ->
+                selectionMap[key] = false
+            }
+            if (!isSelected) {
+                selectionMap[id] = true
+
+            }
+        } else if (id in 19..27) {
             selectionGenMap[id] = !(selectionGenMap[id] ?: false)
         }
     }
