@@ -41,18 +41,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.core.util.toRange
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.pokedex2.R
 import com.example.pokedex2.ui.Filters.FilterOverlay
 import com.example.pokedex2.utils.RotatingLoader
+import com.example.pokedex2.viewModel.FilterViewModel
 import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.PokePageViewModel
-import com.example.pokedex2.viewModel.FilterViewModel
 import com.example.pokedex2.viewModel.SyncViewModel
-import com.example.pokedex2.viewModel.saveTypesAppliedViewModel
 import kotlinx.coroutines.flow.filter
 
 @Composable
@@ -62,7 +60,6 @@ fun HomePokemonScroll(
     syncViewModel: SyncViewModel = hiltViewModel(),
     fetchAPIViewModel: MainPageViewModel = hiltViewModel(),
     pokePageViewModel: PokePageViewModel = hiltViewModel(),
-    saveTypesViewModel: saveTypesAppliedViewModel = viewModel(),
     filterViewModel: FilterViewModel = viewModel()
 ) {
 
@@ -78,8 +75,7 @@ fun HomePokemonScroll(
     var showFilterOverlay by remember {mutableStateOf(false)}
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var generations by rememberSaveable {mutableStateOf<ClosedRange<Int>?>(null)}
-    var types = saveTypesViewModel.strings
-
+    var types by rememberSaveable { mutableStateOf(mutableListOf<String>()) }
     val allSelected = filterViewModel.selectionMap.values.all { it }
     val allGenSelected = filterViewModel.selectionGenMap.values.all { it }
 
@@ -196,7 +192,8 @@ fun HomePokemonScroll(
                     showOverlay = true,
                     onClose = { showFilterOverlay = false },
                     onFilterApply = {typesFilter, generationsFilter ->
-                        types = typesFilter
+                        types.clear()
+                        types.addAll(typesFilter)
                         generations = generationsFilter
                         showFilterOverlay = false
                         Log.d("HomePokemonScroll", "nummer 3: ${typesFilter.isEmpty()}")
