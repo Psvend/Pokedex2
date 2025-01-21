@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option java_package = "com.example.pokedex2.proto";
+option java_multiple_files = true;
+
+message FavouriteAffirmations {
+    repeated FavouriteAffirmation favourites = 1;
+}
+
+message FavouriteAffirmation {
+    int32 id = 1;
+    string name = 2;
+    string imageResourceId = 3;
+    repeated string typeIcon = 4;
+    bool isLiked = 5;
+    int32 number = 6;
+    repeated string ability = 7;
+    repeated string heldItem = 8;
+    repeated string characteristics = 9;
+    string growthRate = 10;
+    int32 evolutionChainId = 11;
+    repeated Stat stats = 12;
+}
+
+message Stat {
+    string name = 1;
+    int32 value = 2;
+}
