@@ -87,16 +87,16 @@ fun HomePokemonScroll(
         val matchesSearch = searchQuery.isBlank() || affirmation.doesMatchQuery(searchQuery)
         val selectedGenerations = filterViewModel.selectionGenMap.filterValues { it }.keys
         val matchesGeneration = selectedGenerations.isEmpty() || selectedGenerations.any { generationId ->
-            val generation = filterViewModel.pokeGenerations.value.find { it.id == generationId }
+        val generation = filterViewModel.pokeGenerations.value.find { it.id == generationId }
             generation?.range?.contains(affirmation.number) == true
         }
-        val matchesTypes = types.isEmpty() || affirmation.typeIcon.any { types.contains(it) }
-
+        val matchesTypes = types.isEmpty() || affirmation.typeIcon.any { typeIcon ->
+            types.contains(typeIcon) }
+        Log.d("tom?", "Tom i filter: ${types.isEmpty()}")
         matchesSearch && matchesGeneration && matchesTypes
     }
     Log.d("Tjek list", "tom eller ej: ${filteredAffirmationList.isEmpty()}")
-    Log.d("HomePokemonScroll", "Affirmation List Size: ${generations.toString()}")
-    Log.d("HomePokemonScroll", "Affirmation List Size: ${generations?.contains(950) == true}")
+    Log.d("tom?", "Tom efter filter: ${types.isEmpty()}")
 
 
 
@@ -199,7 +199,7 @@ fun HomePokemonScroll(
                         types = typesFilter
                         generations = generationsFilter
                         showFilterOverlay = false
-                        Log.d("HomePokemonScroll", "nummer 3: ${generations?.toString()}")
+                        Log.d("HomePokemonScroll", "nummer 3: ${typesFilter.isEmpty()}")
                     }
                 )
             } else if (filteredAffirmationList.isEmpty()){

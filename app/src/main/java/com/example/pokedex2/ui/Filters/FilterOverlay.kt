@@ -190,7 +190,7 @@ fun FilterOverlay(
                         onClick = {
                             onClose()
                             onFilterApply(typesFilter, generationsFilter.value)
-                            Log.d("HomePokemonScroll", "nummer 2: ${generationsFilter.value}")
+                            Log.d("HomePokemonScroll", "nummer 2: ${typesFilter.isEmpty()}")
                         },
                         colors = ButtonDefaults.buttonColors(Color(0xFF1DB5D4))
                     ) {

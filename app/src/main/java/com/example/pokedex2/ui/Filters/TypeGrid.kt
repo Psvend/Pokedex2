@@ -1,5 +1,6 @@
 package com.example.pokedex2.ui.Filters
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -64,6 +65,7 @@ fun TypeGrid(
                         } else {
                             typesFilter.remove(localPokeType.name)
                         }
+                        Log.d("HomePokemonScroll", "nummer 1: ${typesFilter.isEmpty()}")
                     },
                 contentAlignment = Alignment.Center
             ) {

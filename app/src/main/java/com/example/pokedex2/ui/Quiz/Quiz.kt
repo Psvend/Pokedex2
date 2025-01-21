@@ -269,7 +269,7 @@ fun Quiz(
                             .clip(RoundedCornerShape(12.dp))
                     )
                 }
-            }else if(points.intValue in 2..5){
+            }else if(points.intValue in 1..5){
                 Box(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     contentAlignment = Alignment.Center

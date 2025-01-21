@@ -17,7 +17,16 @@ class saveTypesAppliedViewModel(private val state: SavedStateHandle): ViewModel(
         }
 
     fun addString(newString: String) {
-        _strings.add(newString)
-        state["strings"] = _strings
+        if (!_strings.contains(newString)) {
+            _strings.add(newString)
+            state["strings"] = _strings
+        }
+    }
+
+    fun removeString(oldString: String) {
+        if (_strings.contains(oldString)) {
+            _strings.remove(oldString)
+            state["strings"] = _strings
+        }
     }
 }

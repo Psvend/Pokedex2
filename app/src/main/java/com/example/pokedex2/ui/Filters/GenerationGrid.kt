@@ -1,6 +1,5 @@
 package com.example.pokedex2.ui.Filters
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -32,44 +31,42 @@ fun GenerationGrid(
     onToggleSelection: (Int) -> Unit,
     getColor: (Int) -> Color,
     generationsFilter: MutableState<ClosedRange<Int>?>
-    ) {
+) {
     LazyVerticalStaggeredGrid(
         modifier = modifier
-            //.weight(1f)
-            .padding(horizontal = 18.dp, vertical = 5.dp),
-        columns = StaggeredGridCells.Fixed(5),
-        horizontalArrangement = Arrangement.spacedBy(15.dp),
-        verticalItemSpacing = 16.dp
-    ) {
-        if (generations.isEmpty()) {
-            item {
-                RotatingLoader()
-            }
+        .padding(horizontal = 18.dp, vertical = 5.dp),
+    columns = StaggeredGridCells.Fixed(5),
+    horizontalArrangement = Arrangement.spacedBy(15.dp),
+    verticalItemSpacing = 16.dp
+) {
+    if (generations.isEmpty()) {
+        item {
+            RotatingLoader()
         }
-        items(generations) { localGeneration ->
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1.6f)
-                        .border(1.dp, Color.White, RoundedCornerShape(25.dp))
-                        .background(
-                            color = getColor(localGeneration.id),
-                            shape = RoundedCornerShape(25.dp)
-                        )
-                        .clickable {
-                            onToggleSelection(localGeneration.id)
-                            generationsFilter.value = localGeneration.range
-                            Log.d("HomePokemonScroll", "nummer 1 ${generationsFilter.value}")
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
-
-                    Text(
-                        text = localGeneration.generation,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color =  Color.White
+    }
+    items(generations) { localGeneration ->
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1.6f)
+                    .border(1.dp, Color.White, RoundedCornerShape(25.dp))
+                    .background(
+                        color = getColor(localGeneration.id),
+                        shape = RoundedCornerShape(25.dp)
                     )
-                }
+                    .clickable {
+                        onToggleSelection(localGeneration.id)
+                        generationsFilter.value = localGeneration.range
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+
+                Text(
+                    text = localGeneration.generation,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color =  Color.White
+                )
             }
         }
+    }
 }
