@@ -38,9 +38,6 @@ fun FilterOverlay(
 ) {
     val isLoading = filterViewModel.isLoading.value
     val selectionMap = filterViewModel.selectionMap
-    val selectionGenMap = filterViewModel.selectionGenMap
-    val allTypesSelected = selectionMap.values.all { it } // Check if all are selected
-    val allGensSelected = selectionGenMap.values.all {it}
     val pokeTypes = filterViewModel.pokeTypes.value
     val pokeGens = filterViewModel.pokeGenerations.value
 

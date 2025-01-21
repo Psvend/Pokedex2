@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -218,7 +219,21 @@ fun HomePokemonScroll(
                         style = MaterialTheme.typography.bodyLarge,
                         color = Color.Black
                     )
-                }
+
+                    Spacer(modifier.height(16.dp))
+                    Button(
+                        onClick = {
+                            showFilterOverlay = true
+                            showFilterOverlay = false
+                        },
+                        modifier = Modifier.padding(3.dp),
+                        colors = ButtonDefaults.buttonColors(Color(0xFF1DB5D4))
+                    ) {
+                        Text(
+                            text = "Retry",
+                            color = Color.White
+                        )
+                    }                }
             }
             else {
 
