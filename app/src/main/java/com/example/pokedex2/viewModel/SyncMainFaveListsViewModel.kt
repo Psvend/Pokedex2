@@ -42,8 +42,12 @@ class SyncViewModel @Inject constructor(
             // Update cache
             if (isLiked) {
                 favouritesRepository.addFavourite(updatedAffirmation)
+                localCachingDao.addLike(affirmation.name)
+
             } else {
                 favouritesRepository.removeFavourite(updatedAffirmation.id)
+                localCachingDao.removeLike(affirmation.name)
+
             }
 
             // Update synced list

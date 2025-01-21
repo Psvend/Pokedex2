@@ -116,7 +116,9 @@ class MainPageViewModel @Inject constructor (
             _apiPokemons.value = cachedPokemons
 
             // Load new data from the API
-            fetchAffirmations()
+            if (cachedPokemons.size < 1024) {
+                fetchAffirmations()
+            }
         }
     }
 
