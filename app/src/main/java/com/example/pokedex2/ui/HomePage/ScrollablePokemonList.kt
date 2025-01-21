@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.util.toRange
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -49,8 +50,9 @@ import com.example.pokedex2.ui.Filters.FilterOverlay
 import com.example.pokedex2.utils.RotatingLoader
 import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.PokePageViewModel
-import com.example.pokedex2.viewModel.SearchViewModel
+import com.example.pokedex2.viewModel.FilterViewModel
 import com.example.pokedex2.viewModel.SyncViewModel
+import com.example.pokedex2.viewModel.saveTypesAppliedViewModel
 import kotlinx.coroutines.flow.filter
 
 @Composable
@@ -59,8 +61,9 @@ fun HomePokemonScroll(
     modifier: Modifier = Modifier,
     syncViewModel: SyncViewModel = hiltViewModel(),
     fetchAPIViewModel: MainPageViewModel = hiltViewModel(),
-    searchViewModel: SearchViewModel = viewModel(),
     pokePageViewModel: PokePageViewModel = hiltViewModel(),
+    saveTypesViewModel: saveTypesAppliedViewModel = viewModel(),
+    filterViewModel: FilterViewModel = viewModel()
 ) {
 
 
@@ -74,16 +77,27 @@ fun HomePokemonScroll(
 
     var showFilterOverlay by remember {mutableStateOf(false)}
     var searchQuery by rememberSaveable { mutableStateOf("") }
+    var generations by rememberSaveable {mutableStateOf<ClosedRange<Int>?>(null)}
+    var types = saveTypesViewModel.strings
 
-    val allSelected = searchViewModel.selectionMap.values.all { it }
-    val allGenSelected = searchViewModel.selectionGenMap.values.all { it }
+    val allSelected = filterViewModel.selectionMap.values.all { it }
+    val allGenSelected = filterViewModel.selectionGenMap.values.all { it }
 
     val filteredAffirmationList = affirmationList.filter { affirmation ->
         val matchesSearch = searchQuery.isBlank() || affirmation.doesMatchQuery(searchQuery)
-        matchesSearch
-    }
+        val selectedGenerations = filterViewModel.selectionGenMap.filterValues { it }.keys
+        val matchesGeneration = selectedGenerations.isEmpty() || selectedGenerations.any { generationId ->
+            val generation = filterViewModel.pokeGenerations.value.find { it.id == generationId }
+            generation?.range?.contains(affirmation.number) == true
+        }
+        val matchesTypes = types.isEmpty() || affirmation.typeIcon.any { types.contains(it) }
 
-    Log.d("test", "$affirmationList")
+        matchesSearch && matchesGeneration && matchesTypes
+    }
+    Log.d("Tjek list", "tom eller ej: ${filteredAffirmationList.isEmpty()}")
+    Log.d("HomePokemonScroll", "Affirmation List Size: ${generations.toString()}")
+    Log.d("HomePokemonScroll", "Affirmation List Size: ${generations?.contains(950) == true}")
+
 
 
     if (isLoading && affirmationList.isEmpty()) {
@@ -180,9 +194,15 @@ fun HomePokemonScroll(
             if (showFilterOverlay) {
                 FilterOverlay(
                     showOverlay = true,
-                    onClose = { showFilterOverlay = false }
+                    onClose = { showFilterOverlay = false },
+                    onFilterApply = {typesFilter, generationsFilter ->
+                        types = typesFilter
+                        generations = generationsFilter
+                        showFilterOverlay = false
+                        Log.d("HomePokemonScroll", "nummer 3: ${generations?.toString()}")
+                    }
                 )
-            } else if (!allSelected && !allGenSelected){
+            } else if (filteredAffirmationList.isEmpty()){
                 Column(
                     modifier
                         .fillMaxSize()
@@ -208,7 +228,9 @@ fun HomePokemonScroll(
                         color = Color.Black
                     )
                 }
-            }else if (allSelected && allGenSelected){
+            }
+            else {
+
                 LazyColumn(
                     state = listState,
                     modifier = modifier

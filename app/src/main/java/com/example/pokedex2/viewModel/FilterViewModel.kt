@@ -11,7 +11,7 @@ import com.example.pokedex2.model.LocalGenerations
 import com.example.pokedex2.model.LocalPokeTypes
 
 
-class SearchViewModel : ViewModel() {
+class FilterViewModel : ViewModel() {
     val pokeTypes = mutableStateOf<List<LocalPokeTypes>>(emptyList())
     val pokeGenerations = mutableStateOf<List<LocalGenerations>>(emptyList())
     val isLoading = mutableStateOf(true)
@@ -77,7 +77,7 @@ class SearchViewModel : ViewModel() {
     fun toggleSelection(id: Int) {
         if (id <= 18) {
             selectionMap[id] = !(selectionMap[id] ?: false)
-        } else if (id in 19..26){
+        } else if (id in 19..27){
             selectionGenMap[id] = !(selectionGenMap[id] ?: false)
         }
     }
