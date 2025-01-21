@@ -33,7 +33,7 @@ fun NavGraph(
                 HomePokemonScroll(
                     navController = navController,
                     syncViewModel = hiltViewModel(),
-                    fetchAPIViewModel = mainPageViewModel
+                    mainPageViewModel = mainPageViewModel
                 )
             }
         }

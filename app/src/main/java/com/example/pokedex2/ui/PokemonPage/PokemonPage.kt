@@ -36,7 +36,6 @@ import com.example.pokedex2.ui.PokemonPage.PokemonNr
 import com.example.pokedex2.ui.PokemonPage.PokemonStatsGraph
 import com.example.pokedex2.ui.Filters.capitalizeFirstLetter
 import com.example.pokedex2.viewModel.MainPageViewModel
-import com.example.pokedex2.viewModel.PrimaryViewModel
 import com.example.pokedex2.viewModel.PokemonPageViewModel
 import com.example.pokedex2.viewModel.PokemonTypeColorViewModel
 import com.example.pokedex2.viewModel.SyncViewModel
@@ -47,7 +46,7 @@ fun PokemonPage(
     pokemonIdOrName: String,
     modifier: Modifier = Modifier,
     viewModel: PokemonPageViewModel = hiltViewModel(),
-    pokePageViewModel: PrimaryViewModel = hiltViewModel(),
+    mainPageViewModel: MainPageViewModel = hiltViewModel(),
     syncViewModel: SyncViewModel = hiltViewModel(),
     fetchAPIViewModel: MainPageViewModel = hiltViewModel(),
     typingColorViewModel: PokemonTypeColorViewModel = viewModel()
@@ -64,8 +63,8 @@ fun PokemonPage(
     //val isLiked = likedPokemons.any { it.id == pokemonDetail?.id }
     val apiPokemons by fetchAPIViewModel.apiPokemons.collectAsState(initial = emptyList())
     val syncedPokemons by syncViewModel.pokemonList.collectAsState()
-    val pokemonDetail by pokePageViewModel.pokemonDetail.collectAsState()
-    val pokemonDetailList by pokePageViewModel.pokemonDetailList.collectAsState()
+    val pokemonDetail by mainPageViewModel.pokemonDetail.collectAsState()
+    val pokemonDetailList by mainPageViewModel.pokemonDetailList.collectAsState()
 
     // Map the evolution data from your API into EvolutionDetailUI objects
     val evolutionDetailsUI = evolvesTo.map { evolution ->
@@ -78,19 +77,22 @@ fun PokemonPage(
 
 
 
+
     LaunchedEffect (pokemonDetailList) {
-        pokePageViewModel.getAllPokemon()
+        mainPageViewModel.getAllPokemon()
     }
 
     LaunchedEffect(pokemonIdOrName) {
-        pokePageViewModel.fetchCachedPokemon(pokemonIdOrName)
+        mainPageViewModel.fetchCachedPokemon(pokemonIdOrName)
     }
 
-    val affirmation = pokemonDetail?.let { pokePageViewModel.convertSingleAffirmation(it) }
+    val affirmation = pokemonDetail?.let { mainPageViewModel.convertSingleAffirmation(it) }
 
 
 
     // Fetch Pokémon details when the page is displayed
+
+    /*
     LaunchedEffect(pokemonIdOrName) {
         viewModel.fetchPokemonDetail(pokemonIdOrName.lowercase())
         viewModel.fetchPokemonAbilities(pokemonIdOrName.lowercase())
@@ -98,6 +100,8 @@ fun PokemonPage(
         viewModel.fetchEvolutionChain(pokemonIdOrName.lowercase())
         viewModel.fetchPokemonStats(pokemonIdOrName.lowercase())
     }
+
+     */
 
     //Fetch pokemon description
     LaunchedEffect(pokemonDetail?.id) {
@@ -161,7 +165,7 @@ fun PokemonPage(
             if (affirmation != null) {
                     PokemonImage(
                         model = affirmation.imageResourceId,
-                        pokePageViewModel = pokePageViewModel,
+                        mainPageViewModel = mainPageViewModel,
                         affirmation = affirmation
                     )
                 }

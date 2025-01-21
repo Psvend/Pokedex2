@@ -48,7 +48,6 @@ import com.example.pokedex2.R
 import com.example.pokedex2.ui.Filters.FilterOverlay
 import com.example.pokedex2.utils.RotatingLoader
 import com.example.pokedex2.viewModel.MainPageViewModel
-import com.example.pokedex2.viewModel.PrimaryViewModel
 import com.example.pokedex2.viewModel.SearchViewModel
 import com.example.pokedex2.viewModel.SyncViewModel
 import kotlinx.coroutines.flow.filter
@@ -58,17 +57,16 @@ fun HomePokemonScroll(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     syncViewModel: SyncViewModel = hiltViewModel(),
-    fetchAPIViewModel: MainPageViewModel = hiltViewModel(),
     searchViewModel: SearchViewModel = viewModel(),
-    pokePageViewModel: PrimaryViewModel = hiltViewModel(),
+    mainPageViewModel: MainPageViewModel = hiltViewModel(),
 ) {
 
 
-    val isLoading by fetchAPIViewModel.isLoading.collectAsState()
-    val isPaginating by fetchAPIViewModel.isPaginating.collectAsState()
-    val errorMessage by fetchAPIViewModel.errorMessage.collectAsState()
+    val isLoading by mainPageViewModel.isLoading.collectAsState()
+    val isPaginating by mainPageViewModel.isPaginating.collectAsState()
+    val errorMessage by mainPageViewModel.errorMessage.collectAsState()
     val listState = rememberLazyListState()
-    val affirmationList by fetchAPIViewModel.apiPokemons.collectAsState()
+    val affirmationList by mainPageViewModel.apiPokemons.collectAsState()
     var showFilterOverlay by remember {mutableStateOf(false)}
     var searchQuery by rememberSaveable { mutableStateOf("") }
 
@@ -76,12 +74,9 @@ fun HomePokemonScroll(
     val allGenSelected = searchViewModel.selectionGenMap.values.all { it }
     val allEvoSelected = searchViewModel.selectionEvoMap.values.all { it }
 
-
     val filteredAffirmationList = affirmationList.filter { affirmation ->
         searchQuery.isBlank() || affirmation.doesMatchQuery(searchQuery)
     }
-
-
 
 
 
@@ -118,7 +113,7 @@ fun HomePokemonScroll(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = { fetchAPIViewModel.loadNextPage() }) {
+                Button(onClick = { mainPageViewModel.loadNextPage() }) {
                     Text("Retry")
                 }
             }
@@ -176,6 +171,8 @@ fun HomePokemonScroll(
                     )
                 }
             }
+
+
             if (showFilterOverlay) {
                 FilterOverlay(
                     showOverlay = true,
@@ -218,12 +215,14 @@ fun HomePokemonScroll(
                        filteredAffirmationList
 
                     ) { affirmation ->
-                        AffirmationCard(
-                            affirmation = affirmation,
-                            navController = navController,
-                            onLikeClicked = { pokePageViewModel.toggleLike(affirmation.name)},
-                            modifier = Modifier.padding(4.dp),
-                        )
+                        mainPageViewModel.getPokemonAffirmation(affirmation.name)?.let {
+                            AffirmationCard(
+                                affirmation = it,
+                                navController = navController,
+                                onLikeClicked = { mainPageViewModel.toggleLike(it) },
+                                modifier = Modifier.padding(4.dp),
+                            )
+                        }
                     }
                     if (isPaginating) {
                         item {
@@ -243,7 +242,7 @@ fun HomePokemonScroll(
                     snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
                         .filter { it == affirmationList.size - 1 && !isPaginating && !isLoading }
                         .collect {
-                            fetchAPIViewModel.loadNextPage()
+                            mainPageViewModel.loadNextPage()
                         }
                 }
             }

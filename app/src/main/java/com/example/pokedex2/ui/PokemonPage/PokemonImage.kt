@@ -19,11 +19,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.pokedex2.model.Affirmation
-import com.example.pokedex2.viewModel.PrimaryViewModel
+import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.SyncViewModel
 
 @Composable
-fun PokemonImage(model: String?, pokePageViewModel: PrimaryViewModel, affirmation: Affirmation) {
+fun PokemonImage(model: String?, mainPageViewModel: MainPageViewModel, affirmation: Affirmation) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -63,8 +63,8 @@ fun PokemonImage(model: String?, pokePageViewModel: PrimaryViewModel, affirmatio
                 .align(Alignment.TopEnd)
                 .padding(end = 50.dp, top = 20.dp),
             affirmation = affirmation,
-            onLikeClicked = { pokePageViewModel.toggleLike(affirmation.name) },
-
-            )
+            onLikeClicked = { mainPageViewModel.toggleLike(affirmation) },
+            mainPageViewModel = mainPageViewModel,
+        )
     }
 }

@@ -1,5 +1,6 @@
 package com.example.pokedex2.viewModel
 
+/*
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -181,3 +182,5 @@ _pokemonList.update { currentList ->
 
 
 }
+
+ */

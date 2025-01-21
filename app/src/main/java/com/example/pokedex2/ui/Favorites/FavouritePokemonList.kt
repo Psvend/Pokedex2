@@ -17,28 +17,25 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.pokedex2.ui.HomePage.AffirmationCard
 import com.example.pokedex2.ui.components.EmptyStateScreen
-import com.example.pokedex2.viewModel.PrimaryViewModel
+import com.example.pokedex2.viewModel.MainPageViewModel
 
 @Composable
 fun FavouritePokemonList(
-    pokePageViewModel: PrimaryViewModel = hiltViewModel(),
+    mainPageViewModel: MainPageViewModel = hiltViewModel(),
     navController: NavHostController,
     modifier: Modifier = Modifier,
 
 
     ) {
-    val favouritePokemons by pokePageViewModel.pokemonLikedList.collectAsState()
-    val pokemonDetail by pokePageViewModel.pokemonDetail.collectAsState()
-    val pokemonDetailList by pokePageViewModel.pokemonDetailList.collectAsState()
-    val pokemonLikedList by pokePageViewModel.pokemonLikedList.collectAsState()
+    val pokemonLikedList by mainPageViewModel.pokemonLikedList.collectAsState()
 
 
     LaunchedEffect (pokemonLikedList) {
-        pokePageViewModel.getAllLikedPokemons()
+        mainPageViewModel.getAllLikedPokemons()
     }
 
 
-    val affirmationList = pokePageViewModel.convertToAffirmation(pokemonLikedList)
+    val affirmationList = mainPageViewModel.convertToAffirmation(pokemonLikedList)
     val sortedFavouritePokemons = affirmationList.sortedBy { it?.number }
 
     Log.d("tag", "$affirmationList $sortedFavouritePokemons")
@@ -59,7 +56,7 @@ fun FavouritePokemonList(
                         affirmation = affirmation,
                         navController = navController,
                         onLikeClicked = {
-                            pokePageViewModel.toggleLike(affirmation.name)
+                            mainPageViewModel.toggleLike(affirmation)
                         },
                         modifier = Modifier.padding(4.dp),
                     )

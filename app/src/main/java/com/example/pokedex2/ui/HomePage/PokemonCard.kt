@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -26,21 +25,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
@@ -53,8 +45,8 @@ import com.example.pokedex2.R
 import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.ui.Filters.addSpaceAndCapitalize
 import com.example.pokedex2.ui.Filters.capitalizeFirstLetter
+import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.PokemonTypeColorViewModel
-import com.example.pokedex2.viewModel.PrimaryViewModel
 import com.example.pokedex2.viewModel.SyncViewModel
 
 
@@ -65,11 +57,20 @@ fun AffirmationCard(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     typingColorViewModel: PokemonTypeColorViewModel = viewModel(),
-    primaryViewModel: PrimaryViewModel = hiltViewModel(),
+    mainPageViewModel: MainPageViewModel = hiltViewModel(),
     syncViewModel: SyncViewModel = hiltViewModel(),
 ){
 
-    var isToggled by remember { mutableStateOf(false) }
+
+    val pokemonLikedList by mainPageViewModel.pokemonLikedList.collectAsState()
+
+
+
+    LaunchedEffect (pokemonLikedList) {
+        mainPageViewModel.getAllLikedPokemons()
+        Log.d("Jeg er en kælling kælling","${affirmation.name} ${affirmation.isLiked}")
+
+    }
 
     Card(
         modifier = modifier
@@ -118,14 +119,15 @@ fun AffirmationCard(
                 modifier = Modifier.padding(start = 8.dp)
             ) {
                 IconButton(onClick = {onLikeClicked()
-                isToggled=!isToggled}) {
+                affirmation.isLiked = !affirmation.isLiked} )
+            {
                     Icon(
-                        imageVector = if (isToggled || affirmation.isLiked) {
+                        imageVector = if (affirmation.isLiked) {
                             Icons.Default.Favorite
                         } else {
                             Icons.Default.FavoriteBorder
                         },
-                        contentDescription = if (isToggled) "Toggled Icon" else "Default Icon",
+                        contentDescription = if (affirmation.isLiked) "Toggled Icon" else "Default Icon",
                         tint = Color(0xFFB11014),
                         modifier = Modifier
                             .size(35.dp)
