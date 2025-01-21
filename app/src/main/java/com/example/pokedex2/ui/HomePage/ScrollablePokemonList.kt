@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
@@ -175,11 +176,13 @@ fun HomePokemonScroll(
                     onClick = {
                         showFilterOverlay = !showFilterOverlay
                     },
-                    modifier = Modifier.padding(3.dp)
+                    modifier = Modifier
+                        .padding(3.dp)
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.Settings,
-                        contentDescription = "Open Filters"
+                        imageVector = Icons.Filled.Menu,
+                        contentDescription = "Open Filters",
+                        modifier = Modifier.size(40.dp)
                     )
                 }
             }
