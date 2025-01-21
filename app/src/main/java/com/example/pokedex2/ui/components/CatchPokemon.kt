@@ -69,7 +69,7 @@ fun CatchAnimation(isActive: Boolean) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black), // Clear canvas with black background
+            .background(Color.Black), // Clear screen for animation
         contentAlignment = Alignment.Center
     ) {
         Image(
@@ -80,7 +80,6 @@ fun CatchAnimation(isActive: Boolean) {
         )
     }
 }
-
 
 @Composable
 fun PokemonDetailsDialog(
