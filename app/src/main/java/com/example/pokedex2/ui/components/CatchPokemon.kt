@@ -69,7 +69,7 @@ fun CatchAnimation(isActive: Boolean) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black), // Clear canvas with black background
+            .background(Color.Black), // Clear screen for animation
         contentAlignment = Alignment.Center
     ) {
         Image(
@@ -80,7 +80,6 @@ fun CatchAnimation(isActive: Boolean) {
         )
     }
 }
-
 
 @Composable
 fun PokemonDetailsDialog(
@@ -149,15 +148,15 @@ fun SparkleAnimation(isActive: Boolean) {
     if (isActive) {
         LaunchedEffect(Unit) {
             while (isActive) {
-                currentFrame = (currentFrame + 1) % 36 // Loop through 36 frames
+                currentFrame = (currentFrame + 1) % 32 // Loop through 36 frames
                 delay(100) // Adjust delay to control frame speed
             }
         }
     }
 
     Canvas(modifier = Modifier.fillMaxSize()) {
-        val row = currentFrame / 6
-        val col = currentFrame % 6
+        val row = currentFrame / 8
+        val col = currentFrame % 4
 
         // Calculate source rectangle
         val srcRect = Rect(
@@ -168,10 +167,11 @@ fun SparkleAnimation(isActive: Boolean) {
         )
 
         // Calculate destination rectangle (centered sparkle)
-        val dstLeft = size.width / 2 - 64
-        val dstTop = size.height / 2 - 64
-        val dstRight = size.width / 2 + 64
-        val dstBottom = size.height / 2 + 64
+        val scaleFactor = 3.0f // Scale factor for size
+        val dstLeft = size.width / 2 - frameWidth * scaleFactor / 2
+        val dstTop = size.height / 2 - frameHeight * scaleFactor / 2
+        val dstRight = size.width / 2 + frameWidth * scaleFactor / 2
+        val dstBottom = size.height / 2 + frameHeight * scaleFactor / 2
 
         // Draw the specific frame using low-level Canvas API
         drawIntoCanvas { canvas ->
@@ -194,36 +194,3 @@ fun SparkleAnimation(isActive: Boolean) {
         }
     }
 }
-
-
-
-@Composable
-fun CatchAndSparkleAnimation(isActive: Boolean) {
-    val density = LocalDensity.current
-    val screenHeightPx = with(density) { LocalConfiguration.current.screenHeightDp.dp.toPx() } // Convert screen height to pixels
-    val ballOffsetY = remember { Animatable(screenHeightPx) } // Start at the bottom of the screen
-    var showSparkles by remember { mutableStateOf(false) }
-
-    if (isActive) {
-        LaunchedEffect(Unit) {
-            ballOffsetY.animateTo(
-                targetValue = screenHeightPx / 2,
-                animationSpec = tween(durationMillis = 2000, easing = LinearOutSlowInEasing)
-            )
-            showSparkles = true // Show sparkles after the ball animation
-        }
-    }
-
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        if (showSparkles) {
-            SparkleAnimation(isActive = true)
-        } else {
-            Image(
-                painter = painterResource(id = R.drawable.closed_pokeball),
-                contentDescription = "Pokeball",
-                modifier = Modifier.offset(y = with(density) { ballOffsetY.value.toDp() })
-            )
-        }
-    }
-}
-
