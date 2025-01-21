@@ -1,6 +1,5 @@
 package com.example.pokedex2.ui.Filters
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,10 +19,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,7 +34,7 @@ fun FilterOverlay(
     showOverlay: Boolean,
     onClose: () -> Unit,
     filterViewModel: FilterViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
-    onFilterApply: (SnapshotStateList<String>, ClosedRange<Int>?)-> Unit
+    onFilterApply: (String, ClosedRange<Int>?)-> Unit
 ) {
     val isLoading = filterViewModel.isLoading.value
     val selectionMap = filterViewModel.selectionMap
@@ -47,7 +44,7 @@ fun FilterOverlay(
     val pokeTypes = filterViewModel.pokeTypes.value
     val pokeGens = filterViewModel.pokeGenerations.value
 
-    val typesFilter = remember { mutableStateListOf<String>() }
+    val typesFilter = remember { mutableStateOf("") }
     val generationsFilter = remember { mutableStateOf<ClosedRange<Int>?> (null)}
 
 
@@ -129,7 +126,8 @@ fun FilterOverlay(
                             selectionMap = selectionMap,
                             onToggleSelection = { id -> filterViewModel.toggleSelection(id) },
                             getTypeColor = { id, color -> filterViewModel.getTypeColor(id, color)},
-                            typesFilter = typesFilter
+                            selectedType = typesFilter.value,
+                            onTypeSelected = { type -> typesFilter.value = type }
                         )
                         Spacer(modifier = Modifier.padding(5.dp))
                         Box(
@@ -169,28 +167,11 @@ fun FilterOverlay(
                         Text(
                             text = "Cancel"
                         )
-                    }/*
-                   Button(
-                        onClick = {
-                            if (allTypesSelected) {
-                                pokeTypes.forEach { selectionMap[it.id] = false }
-                                pokeGens.forEach{selectionGenMap[it.id] = false}
-                            } else {
-                                pokeTypes.forEach { selectionMap[it.id] = true }
-                                pokeGens.forEach{selectionGenMap[it.id] = true}
-                            }
-                        },
-                        colors = ButtonDefaults.buttonColors(Color(0xFF1DB5D4))
-                    ) {
-                        Text(
-                            text = if (allTypesSelected && allGensSelected) "Deselect all" else "Select all",
-                        )
-                    }*/
+                    }
                     Button(
                         onClick = {
                             onClose()
-                            onFilterApply(typesFilter, generationsFilter.value)
-                            Log.d("HomePokemonScroll", "nummer 2: ${typesFilter.isEmpty()}")
+                            onFilterApply(typesFilter.value, generationsFilter.value)
                         },
                         colors = ButtonDefaults.buttonColors(Color(0xFF1DB5D4))
                     ) {

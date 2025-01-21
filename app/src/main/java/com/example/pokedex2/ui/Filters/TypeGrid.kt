@@ -31,7 +31,8 @@ fun TypeGrid(
     selectionMap: Map<Int, Boolean>,
     onToggleSelection: (Int) -> Unit,
     getTypeColor: (Int, String) -> Color,
-    typesFilter: SnapshotStateList<String>
+    selectedType: String,
+    onTypeSelected: (String) -> Unit
 ) {
     LazyVerticalStaggeredGrid(
         modifier = modifier
@@ -47,7 +48,7 @@ fun TypeGrid(
             }
         }
         items(pokeTypes) { localPokeType ->
-            val isSelected = selectionMap[localPokeType.id] ?: false
+            val isSelected = localPokeType.name == selectedType
 
             Box(
                 modifier = Modifier
@@ -59,13 +60,7 @@ fun TypeGrid(
                         shape = RoundedCornerShape(25.dp)
                     )
                     .clickable {
-                        onToggleSelection(localPokeType.id)
-                        if (isSelected) {
-                            typesFilter.add(localPokeType.name)
-                        } else {
-                            typesFilter.remove(localPokeType.name)
-                        }
-                        Log.d("HomePokemonScroll", "nummer 1: ${typesFilter.isEmpty()}")
+                        onTypeSelected(localPokeType.name)
                     },
                 contentAlignment = Alignment.Center
             ) {

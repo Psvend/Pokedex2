@@ -75,7 +75,7 @@ fun HomePokemonScroll(
     var showFilterOverlay by remember {mutableStateOf(false)}
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var generations by rememberSaveable {mutableStateOf<ClosedRange<Int>?>(null)}
-    var types by rememberSaveable { mutableStateOf(mutableListOf<String>()) }
+    var selectedType by rememberSaveable { mutableStateOf("") }
     val allSelected = filterViewModel.selectionMap.values.all { it }
     val allGenSelected = filterViewModel.selectionGenMap.values.all { it }
 
@@ -86,13 +86,10 @@ fun HomePokemonScroll(
         val generation = filterViewModel.pokeGenerations.value.find { it.id == generationId }
             generation?.range?.contains(affirmation.number) == true
         }
-        val matchesTypes = types.isEmpty() || affirmation.typeIcon.any { typeIcon ->
-            types.contains(typeIcon) }
-        Log.d("tom?", "Tom i filter: ${types.isEmpty()}")
+        val matchesTypes = selectedType.isEmpty() || affirmation.typeIcon.contains(selectedType)
         matchesSearch && matchesGeneration && matchesTypes
     }
-    Log.d("Tjek list", "tom eller ej: ${filteredAffirmationList.isEmpty()}")
-    Log.d("tom?", "Tom efter filter: ${types.isEmpty()}")
+
 
 
 
@@ -192,8 +189,7 @@ fun HomePokemonScroll(
                     showOverlay = true,
                     onClose = { showFilterOverlay = false },
                     onFilterApply = {typesFilter, generationsFilter ->
-                        types.clear()
-                        types.addAll(typesFilter)
+                        selectedType = typesFilter
                         generations = generationsFilter
                         showFilterOverlay = false
                         Log.d("HomePokemonScroll", "nummer 3: ${typesFilter.isEmpty()}")
