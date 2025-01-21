@@ -1,5 +1,6 @@
 package com.example.pokedex2.ui.Filters
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -15,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,7 +30,9 @@ fun TypeGrid(
     pokeTypes: List<LocalPokeTypes>,
     selectionMap: Map<Int, Boolean>,
     onToggleSelection: (Int) -> Unit,
-    getTypeColor: (Int, String) -> Color
+    getTypeColor: (Int, String) -> Color,
+    selectedType: String,
+    onTypeSelected: (String) -> Unit
 ) {
     LazyVerticalStaggeredGrid(
         modifier = modifier
@@ -44,7 +48,7 @@ fun TypeGrid(
             }
         }
         items(pokeTypes) { localPokeType ->
-            val isSelected = selectionMap[localPokeType.id] ?: false
+            val isSelected = localPokeType.name == selectedType
 
             Box(
                 modifier = Modifier
@@ -57,6 +61,11 @@ fun TypeGrid(
                     )
                     .clickable {
                         onToggleSelection(localPokeType.id)
+                        if (isSelected) {
+                            onTypeSelected("")
+                        } else {
+                            onTypeSelected(localPokeType.name)
+                        }
                     },
                 contentAlignment = Alignment.Center
             ) {

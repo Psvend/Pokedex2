@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -47,9 +48,9 @@ import androidx.navigation.NavHostController
 import com.example.pokedex2.R
 import com.example.pokedex2.ui.Filters.FilterOverlay
 import com.example.pokedex2.utils.RotatingLoader
+import com.example.pokedex2.viewModel.FilterViewModel
 import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.PokePageViewModel
-import com.example.pokedex2.viewModel.SearchViewModel
 import com.example.pokedex2.viewModel.SyncViewModel
 import kotlinx.coroutines.flow.filter
 
@@ -59,8 +60,8 @@ fun HomePokemonScroll(
     modifier: Modifier = Modifier,
     syncViewModel: SyncViewModel = hiltViewModel(),
     fetchAPIViewModel: MainPageViewModel = hiltViewModel(),
-    searchViewModel: SearchViewModel = viewModel(),
     pokePageViewModel: PokePageViewModel = hiltViewModel(),
+    filterViewModel: FilterViewModel = viewModel()
 ) {
     val isLoading by fetchAPIViewModel.isLoading.collectAsState()
     val isPaginating by fetchAPIViewModel.isPaginating.collectAsState()
@@ -72,17 +73,23 @@ fun HomePokemonScroll(
 
     var showFilterOverlay by remember {mutableStateOf(false)}
     var searchQuery by rememberSaveable { mutableStateOf("") }
-
-    val allSelected = searchViewModel.selectionMap.values.all { it }
-    val allGenSelected = searchViewModel.selectionGenMap.values.all { it }
-    val allEvoSelected = searchViewModel.selectionEvoMap.values.all { it }
+    var generations by rememberSaveable {mutableStateOf<ClosedRange<Int>?>(null)}
+    var selectedType by rememberSaveable { mutableStateOf("") }
+    val allSelected = filterViewModel.selectionMap.values.all { it }
+    val allGenSelected = filterViewModel.selectionGenMap.values.all { it }
 
     val filteredAffirmationList = affirmationList.filter { affirmation ->
         val matchesSearch = searchQuery.isBlank() || affirmation.doesMatchQuery(searchQuery)
-        matchesSearch
+        val selectedGenerations = filterViewModel.selectionGenMap.filterValues { it }.keys
+        val matchesGeneration = selectedGenerations.isEmpty() || selectedGenerations.any { generationId ->
+        val generation = filterViewModel.pokeGenerations.value.find { it.id == generationId }
+            generation?.range?.contains(affirmation.number) == true
+        }
+        val matchesTypes = selectedType.isEmpty() || affirmation.typeIcon.contains(selectedType)
+        matchesSearch && matchesGeneration && matchesTypes
     }
 
-    Log.d("test", "$affirmationList")
+
 
 
     if (isLoading && affirmationList.isEmpty()) {
@@ -179,9 +186,15 @@ fun HomePokemonScroll(
             if (showFilterOverlay) {
                 FilterOverlay(
                     showOverlay = true,
-                    onClose = { showFilterOverlay = false }
+                    onClose = { showFilterOverlay = false },
+                    onFilterApply = {typesFilter, generationsFilter ->
+                        selectedType = typesFilter
+                        generations = generationsFilter
+                        showFilterOverlay = false
+                        Log.d("HomePokemonScroll", "nummer 3: ${typesFilter.isEmpty()}")
+                    }
                 )
-            } else if (!allSelected && !allEvoSelected && !allGenSelected){
+            } else if (filteredAffirmationList.isEmpty()){
                 Column(
                     modifier
                         .fillMaxSize()
@@ -206,8 +219,24 @@ fun HomePokemonScroll(
                         style = MaterialTheme.typography.bodyLarge,
                         color = Color.Black
                     )
-                }
-            }else if (allSelected && allEvoSelected && allGenSelected){
+
+                    Spacer(modifier.height(16.dp))
+                    Button(
+                        onClick = {
+                            showFilterOverlay = true
+                            showFilterOverlay = false
+                        },
+                        modifier = Modifier.padding(3.dp),
+                        colors = ButtonDefaults.buttonColors(Color(0xFF1DB5D4))
+                    ) {
+                        Text(
+                            text = "Retry",
+                            color = Color.White
+                        )
+                    }                }
+            }
+            else {
+
                 LazyColumn(
                     state = listState,
                     modifier = modifier

@@ -9,35 +9,40 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.pokedex2.utils.RotatingLoader
-import com.example.pokedex2.viewModel.SearchViewModel
+import com.example.pokedex2.viewModel.FilterViewModel
 
 @Composable
 fun FilterOverlay(
     showOverlay: Boolean,
     onClose: () -> Unit,
-    searchViewModel: SearchViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    filterViewModel: FilterViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    onFilterApply: (String, ClosedRange<Int>?)-> Unit
 ) {
-    val isLoading = searchViewModel.isLoading.value
-    val selectionMap = searchViewModel.selectionMap
-    val selectionGenMap = searchViewModel.selectionGenMap
-    val selectionEvoMap = searchViewModel.selectionEvoMap
-    val allTypesSelected = selectionMap.values.all { it } // Check if all are selected
-    val allGensSelected = selectionGenMap.values.all {it}
-    val allEvosSelected = selectionEvoMap.values.all {it}
-    val pokeTypes = searchViewModel.pokeTypes.value
-    val pokeGens = searchViewModel.pokeGenerations.value
-    val pokeEvos = searchViewModel.pokeEvolutions.value
+    val isLoading = filterViewModel.isLoading.value
+    val selectionMap = filterViewModel.selectionMap
+    val pokeTypes = filterViewModel.pokeTypes.value
+    val pokeGens = filterViewModel.pokeGenerations.value
+
+    val typesFilter = remember { mutableStateOf("") }
+    val generationsFilter = remember { mutableStateOf<ClosedRange<Int>?> (null)}
 
 
     if(showOverlay){
@@ -46,6 +51,7 @@ fun FilterOverlay(
                 .fillMaxWidth()
                 .background(Color.Black.copy(alpha = 0.5f)),
         ) {
+
             Column (
                 modifier = Modifier
                     .background(Color(0xFFFFF9E6))
@@ -54,6 +60,29 @@ fun FilterOverlay(
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Filters",
+                        color = Color.Black,
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(Modifier.weight(1f))
+                    IconButton(
+                        onClick = { onClose() },
+                        modifier = Modifier
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            tint = Color.DarkGray,
+                            contentDescription = "Close FilterOverlay",
+                            modifier = Modifier.size(40.dp)
+                        )
+                    }
+                }
                 when {
                     isLoading -> {
                         Box(
@@ -92,19 +121,20 @@ fun FilterOverlay(
                             modifier = Modifier,
                             pokeTypes = pokeTypes,
                             selectionMap = selectionMap,
-                            onToggleSelection = { id -> searchViewModel.toggleSelection(id) },
-                            getTypeColor = { id, color -> searchViewModel.getTypeColor(id, color) }
+                            onToggleSelection = { id -> filterViewModel.toggleSelection(id) },
+                            getTypeColor = { id, color -> filterViewModel.getTypeColor(id, color)},
+                            selectedType = typesFilter.value,
+                            onTypeSelected = { type -> typesFilter.value = type }
                         )
+                        Spacer(modifier = Modifier.padding(5.dp))
                         Box(
                             modifier = Modifier
-                                //.background(Color(0xFFE55655))
                                 .align(Alignment.Start)
                         ){
                             Text(
                                 modifier = Modifier.padding(6.dp),
                                 text = "Generations:",
                                 color = Color.Black,
-                                //color = Color(0xFFFFD88E),
                                 style = MaterialTheme.typography.bodyLarge,
                                 fontWeight = FontWeight.Bold
                             )
@@ -112,28 +142,9 @@ fun FilterOverlay(
                         GenerationGrid(
                             modifier = Modifier,
                             generations = pokeGens,
-                            selectionGenerationMap = selectionGenMap,
-                            onToggleSelection = {id -> searchViewModel.toggleSelection(id)},
-                            getColor = {id -> searchViewModel.getButtonColor(id)}
-                        )
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.Start)
-                        ){
-                            Text(
-                                modifier = Modifier.padding(6.dp),
-                                text = "Evolution Stages:",
-                                color = Color.Black,
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                        EvolutionGrid(
-                            modifier = Modifier,
-                            evolutions = pokeEvos,
-                            selectionEvoMap = selectionEvoMap,
-                            onToggleSelection = {id -> searchViewModel.toggleSelection(id)},
-                            getColor = {id -> searchViewModel.getButtonColor(id)}
+                            onToggleSelection = {id -> filterViewModel.toggleSelection(id)},
+                            getColor = {id -> filterViewModel.getButtonColor(id)},
+                            generationsFilter = generationsFilter
                         )
                     }
                 }
@@ -156,25 +167,8 @@ fun FilterOverlay(
                     }
                     Button(
                         onClick = {
-                            if (allTypesSelected) {
-                                pokeTypes.forEach { selectionMap[it.id] = false }
-                                pokeGens.forEach{selectionGenMap[it.id] = false}
-                                pokeEvos.forEach{selectionEvoMap[it.id] = false}
-                            } else {
-                                pokeTypes.forEach { selectionMap[it.id] = true }
-                                pokeGens.forEach{selectionGenMap[it.id] = true}
-                                pokeEvos.forEach{selectionEvoMap[it.id] = true}
-                            }
-                        },
-                        colors = ButtonDefaults.buttonColors(Color(0xFF1DB5D4))
-                    ) {
-                        Text(
-                            text = if (allTypesSelected && allEvosSelected && allGensSelected) "Deselect all" else "Select all",
-                        )
-                    }
-                    Button(
-                        onClick = {
                             onClose()
+                            onFilterApply(typesFilter.value, generationsFilter.value)
                         },
                         colors = ButtonDefaults.buttonColors(Color(0xFF1DB5D4))
                     ) {

@@ -253,13 +253,13 @@ class PokemonPageViewModel @Inject constructor(
 
     fun getStatColor(statName: String): androidx.compose.ui.graphics.Color {
         return when (statName.lowercase()) {
-            "hp" -> Color(0xFFFF0000) // Red for HP
-            "attack" -> Color(0xFFFFA500) // Orange for Attack
-            "defense" -> Color(0xFF00FF00) // Green for Defense
-            "special-attack" -> Color(0xFF1E90FF) // Blue for Special Attack
-            "special-defense" -> Color(0xFF8A2BE2) // Purple for Special Defense
-            "speed" -> Color(0xFFFFD700) // Gold for Speed
-            else -> Color(0xFF808080) // Gray for unknown or unhandled stats
+            "hp" -> Color(0xFFFF0000)
+            "attack" -> Color(0xFFFFA500)
+            "defense" -> Color(0xFF00FF00)
+            "special attack" -> Color(0xFF1E90FF)
+            "special defense" -> Color(0xFF8A2BE2)
+            "speed" -> Color(0xFFFFD700)
+            else -> Color(0xFF808080)
         }
     }
 

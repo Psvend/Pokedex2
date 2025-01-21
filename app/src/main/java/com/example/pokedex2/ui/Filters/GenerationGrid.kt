@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,48 +28,45 @@ import com.example.pokedex2.utils.RotatingLoader
 fun GenerationGrid(
     modifier: Modifier = Modifier,
     generations: List<LocalGenerations>,
-    selectionGenerationMap: Map<Int, Boolean>,
     onToggleSelection: (Int) -> Unit,
-    getColor: (Int) -> Color
+    getColor: (Int) -> Color,
+    generationsFilter: MutableState<ClosedRange<Int>?>
 ) {
     LazyVerticalStaggeredGrid(
         modifier = modifier
-            //.weight(1f)
-            .padding(horizontal = 18.dp, vertical = 5.dp),
-        columns = StaggeredGridCells.Fixed(5),
-        horizontalArrangement = Arrangement.spacedBy(15.dp),
-        verticalItemSpacing = 16.dp
-    ) {
-        if (generations.isEmpty()) {
-            item {
-                RotatingLoader()
-            }
+        .padding(horizontal = 18.dp, vertical = 5.dp),
+    columns = StaggeredGridCells.Fixed(5),
+    horizontalArrangement = Arrangement.spacedBy(15.dp),
+    verticalItemSpacing = 16.dp
+) {
+    if (generations.isEmpty()) {
+        item {
+            RotatingLoader()
         }
-        items(generations) { localGeneration ->
-            val isSelected = selectionGenerationMap[localGeneration.id] ?: false
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(2.0f)
-                        .border(1.dp, Color.White, RoundedCornerShape(25.dp))
-                        .background(
-                            color = getColor(localGeneration.id),
-                            shape = RoundedCornerShape(25.dp)
-                        )
-                        .clickable {
-                            onToggleSelection(localGeneration.id)
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
-
-                    Text(
-                        text = localGeneration.generation,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = if (isSelected) Color(0xFFFFD88E) else Color.White
+    }
+    items(generations) { localGeneration ->
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1.6f)
+                    .border(1.dp, Color.White, RoundedCornerShape(25.dp))
+                    .background(
+                        color = getColor(localGeneration.id),
+                        shape = RoundedCornerShape(25.dp)
                     )
-                }
+                    .clickable {
+                        onToggleSelection(localGeneration.id)
+                        generationsFilter.value = localGeneration.range
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+
+                Text(
+                    text = localGeneration.generation,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color =  Color.White
+                )
             }
         }
-
+    }
 }
