@@ -16,7 +16,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SyncViewModel @Inject constructor(
     private val favouritesRepository: FavouritesRepository,
-    private val localCachingDao: LocalCachingDao
     //private val mainPageViewModel: MainPageViewModel
 ) : ViewModel() {
 

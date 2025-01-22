@@ -71,13 +71,10 @@ fun HomePokemonScroll(
     val syncedPokemons by syncViewModel.pokemonList.collectAsState(initial = emptyList())
     val pokemonDetail by pokePageViewModel.pokemonDetail.collectAsState()
     val affirmationList = pokePageViewModel.convertToAffirmation(pokemonDetail)
-
     var showFilterOverlay by remember {mutableStateOf(false)}
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var generations by rememberSaveable {mutableStateOf<ClosedRange<Int>?>(null)}
     var selectedType by rememberSaveable { mutableStateOf("") }
-    val allSelected = filterViewModel.selectionMap.values.all { it }
-    val allGenSelected = filterViewModel.selectionGenMap.values.all { it }
 
     val filteredAffirmationList = affirmationList.filter { affirmation ->
         val matchesSearch = searchQuery.isBlank() || affirmation.doesMatchQuery(searchQuery)
@@ -89,9 +86,6 @@ fun HomePokemonScroll(
         val matchesTypes = selectedType.isEmpty() || affirmation.typeIcon.contains(selectedType)
         matchesSearch && matchesGeneration && matchesTypes
     }
-
-
-
 
     if (isLoading && affirmationList.isEmpty()) {
         Box(
@@ -236,10 +230,10 @@ fun HomePokemonScroll(
                             text = "Retry",
                             color = Color.White
                         )
-                    }                }
+                    }
+                }
             }
             else {
-
                 LazyColumn(
                     state = listState,
                     modifier = modifier
@@ -269,7 +263,6 @@ fun HomePokemonScroll(
                         }
                     }
                 }
-
                 LaunchedEffect(listState) {
                     snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
                         .filter { it == affirmationList.size - 1 && !isPaginating && !isLoading }
