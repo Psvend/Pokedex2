@@ -33,7 +33,7 @@ class FilterViewModel : ViewModel() {
         Log.d("SearchViewModel", "Types loaded: $types")
 
         types.forEach { type ->
-            selectionMap[type.id] = true
+            selectionMap[type.id] = false
         }
 
         // Log selectionMap. Printing in logcat
@@ -51,7 +51,7 @@ class FilterViewModel : ViewModel() {
         Log.d("SearchViewModel", "Generations loaded: $generations")
 
         generations.forEach {generation->
-            selectionGenMap[generation.id] = true
+            selectionGenMap[generation.id] = false
         }
 
         isLoading.value = false

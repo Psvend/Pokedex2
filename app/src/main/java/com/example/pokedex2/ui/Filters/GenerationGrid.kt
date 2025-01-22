@@ -58,7 +58,6 @@ fun GenerationGrid(
                     .clickable {
                         onToggleSelection(localGeneration.id)
                         selectedGeneration.value = localGeneration.id
-                        Log.d("GenerationGrid", "værdi: ${selectedGeneration.value}")
                     },
                 contentAlignment = Alignment.Center
             ) {

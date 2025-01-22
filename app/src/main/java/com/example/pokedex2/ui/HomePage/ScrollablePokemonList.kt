@@ -80,7 +80,6 @@ fun HomePokemonScroll(
         val matchesSearch = searchQuery.isBlank() || affirmation.doesMatchQuery(searchQuery)
         val matchesGeneration = affirmation.number in fetchAPIViewModel.getGenerationRange(selectedGeneration)
         val matchesTypes = selectedType.isEmpty() || affirmation.typeIcon.contains(selectedType)
-        Log.d("GenerationGrid", "værdi: ${selectedGeneration}")
         matchesSearch && matchesGeneration && matchesTypes
     }
 
