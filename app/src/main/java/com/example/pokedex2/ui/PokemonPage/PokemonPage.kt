@@ -35,7 +35,6 @@ import com.example.pokedex2.ui.PokemonPage.PokemonName
 import com.example.pokedex2.ui.PokemonPage.PokemonNr
 import com.example.pokedex2.ui.PokemonPage.PokemonStatsGraph
 import com.example.pokedex2.ui.Filters.capitalizeFirstLetter
-import com.example.pokedex2.viewModel.MainPageViewModel
 import com.example.pokedex2.viewModel.PokePageViewModel
 import com.example.pokedex2.viewModel.PokemonPageViewModel
 import com.example.pokedex2.viewModel.PokemonTypeColorViewModel
