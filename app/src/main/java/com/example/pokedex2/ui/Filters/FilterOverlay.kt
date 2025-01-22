@@ -1,6 +1,5 @@
 package com.example.pokedex2.ui.Filters
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -170,7 +169,7 @@ fun FilterOverlay(
                         onClick = {
                             onClose()
                             onFilterApply(typesFilter.value, generationsFilter.value)
-                            Log.d("FilterOverlay", "værdi: ${generationsFilter.value}")
+                            filterViewModel.turnColorOffAll()
                         },
                         colors = ButtonDefaults.buttonColors(Color(0xFF1DB5D4))
                     ) {

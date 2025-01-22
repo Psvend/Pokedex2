@@ -88,4 +88,17 @@ class FilterViewModel : ViewModel() {
             selectionGenMap[id] = !(selectionGenMap[id] ?: false)
         }
     }
+
+    fun turnColorOffAll() {
+        val types = DataPokeTypes().loadTypes()
+        val generations = DataPokeGenerations().loadGeneration()
+
+        types.forEach { type ->
+            selectionMap[type.id] = false
+        }
+        generations.forEach {generation->
+            selectionGenMap[generation.id] = false
+        }
+
+    }
 }
