@@ -49,23 +49,17 @@ fun PokemonPage(
     viewModel: PokemonPageViewModel = hiltViewModel(),
     pokePageViewModel: PokePageViewModel = hiltViewModel(),
     syncViewModel: SyncViewModel = hiltViewModel(),
-    fetchAPIViewModel: MainPageViewModel = hiltViewModel(),
     typingColorViewModel: PokemonTypeColorViewModel = viewModel()
 ) {
     //val pokemonDetail by viewModel.pokemonDetail.collectAsState()
-    val errorMessage by viewModel.errorMessage.collectAsState()
     val pokemonLocations by viewModel.pokemonLocations.collectAsState()
+    val pokemonDetail by viewModel.pokemonDetail.collectAsState()
     val abilities by viewModel.abilities.collectAsState()
     val growthRate by viewModel.growthRate.collectAsState()
     val evolvesTo by viewModel.evolvesTo.collectAsState()
     val stats by viewModel.pokemonStats.collectAsState()
     val characteristicDescription by viewModel.characteristicDescription.collectAsState()
-    val likedPokemons by syncViewModel.pokemonList.collectAsState()
-    //val isLiked = likedPokemons.any { it.id == pokemonDetail?.id }
-    val apiPokemons by fetchAPIViewModel.apiPokemons.collectAsState(initial = emptyList())
-    val syncedPokemons by syncViewModel.pokemonList.collectAsState()
-    val pokemonDetail by pokePageViewModel.pokemonDetail.collectAsState()
-    val isLiked = syncViewModel.pokemonList.collectAsState().value.any { it.id == pokemonDetail?.id }
+    val pokemonDetailLocal by pokePageViewModel.pokemonDetail.collectAsState()
 
     // Map the evolution data from your API into EvolutionDetailUI objects
     val evolutionDetailsUI = evolvesTo.map { evolution ->
@@ -76,7 +70,7 @@ fun PokemonPage(
         )
     }
 
-    val affirmation = pokemonDetail?.let { pokePageViewModel.convertToAffirmation(it) }
+    val affirmation = pokemonDetailLocal?.let { pokePageViewModel.convertToAffirmation(it) }
         ?.find { it.name.equals(pokemonIdOrName, ignoreCase = true) }
 
     LaunchedEffect(affirmation) {
@@ -90,6 +84,13 @@ fun PokemonPage(
         viewModel.fetchPokemonSpecies(pokemonIdOrName.lowercase())
         viewModel.fetchEvolutionChain(pokemonIdOrName.lowercase())
         viewModel.fetchPokemonStats(pokemonIdOrName.lowercase())
+        viewModel.fetchPokemonEncounters(pokemonIdOrName.lowercase())
+    }
+
+    LaunchedEffect(pokemonDetail?.location_area_encounters) {
+        pokemonDetail?.location_area_encounters?.let { url ->
+            viewModel.fetchPokemonEncounters(url)
+        }
     }
 
     //Fetch pokemon description
@@ -123,9 +124,9 @@ fun PokemonPage(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                PokemonName(name = pokemonDetail?.name ?: "Unknown")
+                PokemonName(name = pokemonDetailLocal?.name ?: "Unknown")
 
-                pokemonDetail?.id?.let { id ->
+                pokemonDetailLocal?.id?.let { id ->
                     PokemonNr(id = id)
                 }
 
@@ -177,8 +178,8 @@ fun PokemonPage(
             PokemonEvolvesTo(
                 evolvesTo = evolutionDetailsUI,
                 currentPokemon = EvolutionDetailUI(
-                    name = pokemonDetail?.name?.capitalizeFirstLetter()?.addSpaceAndCapitalize() ?: "Unknown",
-                    imageUrl = pokemonDetail?.imageResourceId ?: "",
+                    name = pokemonDetailLocal?.name?.capitalizeFirstLetter()?.addSpaceAndCapitalize() ?: "Unknown",
+                    imageUrl = pokemonDetailLocal?.imageResourceId ?: "",
                     requirement = "This is the final form"
                 )
             )
