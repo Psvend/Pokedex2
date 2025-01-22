@@ -36,6 +36,8 @@ class MainPageViewModel @Inject constructor (
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
+
+
     private var currentPage = 0
 
     init {

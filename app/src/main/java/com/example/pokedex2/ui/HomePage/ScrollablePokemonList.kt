@@ -21,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -67,14 +66,22 @@ fun HomePokemonScroll(
     val isLoading by fetchAPIViewModel.isLoading.collectAsState()
     val isPaginating by fetchAPIViewModel.isPaginating.collectAsState()
     val errorMessage by fetchAPIViewModel.errorMessage.collectAsState()
+    val apiPokemons by fetchAPIViewModel.apiPokemons.collectAsState(initial = emptyList())
     val listState = rememberLazyListState()
     val syncedPokemons by syncViewModel.pokemonList.collectAsState(initial = emptyList())
     val pokemonDetail by pokePageViewModel.pokemonDetail.collectAsState()
-    val affirmationList = pokePageViewModel.convertToAffirmation(pokemonDetail)
+    val convertedList by pokePageViewModel.convertedDetail.collectAsState(initial = emptyList())
     var showFilterOverlay by remember {mutableStateOf(false)}
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var selectedGeneration by rememberSaveable { mutableStateOf<Int?>(null) }
     var selectedType by rememberSaveable { mutableStateOf("") }
+
+
+    val affirmationList = syncedPokemons
+
+    LaunchedEffect(apiPokemons) {
+        syncViewModel.syncPokemons(apiPokemons)
+    }
 
     val filteredAffirmationList = affirmationList.filter { affirmation ->
         val matchesSearch = searchQuery.isBlank() || affirmation.doesMatchQuery(searchQuery)
@@ -239,12 +246,17 @@ fun HomePokemonScroll(
                     items(
                         filteredAffirmationList
                     ) { affirmation ->
+
                         AffirmationCard(
                             affirmation = affirmation,
                             navController = navController,
-                            onLikeClicked = { syncViewModel.toggleLike(affirmation) },
+                            onLikeClicked = { syncViewModel.toggleLike(affirmation)
+                            },
+
                             modifier = Modifier.padding(4.dp)
                         )
+
+
                     }
                     if (isPaginating) {
                         item {
@@ -261,7 +273,7 @@ fun HomePokemonScroll(
                 }
                 LaunchedEffect(listState) {
                     snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
-                        .filter { it == affirmationList.size - 1 && !isPaginating && !isLoading }
+                        .filter { it == syncedPokemons.size - 1 && !isPaginating && !isLoading }
                         .collect {
                             fetchAPIViewModel.loadNextPage()
                         }
