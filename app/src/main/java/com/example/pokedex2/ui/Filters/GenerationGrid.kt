@@ -30,7 +30,7 @@ fun GenerationGrid(
     generations: List<LocalGenerations>,
     onToggleSelection: (Int) -> Unit,
     getColor: (Int) -> Color,
-    generationsFilter: MutableState<ClosedRange<Int>?>
+    selectedGeneration: MutableState<Int?>
 ) {
     LazyVerticalStaggeredGrid(
         modifier = modifier
@@ -56,7 +56,7 @@ fun GenerationGrid(
                     )
                     .clickable {
                         onToggleSelection(localGeneration.id)
-                        generationsFilter.value = localGeneration.range
+                        selectedGeneration.value = localGeneration.id
                     },
                 contentAlignment = Alignment.Center
             ) {

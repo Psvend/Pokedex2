@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberAsyncImagePainter
 import com.example.pokedex2.data.remote.EvolutionDetailUI
 import com.example.pokedex2.ui.Filters.addSpaceAndCapitalize
 import com.example.pokedex2.ui.HomePage.PokemonTypeIcons
@@ -78,8 +79,7 @@ fun PokemonPage(
     val affirmation = pokemonDetail?.let { pokePageViewModel.convertToAffirmation(it) }
         ?.find { it.name.equals(pokemonIdOrName, ignoreCase = true) }
 
-
-    LaunchedEffect(pokemonIdOrName) {
+    LaunchedEffect(affirmation) {
         pokePageViewModel.fetchCachedPokemon(pokemonIdOrName)
     }
 
@@ -144,7 +144,7 @@ fun PokemonPage(
 
             if (affirmation != null) {
                     PokemonImage(
-                        model = affirmation.imageResourceId,
+                        painter = rememberAsyncImagePainter(affirmation.imageResourceId),
                         syncViewModel = syncViewModel,
                         affirmation = affirmation
                     )

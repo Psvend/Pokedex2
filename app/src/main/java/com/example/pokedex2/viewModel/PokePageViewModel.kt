@@ -23,6 +23,8 @@ class PokePageViewModel @Inject constructor (
     private val _convertedDetail = MutableStateFlow<List<Affirmation>>(emptyList())
     val convertedDetail: StateFlow<List<Affirmation>> = _convertedDetail
 
+    private val _pokemon = MutableStateFlow<Affirmation?>(null)
+    val pokemon: StateFlow<Affirmation?> = _pokemon
 
     fun fetchCachedPokemon(pokemonIdOrName: String) {
         viewModelScope.launch {
@@ -54,9 +56,5 @@ class PokePageViewModel @Inject constructor (
             _convertedDetail.value = cachedPokemons
         }
         return _convertedDetail.value
-    }
-    // This can still be used for fetching API data if required
-    fun getAffirmationByName(pokemonIdOrName: String) : Affirmation? {
-        return _convertedDetail.value.find { it.name.equals(pokemonIdOrName, ignoreCase = true) }
     }
 }

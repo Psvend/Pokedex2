@@ -19,8 +19,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -61,27 +62,30 @@ fun HomePokemonScroll(
     syncViewModel: SyncViewModel = hiltViewModel(),
     fetchAPIViewModel: MainPageViewModel = hiltViewModel(),
     pokePageViewModel: PokePageViewModel = hiltViewModel(),
-    filterViewModel: FilterViewModel = viewModel()
 ) {
     val isLoading by fetchAPIViewModel.isLoading.collectAsState()
     val isPaginating by fetchAPIViewModel.isPaginating.collectAsState()
     val errorMessage by fetchAPIViewModel.errorMessage.collectAsState()
+    val apiPokemons by fetchAPIViewModel.apiPokemons.collectAsState(initial = emptyList())
     val listState = rememberLazyListState()
     val syncedPokemons by syncViewModel.pokemonList.collectAsState(initial = emptyList())
     val pokemonDetail by pokePageViewModel.pokemonDetail.collectAsState()
-    val affirmationList = pokePageViewModel.convertToAffirmation(pokemonDetail)
+    val convertedList by pokePageViewModel.convertedDetail.collectAsState(initial = emptyList())
     var showFilterOverlay by remember {mutableStateOf(false)}
     var searchQuery by rememberSaveable { mutableStateOf("") }
-    var generations by rememberSaveable {mutableStateOf<ClosedRange<Int>?>(null)}
+    var selectedGeneration by rememberSaveable { mutableStateOf<Int?>(null) }
     var selectedType by rememberSaveable { mutableStateOf("") }
+
+
+    val affirmationList = syncedPokemons
+
+    LaunchedEffect(apiPokemons) {
+        syncViewModel.syncPokemons(apiPokemons)
+    }
 
     val filteredAffirmationList = affirmationList.filter { affirmation ->
         val matchesSearch = searchQuery.isBlank() || affirmation.doesMatchQuery(searchQuery)
-        val selectedGenerations = filterViewModel.selectionGenMap.filterValues { it }.keys
-        val matchesGeneration = selectedGenerations.isEmpty() || selectedGenerations.any { generationId ->
-        val generation = filterViewModel.pokeGenerations.value.find { it.id == generationId }
-            generation?.range?.contains(affirmation.number) == true
-        }
+        val matchesGeneration = affirmation.number in fetchAPIViewModel.getGenerationRange(selectedGeneration)
         val matchesTypes = selectedType.isEmpty() || affirmation.typeIcon.contains(selectedType)
         matchesSearch && matchesGeneration && matchesTypes
     }
@@ -169,11 +173,13 @@ fun HomePokemonScroll(
                     onClick = {
                         showFilterOverlay = !showFilterOverlay
                     },
-                    modifier = Modifier.padding(3.dp)
+                    modifier = Modifier
+                        .padding(3.dp)
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.Settings,
-                        contentDescription = "Open Filters"
+                        imageVector = Icons.Filled.Menu,
+                        contentDescription = "Open Filters",
+                        modifier = Modifier.size(40.dp)
                     )
                 }
             }
@@ -183,7 +189,7 @@ fun HomePokemonScroll(
                     onClose = { showFilterOverlay = false },
                     onFilterApply = {typesFilter, generationsFilter ->
                         selectedType = typesFilter
-                        generations = generationsFilter
+                        selectedGeneration = generationsFilter
                         showFilterOverlay = false
                         Log.d("HomePokemonScroll", "nummer 3: ${typesFilter.isEmpty()}")
                     }
@@ -240,12 +246,17 @@ fun HomePokemonScroll(
                     items(
                         filteredAffirmationList
                     ) { affirmation ->
+
                         AffirmationCard(
                             affirmation = affirmation,
                             navController = navController,
-                            onLikeClicked = { syncViewModel.toggleLike(affirmation) },
+                            onLikeClicked = { syncViewModel.toggleLike(affirmation)
+                            },
+
                             modifier = Modifier.padding(4.dp)
                         )
+
+
                     }
                     if (isPaginating) {
                         item {
@@ -262,7 +273,7 @@ fun HomePokemonScroll(
                 }
                 LaunchedEffect(listState) {
                     snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
-                        .filter { it == affirmationList.size - 1 && !isPaginating && !isLoading }
+                        .filter { it == syncedPokemons.size - 1 && !isPaginating && !isLoading }
                         .collect {
                             fetchAPIViewModel.loadNextPage()
                         }

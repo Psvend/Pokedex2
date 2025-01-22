@@ -36,6 +36,8 @@ class MainPageViewModel @Inject constructor (
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
+
+
     private var currentPage = 0
 
     init {
@@ -48,7 +50,7 @@ class MainPageViewModel @Inject constructor (
                 if (page == 0) _isLoading.value = true else _isPaginating.value = true
 
                 val offset = 0
-                val response = pokemonApiService.getPokemonList(offset, 100)
+                val response = pokemonApiService.getPokemonList(offset, 1025)
 
                 val fetchedPokemons = response.results.map { result ->
                     val detail = pokemonApiService.getPokemonDetail(result.name)
@@ -116,7 +118,9 @@ class MainPageViewModel @Inject constructor (
             _apiPokemons.value = cachedPokemons
 
             // Load new data from the API
-            fetchAffirmations()
+            if (cachedPokemons.size < 1024) {
+                fetchAffirmations()
+            }
         }
     }
 
@@ -133,5 +137,20 @@ class MainPageViewModel @Inject constructor (
 
     fun getAffirmationByName(name: String): Affirmation? {
         return _apiPokemons.value.find { it.name == name}
+    }
+
+    fun getGenerationRange(generationId: Int?): ClosedRange<Int> {
+        return when (generationId) {
+            19 -> 1..151
+            20 -> 152..251
+            21 -> 252..386
+            22 -> 387..493
+            23 -> 494..649
+            24 -> 650..721
+            25-> 722..809
+            26 -> 810..905
+            27 -> 906..1025
+            else -> 1..1025
+        }
     }
 }

@@ -21,12 +21,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.viewModel.SyncViewModel
+import androidx.compose.foundation.Image
+import androidx.compose.ui.graphics.painter.Painter
+
 
 @Composable
-fun PokemonImage(model: String?, syncViewModel: SyncViewModel, affirmation: Affirmation) {
+fun PokemonImage(painter: Painter, syncViewModel: SyncViewModel, affirmation: Affirmation) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -44,27 +46,19 @@ fun PokemonImage(model: String?, syncViewModel: SyncViewModel, affirmation: Affi
                 .border(16.dp, Color.Gray, shape = RoundedCornerShape(24.dp))
                 .background(Color.White, shape = RoundedCornerShape(24.dp))
         ) {
-            if (model != null) {
-                AsyncImage(
-                    model = model,
-                    contentDescription = "Pokemon sprite",
-                    modifier = Modifier
-                        .size(280.dp)
-                        .clip(RoundedCornerShape(24.dp))
-                )
-            } else {
-                Text(
-                    text = "Image not available",
-                    color = Color.Gray,
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
+            Image(
+                painter = painter,
+                contentDescription = "Pokemon sprite",
+                modifier = Modifier
+                    .size(280.dp)
+                    .clip(RoundedCornerShape(24.dp))
+            )
         }
 
         LikeButton(
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .offset(x = (-25).dp, y = 25.dp)
+                .offset(x = (-50).dp, y = 25.dp)
                 .clickable (
                     indication = null,
                     interactionSource = remember{ MutableInteractionSource() }
@@ -72,7 +66,6 @@ fun PokemonImage(model: String?, syncViewModel: SyncViewModel, affirmation: Affi
                     syncViewModel.toggleLike(affirmation)
                 },
             affirmation = affirmation,
-            onLikeClicked = { syncViewModel.toggleLike(affirmation) },
         )
 
     }
