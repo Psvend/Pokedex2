@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -62,7 +63,6 @@ fun HomePokemonScroll(
     syncViewModel: SyncViewModel = hiltViewModel(),
     fetchAPIViewModel: MainPageViewModel = hiltViewModel(),
     pokePageViewModel: PokePageViewModel = hiltViewModel(),
-    filterViewModel: FilterViewModel = viewModel()
 ) {
     val isLoading by fetchAPIViewModel.isLoading.collectAsState()
     val isPaginating by fetchAPIViewModel.isPaginating.collectAsState()
@@ -73,17 +73,14 @@ fun HomePokemonScroll(
     val affirmationList = pokePageViewModel.convertToAffirmation(pokemonDetail)
     var showFilterOverlay by remember {mutableStateOf(false)}
     var searchQuery by rememberSaveable { mutableStateOf("") }
-    var generations by rememberSaveable {mutableStateOf<ClosedRange<Int>?>(null)}
+    var selectedGeneration by rememberSaveable { mutableStateOf<Int?>(null) }
     var selectedType by rememberSaveable { mutableStateOf("") }
 
     val filteredAffirmationList = affirmationList.filter { affirmation ->
         val matchesSearch = searchQuery.isBlank() || affirmation.doesMatchQuery(searchQuery)
-        val selectedGenerations = filterViewModel.selectionGenMap.filterValues { it }.keys
-        val matchesGeneration = selectedGenerations.isEmpty() || selectedGenerations.any { generationId ->
-        val generation = filterViewModel.pokeGenerations.value.find { it.id == generationId }
-            generation?.range?.contains(affirmation.number) == true
-        }
+        val matchesGeneration = affirmation.number in fetchAPIViewModel.getGenerationRange(selectedGeneration)
         val matchesTypes = selectedType.isEmpty() || affirmation.typeIcon.contains(selectedType)
+        Log.d("GenerationGrid", "værdi: ${selectedGeneration}")
         matchesSearch && matchesGeneration && matchesTypes
     }
 
@@ -186,7 +183,7 @@ fun HomePokemonScroll(
                     onClose = { showFilterOverlay = false },
                     onFilterApply = {typesFilter, generationsFilter ->
                         selectedType = typesFilter
-                        generations = generationsFilter
+                        selectedGeneration = generationsFilter
                         showFilterOverlay = false
                         Log.d("HomePokemonScroll", "nummer 3: ${typesFilter.isEmpty()}")
                     }

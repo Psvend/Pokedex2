@@ -136,4 +136,19 @@ class MainPageViewModel @Inject constructor (
     fun getAffirmationByName(name: String): Affirmation? {
         return _apiPokemons.value.find { it.name == name}
     }
+
+    fun getGenerationRange(generationId: Int?): ClosedRange<Int> {
+        return when (generationId) {
+            19 -> 1..151
+            20 -> 152..251
+            21 -> 252..386
+            22 -> 387..493
+            23 -> 494..649
+            24 -> 650..721
+            25-> 722..809
+            26 -> 810..905
+            27 -> 906..1025
+            else -> 1..1025
+        }
+    }
 }

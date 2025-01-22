@@ -1,5 +1,6 @@
 package com.example.pokedex2.ui.Filters
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,7 +35,7 @@ fun FilterOverlay(
     showOverlay: Boolean,
     onClose: () -> Unit,
     filterViewModel: FilterViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
-    onFilterApply: (String, ClosedRange<Int>?)-> Unit
+    onFilterApply: (String, Int?)-> Unit
 ) {
     val isLoading = filterViewModel.isLoading.value
     val selectionMap = filterViewModel.selectionMap
@@ -42,7 +43,7 @@ fun FilterOverlay(
     val pokeGens = filterViewModel.pokeGenerations.value
 
     val typesFilter = remember { mutableStateOf("") }
-    val generationsFilter = remember { mutableStateOf<ClosedRange<Int>?> (null)}
+    val generationsFilter = remember { mutableStateOf<Int?> (null)}
 
 
     if(showOverlay){
@@ -144,7 +145,7 @@ fun FilterOverlay(
                             generations = pokeGens,
                             onToggleSelection = {id -> filterViewModel.toggleSelection(id)},
                             getColor = {id -> filterViewModel.getButtonColor(id)},
-                            generationsFilter = generationsFilter
+                            selectedGeneration = generationsFilter
                         )
                     }
                 }
@@ -169,6 +170,7 @@ fun FilterOverlay(
                         onClick = {
                             onClose()
                             onFilterApply(typesFilter.value, generationsFilter.value)
+                            Log.d("FilterOverlay", "værdi: ${generationsFilter.value}")
                         },
                         colors = ButtonDefaults.buttonColors(Color(0xFF1DB5D4))
                     ) {

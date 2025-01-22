@@ -1,5 +1,6 @@
 package com.example.pokedex2.ui.Filters
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -30,7 +31,7 @@ fun GenerationGrid(
     generations: List<LocalGenerations>,
     onToggleSelection: (Int) -> Unit,
     getColor: (Int) -> Color,
-    generationsFilter: MutableState<ClosedRange<Int>?>
+    selectedGeneration: MutableState<Int?>
 ) {
     LazyVerticalStaggeredGrid(
         modifier = modifier
@@ -56,7 +57,8 @@ fun GenerationGrid(
                     )
                     .clickable {
                         onToggleSelection(localGeneration.id)
-                        generationsFilter.value = localGeneration.range
+                        selectedGeneration.value = localGeneration.id
+                        Log.d("GenerationGrid", "værdi: ${selectedGeneration.value}")
                     },
                 contentAlignment = Alignment.Center
             ) {
