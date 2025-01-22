@@ -78,7 +78,9 @@ fun PokemonPage(
     val affirmation = pokemonDetail?.let { pokePageViewModel.convertToAffirmation(it) }
         ?.find { it.name.equals(pokemonIdOrName, ignoreCase = true) }
 
-
+    LaunchedEffect(affirmation) {
+        pokePageViewModel.fetchCachedPokemon(pokemonIdOrName)
+    }
     LaunchedEffect(pokemonIdOrName) {
         pokePageViewModel.fetchCachedPokemon(pokemonIdOrName)
     }

@@ -70,11 +70,17 @@ fun HomePokemonScroll(
     val listState = rememberLazyListState()
     val syncedPokemons by syncViewModel.pokemonList.collectAsState(initial = emptyList())
     val pokemonDetail by pokePageViewModel.pokemonDetail.collectAsState()
-    val affirmationList = pokePageViewModel.convertToAffirmation(pokemonDetail)
+    val convertedList by pokePageViewModel.convertedDetail.collectAsState(initial = emptyList())
     var showFilterOverlay by remember {mutableStateOf(false)}
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var generations by rememberSaveable {mutableStateOf<ClosedRange<Int>?>(null)}
     var selectedType by rememberSaveable { mutableStateOf("") }
+
+    LaunchedEffect (convertedList) {
+        syncViewModel.syncPokemons(convertedList)
+    }
+
+    val affirmationList = pokePageViewModel.convertToAffirmation(pokemonDetail)
 
     val filteredAffirmationList = affirmationList.filter { affirmation ->
         val matchesSearch = searchQuery.isBlank() || affirmation.doesMatchQuery(searchQuery)
@@ -243,12 +249,21 @@ fun HomePokemonScroll(
                     items(
                         filteredAffirmationList
                     ) { affirmation ->
+                        LaunchedEffect (affirmation){
+                            Log.d("Bitch2", "$affirmation")
+                        }
                         AffirmationCard(
                             affirmation = affirmation,
                             navController = navController,
-                            onLikeClicked = { syncViewModel.toggleLike(affirmation) },
+                            onLikeClicked = { syncViewModel.toggleLike(affirmation)
+
+                                Log.d("Bitch3", "$affirmation")
+                            },
+
                             modifier = Modifier.padding(4.dp)
                         )
+
+
                     }
                     if (isPaginating) {
                         item {

@@ -1,5 +1,6 @@
 package com.example.pokedex2.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedex2.data.local.FavouritesRepository
@@ -23,13 +24,15 @@ class SyncViewModel @Inject constructor(
     private val _pokemonList = MutableStateFlow<List<Affirmation>>(emptyList())
     val pokemonList: StateFlow<List<Affirmation>> = _pokemonList
 
+
+
+
     fun syncPokemons(apiPokemons: List<Affirmation>) {
         viewModelScope.launch {
             val likedPokemons = favouritesRepository.getFavourites().firstOrNull() ?: emptyList()
             val syncedPokemons = apiPokemons.map { fetched ->
                 fetched.copy(isLiked = likedPokemons.any { it.id == fetched.id })
             }
-
             _pokemonList.value = syncedPokemons
         }
     }
@@ -43,10 +46,12 @@ class SyncViewModel @Inject constructor(
             if (isLiked) {
                 favouritesRepository.addFavourite(updatedAffirmation)
                 localCachingDao.addLike(affirmation.name)
+                affirmation.isLiked = true
 
             } else {
                 favouritesRepository.removeFavourite(updatedAffirmation.id)
                 localCachingDao.removeLike(affirmation.name)
+                affirmation.isLiked = false
 
             }
 
@@ -54,46 +59,11 @@ class SyncViewModel @Inject constructor(
             _pokemonList.update { list ->
                 list.map { if (it.id == affirmation.id) updatedAffirmation else it }
             }
+
+            Log.d("Bitch","$affirmation")
+
+
         }
     }
-/*
-    fun getIsLikedById(id: Int): Boolean {
-        return _pokemonList.value.find { it.id == id }?.isLiked ?: false
-    }
-
-    fun getIsLikedByName(name: String): Boolean {
-        return _pokemonList.value.find { it.name == name }?.isLiked ?: false
-    }
-
-    fun getAffirmationByName(name: String): Affirmation? {
-        return _pokemonList.value.find { it.name == name}
-    }*/
-
-    fun getAffirmationById(id: Int): Affirmation? {
-        return _pokemonList.value.find { it.id == id}
-    }
-
-    /*fun toggleLikeById(pokemonId: Int) {
-        viewModelScope.launch {
-            // Find the Pokémon in the list by id
-            val affirmation = _pokemonList.value.find { it.id == pokemonId }
-            affirmation?.let {
-                val isLiked = !it.isLiked
-                val updatedAffirmation = it.copy(isLiked = isLiked)
-
-                // Update cache (favourites repository)
-                if (isLiked) {
-                    favouritesRepository.addFavourite(updatedAffirmation)
-                } else {
-                    favouritesRepository.removeFavourite(updatedAffirmation.id)
-                }
-
-                // Update the list with the new isLiked state
-                _pokemonList.update { list ->
-                    list.map { if (it.id == pokemonId) updatedAffirmation else it }
-                }
-            }
-        }
-    }*/
 
 }
