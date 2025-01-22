@@ -64,7 +64,7 @@ fun PokemonImage(model: String?, syncViewModel: SyncViewModel, affirmation: Affi
         LikeButton(
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .offset(x = (-25).dp, y = 25.dp)
+                .offset(x = (-50).dp, y = 25.dp)
                 .clickable (
                     indication = null,
                     interactionSource = remember{ MutableInteractionSource() }

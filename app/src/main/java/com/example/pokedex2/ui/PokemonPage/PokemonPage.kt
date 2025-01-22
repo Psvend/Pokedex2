@@ -81,12 +81,6 @@ fun PokemonPage(
     LaunchedEffect(affirmation) {
         pokePageViewModel.fetchCachedPokemon(pokemonIdOrName)
     }
-    /*
-    LaunchedEffect(pokemonIdOrName) {
-        pokePageViewModel.fetchCachedPokemon(pokemonIdOrName)
-    }
-
-     */
 
     // Fetch Pokémon details when the page is displayed
     LaunchedEffect(pokemonIdOrName) {

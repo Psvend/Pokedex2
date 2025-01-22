@@ -26,36 +26,12 @@ class PokePageViewModel @Inject constructor (
     private val _pokemon = MutableStateFlow<Affirmation?>(null)
     val pokemon: StateFlow<Affirmation?> = _pokemon
 
-
-
     fun fetchCachedPokemon(pokemonIdOrName: String) {
         viewModelScope.launch {
             val pokemon = localCachingDao.getAllPokemons()
                 .find { it.name.equals(pokemonIdOrName, ignoreCase = true) }
             _pokemonDetail.value = pokemon
         }
-    }
-
-    fun getCachedPokemonAsAffirmation(name :String) : Affirmation {
-        viewModelScope.launch {
-            val convert = localCachingDao.getPokemonByname(name)
-            val affirmation = Affirmation(
-                id = convert.id,
-                name = convert.name,
-                imageResourceId = convert.imageResourceId,
-                typeIcon = convert.typeIcon.split(","),
-                isLiked = convert.isLiked,
-                number = convert.number,
-                ability = convert.ability.split(","),
-                heldItem = convert.heldItem.split(","),
-                stats = convert.stats.split(",").map { stat ->
-                    val parts = stat.split(":")
-                    parts[0] to parts[1].toInt()
-                }
-            )
-            _pokemon.value = affirmation
-        }
-        return _pokemon.value!!
     }
 
     fun convertToAffirmation(localCaching: LocalCaching?): List<Affirmation>{
@@ -80,9 +56,5 @@ class PokePageViewModel @Inject constructor (
             _convertedDetail.value = cachedPokemons
         }
         return _convertedDetail.value
-    }
-    // This can still be used for fetching API data if required
-    fun getAffirmationByName(pokemonIdOrName: String) : Affirmation? {
-        return _convertedDetail.value.find { it.name.equals(pokemonIdOrName, ignoreCase = true) }
     }
 }

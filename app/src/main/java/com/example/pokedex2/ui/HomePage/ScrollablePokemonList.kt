@@ -246,11 +246,13 @@ fun HomePokemonScroll(
                     items(
                         filteredAffirmationList
                     ) { affirmation ->
+                        Log.d("MIAW", "${affirmation.name} and ${affirmation.isLiked}")
+
                         AffirmationCard(
                             affirmation = affirmation,
                             navController = navController,
                             onLikeClicked = { syncViewModel.toggleLike(affirmation)
-                                            },
+                            },
 
                             modifier = Modifier.padding(4.dp)
                         )

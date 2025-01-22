@@ -1,6 +1,7 @@
 package com.example.pokedex2.ui.PokemonPage
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.size
@@ -44,9 +45,12 @@ fun LikeButton(
     val isPressed by interactionSource.collectIsPressedAsState()
 
     IconToggleButton(
+            modifier = modifier,
             checked = checked,
             onCheckedChange = { checked = it
                 syncViewModel.toggleLike(affirmation)
+                Log.d("MIAW3", "${affirmation.name} and ${affirmation.isLiked}")
+
             },
             interactionSource = interactionSource
         ) { Icon(
@@ -58,7 +62,7 @@ fun LikeButton(
             contentDescription = if (checked as Boolean) "Toggled Icon" else "Default Icon",
             tint = Color(0xFFB11014),
             modifier = Modifier
-                .size(40.dp)
+                .size(50.dp)
         )
         }
 }
