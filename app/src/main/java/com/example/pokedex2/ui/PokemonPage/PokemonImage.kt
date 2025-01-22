@@ -72,7 +72,6 @@ fun PokemonImage(model: String?, syncViewModel: SyncViewModel, affirmation: Affi
                     syncViewModel.toggleLike(affirmation)
                 },
             affirmation = affirmation,
-            onLikeClicked = { syncViewModel.toggleLike(affirmation) },
         )
 
     }

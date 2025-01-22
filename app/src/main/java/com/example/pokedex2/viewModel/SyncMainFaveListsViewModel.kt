@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
+
 
 @HiltViewModel
 class SyncViewModel @Inject constructor(
@@ -37,6 +39,7 @@ class SyncViewModel @Inject constructor(
         }
     }
 
+
     fun toggleLike(affirmation: Affirmation) {
         viewModelScope.launch {
             val isLiked = !affirmation.isLiked
@@ -59,9 +62,6 @@ class SyncViewModel @Inject constructor(
             _pokemonList.update { list ->
                 list.map { if (it.id == affirmation.id) updatedAffirmation else it }
             }
-
-            Log.d("Bitch","$affirmation")
-
 
         }
     }

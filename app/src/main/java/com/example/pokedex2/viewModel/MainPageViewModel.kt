@@ -36,6 +36,8 @@ class MainPageViewModel @Inject constructor (
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
+
+
     private var currentPage = 0
 
     init {
@@ -131,9 +133,5 @@ class MainPageViewModel @Inject constructor (
 
         fun loadNextPage() {
         fetchAffirmations(currentPage + 1)
-    }
-
-    fun getAffirmationByName(name: String): Affirmation? {
-        return _apiPokemons.value.find { it.name == name}
     }
 }
