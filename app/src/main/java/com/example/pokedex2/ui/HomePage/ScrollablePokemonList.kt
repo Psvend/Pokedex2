@@ -250,9 +250,6 @@ fun HomePokemonScroll(
                         AffirmationCard(
                             affirmation = affirmation,
                             navController = navController,
-                            onLikeClicked = { syncViewModel.toggleLike(affirmation)
-                            },
-
                             modifier = Modifier.padding(4.dp)
                         )
 

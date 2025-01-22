@@ -256,7 +256,7 @@ fun Quiz(
                     )
                 }
             }
-            else if (points.intValue == 10){
+            else if (time.intValue < 29){
                 Box(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     contentAlignment = Alignment.Center
@@ -269,7 +269,7 @@ fun Quiz(
                             .clip(RoundedCornerShape(12.dp))
                     )
                 }
-            }else if(points.intValue in 1..5){
+            }else if(time.intValue in 30..59){
                 Box(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     contentAlignment = Alignment.Center
