@@ -77,7 +77,11 @@ fun HomePokemonScroll(
     var selectedType by rememberSaveable { mutableStateOf("") }
 
 
-    val affirmationList = apiPokemons
+    val affirmationList = syncedPokemons
+
+    LaunchedEffect(apiPokemons) {
+        syncViewModel.syncPokemons(apiPokemons)
+    }
 
     val filteredAffirmationList = affirmationList.filter { affirmation ->
         val matchesSearch = searchQuery.isBlank() || affirmation.doesMatchQuery(searchQuery)
