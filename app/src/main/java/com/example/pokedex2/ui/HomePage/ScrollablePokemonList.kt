@@ -250,7 +250,6 @@ fun HomePokemonScroll(
                     items(
                         filteredAffirmationList
                     ) { affirmation ->
-                        Log.d("MIAW", "${affirmation.name} and ${affirmation.isLiked}")
 
                         AffirmationCard(
                             affirmation = affirmation,

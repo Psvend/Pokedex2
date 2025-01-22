@@ -21,7 +21,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.example.pokedex2.model.Affirmation
 import com.example.pokedex2.viewModel.SyncViewModel
 import androidx.compose.foundation.Image
